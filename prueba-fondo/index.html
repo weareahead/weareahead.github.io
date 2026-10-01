@@ -65,26 +65,26 @@ main{
 }
 
 
-/* ===== Fondo animado (prueba) — luces difuminadas que derivan, estilo aurora ===== */
+/* ===== Fondo animado (prueba v2) — luces lila que derivan, retícula casi imperceptible ===== */
 .fondo{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
 .fondo .luz{position:absolute;border-radius:50%;will-change:transform;mix-blend-mode:screen}
 .fondo .l1{width:120vmax;height:120vmax;left:-78vmax;top:-50vmax;
   background:radial-gradient(closest-side,rgba(177,73,240,.42),rgba(177,73,240,0) 70%);
-  animation:deriva1 18s ease-in-out infinite alternate}
+  animation:deriva1 11s ease-in-out infinite alternate}
 .fondo .l2{width:110vmax;height:110vmax;right:-80vmax;top:25vh;
   background:radial-gradient(closest-side,rgba(177,73,240,.34),rgba(140,54,190,0) 70%);
-  animation:deriva2 22s ease-in-out infinite alternate}
+  animation:deriva2 13s ease-in-out infinite alternate}
 .fondo .l3{width:100vmax;height:100vmax;left:-30vmax;bottom:-70vmax;
-  background:radial-gradient(closest-side,rgba(216,69,29,.22),rgba(216,69,29,0) 70%);
-  animation:deriva3 26s ease-in-out infinite alternate}
+  background:radial-gradient(closest-side,rgba(205,140,248,.34),rgba(205,140,248,0) 70%);
+  animation:deriva3 15s ease-in-out infinite alternate}
 .fondo .reticula{position:absolute;inset:0;
-  background-image:linear-gradient(rgba(239,235,253,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(239,235,253,.06) 1px,transparent 1px);
+  background-image:linear-gradient(rgba(239,235,253,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(239,235,253,.025) 1px,transparent 1px);
   background-size:44px 44px;
   -webkit-mask-image:radial-gradient(ellipse 90% 70% at 50% 30%,#000 30%,transparent 80%);
           mask-image:radial-gradient(ellipse 90% 70% at 50% 30%,#000 30%,transparent 80%)}
-@keyframes deriva1{0%{transform:translate(0,0) scale(1)}50%{transform:translate(18vmax,10vmax) scale(1.12)}100%{transform:translate(6vmax,28vmax) scale(.95)}}
-@keyframes deriva2{0%{transform:translate(0,0) scale(1)}50%{transform:translate(-20vmax,-12vmax) scale(1.1)}100%{transform:translate(-8vmax,18vmax) scale(1.05)}}
-@keyframes deriva3{0%{transform:translate(0,0) scale(1)}100%{transform:translate(26vmax,-18vmax) scale(1.15)}}
+@keyframes deriva1{0%{transform:translate(0,0) scale(1)}33%{transform:translate(34vmax,14vmax) scale(1.2)}66%{transform:translate(12vmax,42vmax) scale(.9)}100%{transform:translate(40vmax,30vmax) scale(1.1)}}
+@keyframes deriva2{0%{transform:translate(0,0) scale(1)}33%{transform:translate(-36vmax,-18vmax) scale(1.15)}66%{transform:translate(-14vmax,26vmax) scale(.9)}100%{transform:translate(-40vmax,8vmax) scale(1.2)}}
+@keyframes deriva3{0%{transform:translate(0,0) scale(1)}50%{transform:translate(40vmax,-30vmax) scale(1.25)}100%{transform:translate(10vmax,-50vmax) scale(.95)}}
 @media (prefers-reduced-motion:reduce){.fondo .luz{animation:none}}
 
 /* Encabezado */
