@@ -16,7 +16,8 @@
 
 window.AHEAD = {
   frase: "Operamos tu potencial.",
-  bajada: "Edificios completos y proyectos desde los planos. Colombia · desde 2018.",
+  bajada: "Somos quienes hacen que un lugar funcione mejor, se sienta mejor y llegue más lejos.",
+  linea: "Desde 2018",   // se muestra en mayúsculas con tracking 200
   firma: "Always Ahead.",
 
   grupos: [
@@ -24,7 +25,7 @@ window.AHEAD = {
       titulo: "Hablemos",
       links: [
         {
-          texto: "Hablemos de su propiedad",
+          texto: "Hablemos de tu propiedad",
           detalle: "Propietarios e inversionistas",
           url: "https://wa.me/573142701520?text=Hola%20Ahead%2C%20quiero%20hablar%20de%20mi%20propiedad.",
           icono: "whatsapp",

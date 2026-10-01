@@ -71,7 +71,8 @@ h1{
   font-size:clamp(28px,8vw,34px);line-height:1.08;letter-spacing:-.025em;
   text-wrap:balance;
 }
-.bajada{margin:-6px 0 0;max-width:34ch;color:var(--muted);font-size:15px;text-wrap:pretty}
+.bajada{margin:-6px 0 0;max-width:34ch;color:var(--muted);font-size:15px;text-wrap:balance}
+.linea{margin:-6px 0 0;font-size:12px;font-weight:500;text-transform:uppercase;letter-spacing:.2em;color:var(--soft-lila);opacity:.7;padding-left:.2em}
 
 /* Grupos */
 section{display:flex;flex-direction:column;gap:12px}
@@ -163,6 +164,7 @@ footer{display:flex;flex-direction:column;align-items:center;gap:14px;padding-to
     <img class="logo" src="assets/logo-ahead.svg" alt="Ahead" width="124" height="112">
     <h1 id="frase">Operamos tu potencial.</h1>
     <p class="bajada" id="bajada"></p>
+    <p class="linea" id="linea" hidden></p>
   </header>
 
   <div id="grupos" style="display:contents"></div>
@@ -188,6 +190,8 @@ const ICONS={"web":["0 -960 960 960","M331.27-129.96q-69.35-29.96-120.85-81.27-5
   if(D.frase) document.getElementById("frase").textContent = D.frase;
   var bj = document.getElementById("bajada");
   if(D.bajada) bj.textContent = D.bajada; else bj.hidden = true;
+  var ln = document.getElementById("linea");
+  if(D.linea){ ln.textContent = D.linea; ln.hidden = false; }
   if(D.firma) document.getElementById("firma").textContent = D.firma;
   document.getElementById("anio").textContent = new Date().getFullYear();
   document.getElementById("ico-share").setAttribute("d", ICONS.share[1]);
