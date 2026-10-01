@@ -22,7 +22,7 @@ Mobile-first, sin dependencias, estático: se publica gratis en GitHub Pages.
 
 ## Sistema visual (Brandbook Ahead V1.0)
 
-- Fondo en degradado vertical: Dark Morada `#3B0B45` arriba → Morada `#5C1F63` abajo (decisión 01-oct-2026; excepción consciente a la regla de fondo sólido del brandbook). Marca de agua con la silueta del isotipo en Dark Morada.
+- Fondo en degradado vertical: Morada `#5C1F63` arriba → Dark Morada `#3B0B45` abajo (decisión 01-oct-2026, invertido el mismo día; excepción consciente a la regla de fondo sólido del brandbook). Marca de agua con la silueta del isotipo en Morada.
 - Logo vertical versión Cream (archivo maestro `Logo_V_Blanco_Ahead.svg`).
 - Acento único: Naranja `#F76F26` en el botón de propietarios. Cream `#F4F0E8` en el de reservas.
 - Titulares: Outfit (sustituto de Aeonik mientras no haya licencia web). Cuerpo: DM Sans.
