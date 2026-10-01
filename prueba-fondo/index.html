@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ahead · Links (prueba fondo)</title>
+<meta name="robots" content="noindex">
+<meta name="description" content="Ahead — Operamos tu potencial. Sitio web, redes sociales y WhatsApp de Ahead en un solo lugar.">
+<meta name="theme-color" content="#5C1F63">
+<meta property="og:title" content="Ahead · Operamos tu potencial">
+<meta property="og:description" content="Sitio web, redes y WhatsApp de Ahead en un solo lugar.">
+<meta property="og:image" content="assets/og-ahead.png">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="../favicon.ico" sizes="any">
+<link rel="icon" href="../assets/isotipo-ahead.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+<link rel="preload" href="../assets/fonts/outfit-latin-600-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../assets/fonts/dm-sans-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+@font-face{font-family:"Outfit";font-weight:500;font-display:swap;src:url(../assets/fonts/outfit-latin-500-normal.woff2) format("woff2")}
+@font-face{font-family:"Outfit";font-weight:600;font-display:swap;src:url(../assets/fonts/outfit-latin-600-normal.woff2) format("woff2")}
+@font-face{font-family:"DM Sans";font-weight:100 1000;font-display:swap;src:url(../assets/fonts/dm-sans-latin-wght-normal.woff2) format("woff2")}
+/* Layout: una columna móvil de 440px máx. sobre Dark Morada sólido; silueta del isotipo sangrada como marca de agua. */
+:root{
+  /* Paleta Brandbook Ahead V1.0 */
+  --dark-morada:#3B0B45;
+  --morada:#5C1F63;
+  --soft-lila:#EFEBFD;
+  --cream:#F4F0E8;
+  --naranja:#F76F26;
+  --naranja-hover:#D8451D; /* Terracota, estado presionado */
+  --line:rgba(239,235,253,.12);
+  --muted:rgba(244,240,232,.72);
+
+  /* Tipografía: Aeonik (titulares) cuando haya licencia web; mientras tanto Outfit. DM Sans (cuerpo). */
+  --font-display:"Aeonik","Outfit",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --font-body:"DM Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+
+  --radius-card:20px;
+  --radius-pill:999px;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;background:var(--morada)}
+body{
+  margin:0;min-height:100vh;min-height:100dvh;
+  /* Fondo: degradado vertical Morada (arriba) → Dark Morada (abajo) a lo largo de toda la página */
+  background:linear-gradient(180deg,var(--morada) 0%,var(--dark-morada) 100%) var(--dark-morada);
+  color:var(--cream);
+  font-family:var(--font-body);font-weight:300;font-size:16px;line-height:1.5;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden;
+}
+.watermark{
+  position:fixed;z-index:0;pointer-events:none;
+  width:min(150vw,720px);right:max(-48vw,-240px);bottom:-18vh;
+  fill:var(--morada);opacity:.25;
+}
+main{
+  position:relative;z-index:1;
+  max-width:440px;margin:0 auto;
+  padding-inline:20px;
+  padding-block:calc(40px + env(safe-area-inset-top,0px)) calc(32px + env(safe-area-inset-bottom,0px));
+  display:flex;flex-direction:column;gap:36px;
+}
+
+
+/* ===== Fondo animado (prueba) — luces difuminadas que derivan, estilo aurora ===== */
+.fondo{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.fondo .luz{position:absolute;border-radius:50%;will-change:transform;mix-blend-mode:screen}
+.fondo .l1{width:120vmax;height:120vmax;left:-78vmax;top:-50vmax;
+  background:radial-gradient(closest-side,rgba(177,73,240,.42),rgba(177,73,240,0) 70%);
+  animation:deriva1 18s ease-in-out infinite alternate}
+.fondo .l2{width:110vmax;height:110vmax;right:-80vmax;top:25vh;
+  background:radial-gradient(closest-side,rgba(177,73,240,.34),rgba(140,54,190,0) 70%);
+  animation:deriva2 22s ease-in-out infinite alternate}
+.fondo .l3{width:100vmax;height:100vmax;left:-30vmax;bottom:-70vmax;
+  background:radial-gradient(closest-side,rgba(216,69,29,.22),rgba(216,69,29,0) 70%);
+  animation:deriva3 26s ease-in-out infinite alternate}
+.fondo .reticula{position:absolute;inset:0;
+  background-image:linear-gradient(rgba(239,235,253,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(239,235,253,.06) 1px,transparent 1px);
+  background-size:44px 44px;
+  -webkit-mask-image:radial-gradient(ellipse 90% 70% at 50% 30%,#000 30%,transparent 80%);
+          mask-image:radial-gradient(ellipse 90% 70% at 50% 30%,#000 30%,transparent 80%)}
+@keyframes deriva1{0%{transform:translate(0,0) scale(1)}50%{transform:translate(18vmax,10vmax) scale(1.12)}100%{transform:translate(6vmax,28vmax) scale(.95)}}
+@keyframes deriva2{0%{transform:translate(0,0) scale(1)}50%{transform:translate(-20vmax,-12vmax) scale(1.1)}100%{transform:translate(-8vmax,18vmax) scale(1.05)}}
+@keyframes deriva3{0%{transform:translate(0,0) scale(1)}100%{transform:translate(26vmax,-18vmax) scale(1.15)}}
+@media (prefers-reduced-motion:reduce){.fondo .luz{animation:none}}
+
+/* Encabezado */
+header{display:flex;flex-direction:column;align-items:center;text-align:center;gap:18px}
+.logo{width:124px;height:auto;display:block}
+h1{
+  margin:0;font-family:var(--font-display);font-weight:600;
+  font-size:clamp(28px,8vw,34px);line-height:1.08;letter-spacing:-.025em;
+  text-wrap:balance;
+}
+.bajada{margin:-6px 0 0;max-width:34ch;color:var(--muted);font-size:15px;text-wrap:balance}
+.linea{margin:-6px 0 0;font-size:12px;font-weight:500;text-transform:uppercase;letter-spacing:.2em;color:var(--soft-lila);opacity:.7;padding-left:.2em}
+
+/* Grupos */
+section{display:flex;flex-direction:column;gap:12px}
+.eyebrow{
+  margin:0 0 2px 4px;font-size:12px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--soft-lila);opacity:.7;
+}
+
+/* Botones principales (píldora) */
+.btn{
+  display:flex;align-items:center;gap:14px;
+  min-height:68px;padding:10px 20px 10px 10px;border-radius:var(--radius-pill);
+  text-decoration:none;color:var(--dark-morada);
+  transition:transform .15s ease,background-color .15s ease;
+  -webkit-tap-highlight-color:transparent;
+}
+.btn .ico{
+  flex:none;width:48px;height:48px;border-radius:50%;
+  display:grid;place-items:center;
+}
+.btn .ico svg{width:24px;height:24px}
+.btn .txt{flex:1;min-width:0;display:flex;flex-direction:column}
+.btn .t{font-family:var(--font-display);font-weight:600;font-size:17px;line-height:1.2;letter-spacing:-.01em}
+.btn .d{font-size:13px;line-height:1.35;opacity:.78}
+.btn .go{flex:none;width:22px;height:22px;opacity:.7}
+
+.btn.destacado{background:var(--naranja)}
+.btn.destacado .ico{background:var(--dark-morada);fill:var(--naranja)}
+.btn.destacado:active{background:var(--naranja-hover)}
+.btn.claro{background:var(--cream)}
+.btn.claro .ico{background:var(--morada);fill:var(--cream)}
+.btn.claro:active{background:var(--soft-lila)}
+.btn:active{transform:scale(.985)}
+
+/* Lista de redes */
+.lista{
+  list-style:none;margin:0;padding:6px;
+  background:rgba(239,235,253,.07);border:1px solid rgba(239,235,253,.10);border-radius:var(--radius-card);
+  display:flex;flex-direction:column;
+}
+.lista li + li{position:relative}
+.lista li + li::before{content:"";position:absolute;top:0;left:64px;right:16px;height:1px;background:var(--line)}
+.red{
+  display:flex;align-items:center;gap:14px;
+  padding:12px 14px 12px 10px;border-radius:14px;
+  color:var(--cream);text-decoration:none;
+  transition:background-color .15s ease;-webkit-tap-highlight-color:transparent;
+}
+.red .ico{flex:none;width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:rgba(239,235,253,.08);fill:var(--soft-lila)}
+.red .ico svg{width:20px;height:20px}
+.red .txt{flex:1;min-width:0;display:flex;flex-direction:column}
+.red .t{font-weight:500;font-size:16px;line-height:1.25}
+.red .d{font-size:13px;color:var(--muted);overflow-wrap:anywhere}
+.red .go{flex:none;width:20px;height:20px;fill:var(--cream);opacity:.5}
+.red:active{background:rgba(239,235,253,.08)}
+
+a:focus-visible,button:focus-visible{outline:2px solid var(--naranja);outline-offset:3px}
+@media (hover:hover){
+  .btn.destacado:hover{background:#FF7F3A}
+  .btn.claro:hover{background:#FFFFFF}
+  .red:hover{background:rgba(239,235,253,.06)}
+  .red:hover .go{opacity:.9}
+}
+
+/* Pie */
+footer{display:flex;flex-direction:column;align-items:center;gap:14px;padding-top:4px}
+.compartir{
+  display:inline-flex;align-items:center;gap:8px;
+  font:inherit;font-size:14px;font-weight:500;color:var(--cream);
+  background:transparent;border:1px solid rgba(244,240,232,.35);border-radius:var(--radius-pill);
+  padding:10px 18px;cursor:pointer;-webkit-tap-highlight-color:transparent;
+}
+.compartir svg{width:18px;height:18px;fill:currentColor}
+.firma{margin:0;font-family:var(--font-display);font-weight:500;font-size:15px;letter-spacing:-.01em}
+.legal{margin:-8px 0 0;font-size:12px;color:var(--muted)}
+
+/* Entrada */
+@media (prefers-reduced-motion:no-preference){
+  .in{animation:subir .5s cubic-bezier(.2,.7,.2,1) both;animation-delay:calc(var(--i,0) * 60ms)}
+  @keyframes subir{from{transform:translateY(10px);opacity:.01}to{transform:none;opacity:1}}
+}
+</style>
+</head>
+<body>
+<div class="fondo" aria-hidden="true"><div class="luz l1"></div><div class="luz l2"></div><div class="luz l3"></div><div class="reticula"></div></div>
+<svg class="watermark" viewBox="119 174 962 852" aria-hidden="true"><path d="M600,1024.76l-333.49.26c-86.76-2.51-147.01-70.37-146.63-155.98.48-105.93,1.63-209.36,15.85-315.14,6.65-49.48,32.65-90.79,67.74-125.64,90.53-89.9,194.09-162.32,304.52-226.08,29.78-17.2,60.7-26.98,92.01-27.21,31.31.23,62.22,10.01,92.01,27.21,110.43,63.77,213.99,136.19,304.52,226.08,35.09,34.85,61.09,76.16,67.74,125.64,14.22,105.78,15.37,209.21,15.85,315.14.39,85.61-59.86,153.47-146.63,155.98l-333.49-.26h0Z"/></svg>
+
+<main>
+  <header class="in" style="--i:0">
+    <img class="logo" src="../assets/logo-ahead.svg" alt="Ahead" width="124" height="112">
+    <h1 id="frase">Operamos tu potencial.</h1>
+    <p class="bajada" id="bajada"></p>
+    <p class="linea" id="linea" hidden></p>
+  </header>
+
+  <div id="grupos" style="display:contents"></div>
+
+  <footer class="in" style="--i:6">
+    <button class="compartir" id="compartir" type="button"><svg viewBox="0 -960 960 960" aria-hidden="true"><path id="ico-share"/></svg><span>Compartir</span></button>
+    <p class="firma" id="firma">Always Ahead.</p>
+    <p class="legal">© <span id="anio">2026</span> Ahead · Colombia</p>
+  </footer>
+</main>
+
+<script src="../links.js"></script>
+<script>
+const ICONS={"web":["0 -960 960 960","M331.27-129.96q-69.35-29.96-120.85-81.27-51.5-51.31-80.96-120.96Q100-401.85 100-481.42q0-79.58 29.46-148.62t80.96-120.34q51.5-51.31 120.85-80.46Q400.62-860 480-860t148.73 29.16q69.35 29.15 120.85 80.46 51.5 51.3 80.96 120.34Q860-561 860-481.42q0 79.57-29.46 149.23-29.46 69.65-80.96 120.96-51.5 51.31-120.85 81.27Q559.38-100 480-100t-148.73-29.96ZM480-143.39q37.31-40.23 61.38-87.3 24.08-47.08 39.47-110.31H379.77q15.15 62.31 39.23 110.11 24.08 47.81 61 87.5Zm-63.46-8.15q-28.08-36.46-49.73-84.88-21.66-48.43-34.04-104.58H173.54q38.38 77.54 96.46 122.46 58.08 44.93 146.54 67Zm127.92-.61q78.54-17.62 142-66.7 63.46-49.07 100-122.15H627.85q-14.93 56.31-36.08 104.35-21.16 48.03-47.31 84.5ZM158.92-386.38h165.54q-3.77-27.39-4.84-50.43-1.08-23.04-1.08-44.81 0-24.23 1.38-45.84 1.39-21.62 5.16-46.77H158.92q-7.38 23.23-10.46 44.92-3.07 21.69-3.07 47.69 0 26.39 3.07 49 3.08 22.62 10.46 46.24Zm212.16 0h218.46q4.38-30.23 5.77-51.47 1.38-21.23 1.38-43.77 0-21.53-1.38-41.96-1.39-20.42-5.77-50.65H371.08q-4.39 30.23-5.77 50.65-1.39 20.43-1.39 41.96 0 22.54 1.39 43.77 1.38 21.24 5.77 51.47Zm263.84 0h166.16q7.38-23.62 10.46-46.24 3.07-22.61 3.07-49 0-26-3.07-47.69-3.08-21.69-10.46-44.92H635.92q3.39 33.08 4.77 53.88 1.39 20.81 1.39 38.73 0 22.39-1.7 44-1.69 21.62-5.46 51.24Zm-7.69-233.23h159.23q-35.31-76.7-97.81-125.2t-145.19-64.04q28.08 37.77 49.04 84.81t34.73 104.43Zm-247.46 0h202.08q-13.31-56.47-39.5-106.54-26.2-50.08-62.35-89.23-33.92 31.23-57.27 77.15t-42.96 118.62Zm-206.23 0h159.85q12.53-55.54 33-102.08 20.46-46.54 49.15-86.54-82.69 15.92-144.08 63.61-61.38 47.7-97.92 125.01Z"],"instagram":["0 0 24 24","M7.0301.084c-1.2768.0602-2.1487.264-2.911.5634-.7888.3075-1.4575.72-2.1228 1.3877-.6652.6677-1.075 1.3368-1.3802 2.127-.2954.7638-.4956 1.6365-.552 2.914-.0564 1.2775-.0689 1.6882-.0626 4.947.0062 3.2586.0206 3.6671.0825 4.9473.061 1.2765.264 2.1482.5635 2.9107.308.7889.72 1.4573 1.388 2.1228.6679.6655 1.3365 1.0743 2.1285 1.38.7632.295 1.6361.4961 2.9134.552 1.2773.056 1.6884.069 4.9462.0627 3.2578-.0062 3.668-.0207 4.9478-.0814 1.28-.0607 2.147-.2652 2.9098-.5633.7889-.3086 1.4578-.72 2.1228-1.3881.665-.6682 1.0745-1.3378 1.3795-2.1284.2957-.7632.4966-1.636.552-2.9124.056-1.2809.0692-1.6898.063-4.948-.0063-3.2583-.021-3.6668-.0817-4.9465-.0607-1.2797-.264-2.1487-.5633-2.9117-.3084-.7889-.72-1.4568-1.3876-2.1228C21.2982 1.33 20.628.9208 19.8378.6165 19.074.321 18.2017.1197 16.9244.0645 15.6471.0093 15.236-.005 11.977.0014 8.718.0076 8.31.0215 7.0301.0839m.1402 21.6932c-1.17-.0509-1.8053-.2453-2.2287-.408-.5606-.216-.96-.4771-1.3819-.895-.422-.4178-.6811-.8186-.9-1.378-.1644-.4234-.3624-1.058-.4171-2.228-.0595-1.2645-.072-1.6442-.079-4.848-.007-3.2037.0053-3.583.0607-4.848.05-1.169.2456-1.805.408-2.2282.216-.5613.4762-.96.895-1.3816.4188-.4217.8184-.6814 1.3783-.9003.423-.1651 1.0575-.3614 2.227-.4171 1.2655-.06 1.6447-.072 4.848-.079 3.2033-.007 3.5835.005 4.8495.0608 1.169.0508 1.8053.2445 2.228.408.5608.216.96.4754 1.3816.895.4217.4194.6816.8176.9005 1.3787.1653.4217.3617 1.056.4169 2.2263.0602 1.2655.0739 1.645.0796 4.848.0058 3.203-.0055 3.5834-.061 4.848-.051 1.17-.245 1.8055-.408 2.2294-.216.5604-.4763.96-.8954 1.3814-.419.4215-.8181.6811-1.3783.9-.4224.1649-1.0577.3617-2.2262.4174-1.2656.0595-1.6448.072-4.8493.079-3.2045.007-3.5825-.006-4.848-.0608M16.953 5.5864A1.44 1.44 0 1 0 18.39 4.144a1.44 1.44 0 0 0-1.437 1.4424M5.8385 12.012c.0067 3.4032 2.7706 6.1557 6.173 6.1493 3.4026-.0065 6.157-2.7701 6.1506-6.1733-.0065-3.4032-2.771-6.1565-6.174-6.1498-3.403.0067-6.156 2.771-6.1496 6.1738M8 12.0077a4 4 0 1 1 4.008 3.9921A3.9996 3.9996 0 0 1 8 12.0077"],"tiktok":["0 0 24 24","M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"],"linkedin":["0 0 24 24","M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56v11.45z"],"facebook":["0 0 24 24","M9.101 23.691v-7.98H6.627v-3.667h2.474v-1.58c0-4.085 1.848-5.978 5.858-5.978.401 0 .955.042 1.468.103a8.68 8.68 0 0 1 1.141.195v3.325a8.623 8.623 0 0 0-.653-.036 26.805 26.805 0 0 0-.733-.009c-.707 0-1.259.096-1.675.309a1.686 1.686 0 0 0-.679.622c-.258.42-.374.995-.374 1.752v1.297h3.919l-.386 2.103-.287 1.564h-3.246v8.245C19.396 23.238 24 18.179 24 12.044c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.628 3.874 10.35 9.101 11.647Z"],"x":["0 0 24 24","M14.234 10.162 22.977 0h-2.072l-7.591 8.824L7.251 0H.258l9.168 13.343L.258 24H2.33l8.016-9.318L16.749 24h6.993zm-2.837 3.299-.929-1.329L3.076 1.56h3.182l5.965 8.532.929 1.329 7.754 11.09h-3.182z"],"whatsapp":["0 0 24 24","M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"],"arrow":["0 -960 960 960","M655.92-672.62 257.23-274.31q-6.69 6.69-15.81 6.5-9.11-.19-15.8-6.88-6.7-6.7-6.7-15.39 0-8.69 6.7-15.84l398.3-398.7H264q-9.64 0-16.17-6.58-6.52-6.58-6.52-16.3 0-9.73 6.52-16.11Q254.36-750 264-750h408.46q12.26 0 20.55 8.29 8.3 8.3 8.3 20.56v408.46q0 9.64-6.58 16.17-6.58 6.52-16.31 6.52-9.73 0-16.11-6.52-6.39-6.53-6.39-16.17v-359.93Z"],"share":["0 -960 960 960","M676.68-100q-42.8 0-72.97-30.24t-30.17-72.99q0-7.67 5.38-33.62L281.46-412.23q-14.66 16.62-34.82 26.04-20.16 9.42-43.79 9.42-42.6 0-72.72-30.01Q100-436.8 100-480.09q0-43.29 30.13-73.22 30.12-29.92 72.59-29.92 22.87 0 42.77 8.91 19.9 8.91 34.36 25.32l299.07-173.77q-2.38-8-3.88-16.5t-1.5-17.55q0-42.7 30.26-72.94Q634.07-860 676.86-860q42.79 0 72.97 30.26Q780-799.47 780-756.68q0 42.8-30.24 72.97t-73.1 30.17q-22.36 0-41.59-9-19.22-9-33.69-24L300.46-515.23q3 8 4.5 17.11 1.5 9.12 1.5 17.81t-1.19 16.39q-1.19 7.69-3.58 15.69l300.69 174.15q14.61-15 33.54-23.69 18.93-8.69 40.95-8.69 43.15 0 73.14 30.26Q780-245.93 780-203.14q0 42.79-30.26 72.97Q719.47-100 676.68-100Zm.19-45.39q24.63 0 41.19-16.66 16.55-16.66 16.55-41.28 0-24.63-16.66-41.19t-41.28-16.56q-24.63 0-41.19 16.66t-16.56 41.29q0 24.63 16.66 41.19 16.66 16.55 41.29 16.55ZM202.95-422.15q24.79 0 41.46-16.76t16.67-41.19q0-24.44-16.77-41.09-16.77-16.66-41.57-16.66-24.46 0-40.91 16.76-16.44 16.76-16.44 41.19 0 24.44 16.54 41.09 16.55 16.66 41.02 16.66Zm515.01-293.43q16.65-16.66 16.65-41.29t-16.66-41.19q-16.66-16.55-41.28-16.55-24.63 0-41.19 16.66t-16.56 41.28q0 24.63 16.76 41.19t41.19 16.56q24.44 0 41.09-16.66Zm-41.19 512.35ZM203.23-480Zm473.54-276.77Z"],"check":["0 -960 960 960","m379.15-323.15 363-363.39q6.7-6.31 16.12-6.5 9.42-.19 16.5 6.69 7.08 6.89 7.08 16.31 0 9.42-7.08 16.12L399.38-278.54q-8.61 8.62-20.23 8.62-11.61 0-20.23-8.62l-174.3-174.31q-6.7-6.69-6.58-16.11.11-9.42 7.19-16.31 7.08-6.88 16.31-6.88 9.23 0 16.31 6.69l161.3 162.31Z"]};
+(function(){
+  var D = window.AHEAD || {grupos:[]};
+  function svg(name, cls){
+    var i = ICONS[name]; if(!i) return "";
+    return '<svg class="'+(cls||"")+'" viewBox="'+i[0]+'" aria-hidden="true"><path d="'+i[1]+'"/></svg>';
+  }
+  function esc(s){return String(s||"").replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+
+  if(D.frase) document.getElementById("frase").textContent = D.frase;
+  var bj = document.getElementById("bajada");
+  if(D.bajada) bj.textContent = D.bajada; else bj.hidden = true;
+  var ln = document.getElementById("linea");
+  if(D.linea){ ln.textContent = D.linea; ln.hidden = false; }
+  if(D.firma) document.getElementById("firma").textContent = D.firma;
+  document.getElementById("anio").textContent = new Date().getFullYear();
+  document.getElementById("ico-share").setAttribute("d", ICONS.share[1]);
+
+  var html = "", n = 1;
+  (D.grupos||[]).forEach(function(g){
+    var activos = (g.links||[]).filter(function(l){return l.estado==="activo" && l.url});
+    if(!activos.length) return;
+    var botones = activos.filter(function(l){return l.estilo!=="red"});
+    var redes = activos.filter(function(l){return l.estilo==="red"});
+    html += '<section class="in" style="--i:'+(n++)+'" aria-label="'+esc(g.titulo)+'">';
+    if(g.titulo) html += '<p class="eyebrow">'+esc(g.titulo)+'</p>';
+    botones.forEach(function(l){
+      html += '<a class="btn '+esc(l.estilo)+'" href="'+esc(l.url)+'" target="_blank" rel="noopener">'
+           +  '<span class="ico">'+svg(l.icono)+'</span>'
+           +  '<span class="txt"><span class="t">'+esc(l.texto)+'</span>'+(l.detalle?'<span class="d">'+esc(l.detalle)+'</span>':'')+'</span>'
+           +  svg("arrow","go")+'</a>';
+    });
+    if(redes.length){
+      html += '<ul class="lista">';
+      redes.forEach(function(l){
+        html += '<li><a class="red" href="'+esc(l.url)+'" target="_blank" rel="noopener">'
+             +  '<span class="ico">'+svg(l.icono)+'</span>'
+             +  '<span class="txt"><span class="t">'+esc(l.texto)+'</span>'+(l.detalle?'<span class="d">'+esc(l.detalle)+'</span>':'')+'</span>'
+             +  svg("arrow","go")+'</a></li>';
+      });
+      html += '</ul>';
+    }
+    html += '</section>';
+  });
+  document.getElementById("grupos").innerHTML = html;
+
+  var btn = document.getElementById("compartir"), lbl = btn.querySelector("span");
+  btn.addEventListener("click", function(){
+    var url = location.href.split("#")[0];
+    if(navigator.share){
+      navigator.share({title:"Ahead", text:D.frase||"Ahead", url:url}).catch(function(){});
+      return;
+    }
+    var ok = function(){ lbl.textContent = "Link copiado"; setTimeout(function(){lbl.textContent="Compartir"},2200) };
+    if(navigator.clipboard) navigator.clipboard.writeText(url).then(ok, function(){ lbl.textContent = url });
+    else lbl.textContent = url;
+  });
+})();
+</script>
+</body>
+</html>
