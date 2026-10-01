@@ -1,4 +1,4 @@
-# Ahead · Links
+# Microsite Ahead Links
 
 Micrositio tipo Linktree de Ahead para el QR de Expohost 2026 y la bio de redes.
 Mobile-first, sin dependencias, estático: se publica gratis en GitHub Pages.
@@ -22,7 +22,7 @@ Mobile-first, sin dependencias, estático: se publica gratis en GitHub Pages.
 
 ## Sistema visual (Brandbook Ahead V1.0)
 
-- Fondo Dark Morada `#3B0B45`, marca de agua con la silueta del isotipo en Morada `#5C1F63`.
+- Fondo en degradado vertical: Dark Morada `#3B0B45` arriba → Morada `#5C1F63` abajo (decisión 01-oct-2026; excepción consciente a la regla de fondo sólido del brandbook). Marca de agua con la silueta del isotipo en Dark Morada.
 - Logo vertical versión Cream (archivo maestro `Logo_V_Blanco_Ahead.svg`).
 - Acento único: Naranja `#F76F26` en el botón de propietarios. Cream `#F4F0E8` en el de reservas.
 - Titulares: Outfit (sustituto de Aeonik mientras no haya licencia web). Cuerpo: DM Sans.

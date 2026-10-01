@@ -41,17 +41,19 @@
   color-scheme:dark;
 }
 *{box-sizing:border-box}
-html{-webkit-text-size-adjust:100%}
+html{-webkit-text-size-adjust:100%;background:var(--dark-morada)}
 body{
   margin:0;min-height:100vh;min-height:100dvh;
-  background:var(--dark-morada);color:var(--cream);
+  /* Fondo: degradado vertical Dark Morada (arriba) → Morada (abajo) a lo largo de toda la página */
+  background:linear-gradient(180deg,var(--dark-morada) 0%,var(--morada) 100%) var(--morada);
+  color:var(--cream);
   font-family:var(--font-body);font-weight:300;font-size:16px;line-height:1.5;
   -webkit-font-smoothing:antialiased;overflow-x:hidden;
 }
 .watermark{
   position:fixed;z-index:0;pointer-events:none;
   width:min(150vw,720px);right:max(-48vw,-240px);bottom:-18vh;
-  fill:var(--morada);opacity:.4;
+  fill:var(--dark-morada);opacity:.35;
 }
 main{
   position:relative;z-index:1;
@@ -107,7 +109,7 @@ section{display:flex;flex-direction:column;gap:12px}
 /* Lista de redes */
 .lista{
   list-style:none;margin:0;padding:6px;
-  background:var(--morada);border-radius:var(--radius-card);
+  background:rgba(239,235,253,.07);border:1px solid rgba(239,235,253,.10);border-radius:var(--radius-card);
   display:flex;flex-direction:column;
 }
 .lista li + li{position:relative}
