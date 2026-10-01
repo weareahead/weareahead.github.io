@@ -53,7 +53,7 @@ body{
 .watermark{
   position:fixed;z-index:0;pointer-events:none;
   width:min(150vw,720px);right:max(-48vw,-240px);bottom:-18vh;
-  fill:var(--morada);opacity:.45;
+  fill:var(--morada);opacity:.25;
 }
 main{
   position:relative;z-index:1;
@@ -62,6 +62,29 @@ main{
   padding-block:calc(40px + env(safe-area-inset-top,0px)) calc(32px + env(safe-area-inset-bottom,0px));
   display:flex;flex-direction:column;gap:36px;
 }
+
+
+/* ===== Fondo animado — luces lila que derivan + retícula casi imperceptible (aprobado 01-oct-2026) ===== */
+.fondo{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.fondo .luz{position:absolute;border-radius:50%;will-change:transform;mix-blend-mode:screen}
+.fondo .l1{width:120vmax;height:120vmax;left:-78vmax;top:-50vmax;
+  background:radial-gradient(closest-side,rgba(177,73,240,.42),rgba(177,73,240,0) 70%);
+  animation:deriva1 11s ease-in-out infinite alternate}
+.fondo .l2{width:110vmax;height:110vmax;right:-80vmax;top:25vh;
+  background:radial-gradient(closest-side,rgba(177,73,240,.34),rgba(140,54,190,0) 70%);
+  animation:deriva2 13s ease-in-out infinite alternate}
+.fondo .l3{width:100vmax;height:100vmax;left:-30vmax;bottom:-70vmax;
+  background:radial-gradient(closest-side,rgba(205,140,248,.34),rgba(205,140,248,0) 70%);
+  animation:deriva3 15s ease-in-out infinite alternate}
+.fondo .reticula{position:absolute;inset:0;
+  background-image:linear-gradient(rgba(239,235,253,.014) 1px,transparent 1px),linear-gradient(90deg,rgba(239,235,253,.014) 1px,transparent 1px);
+  background-size:44px 44px;
+  -webkit-mask-image:radial-gradient(ellipse 90% 70% at 50% 30%,#000 30%,transparent 80%);
+          mask-image:radial-gradient(ellipse 90% 70% at 50% 30%,#000 30%,transparent 80%)}
+@keyframes deriva1{0%{transform:translate(0,0) scale(1)}33%{transform:translate(34vmax,14vmax) scale(1.2)}66%{transform:translate(12vmax,42vmax) scale(.9)}100%{transform:translate(40vmax,30vmax) scale(1.1)}}
+@keyframes deriva2{0%{transform:translate(0,0) scale(1)}33%{transform:translate(-36vmax,-18vmax) scale(1.15)}66%{transform:translate(-14vmax,26vmax) scale(.9)}100%{transform:translate(-40vmax,8vmax) scale(1.2)}}
+@keyframes deriva3{0%{transform:translate(0,0) scale(1)}50%{transform:translate(40vmax,-30vmax) scale(1.25)}100%{transform:translate(10vmax,-50vmax) scale(.95)}}
+@media (prefers-reduced-motion:reduce){.fondo .luz{animation:none}}
 
 /* Encabezado */
 header{display:flex;flex-direction:column;align-items:center;text-align:center;gap:18px}
@@ -157,6 +180,7 @@ footer{display:flex;flex-direction:column;align-items:center;gap:14px;padding-to
 </style>
 </head>
 <body>
+<div class="fondo" aria-hidden="true"><div class="luz l1"></div><div class="luz l2"></div><div class="luz l3"></div><div class="reticula"></div></div>
 <svg class="watermark" viewBox="119 174 962 852" aria-hidden="true"><path d="M600,1024.76l-333.49.26c-86.76-2.51-147.01-70.37-146.63-155.98.48-105.93,1.63-209.36,15.85-315.14,6.65-49.48,32.65-90.79,67.74-125.64,90.53-89.9,194.09-162.32,304.52-226.08,29.78-17.2,60.7-26.98,92.01-27.21,31.31.23,62.22,10.01,92.01,27.21,110.43,63.77,213.99,136.19,304.52,226.08,35.09,34.85,61.09,76.16,67.74,125.64,14.22,105.78,15.37,209.21,15.85,315.14.39,85.61-59.86,153.47-146.63,155.98l-333.49-.26h0Z"/></svg>
 
 <main>
