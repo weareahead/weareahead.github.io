@@ -2,19 +2,27 @@
  * EVALUADOR DE PROPIEDADES AHEAD — Backend en Google Sheets
  * ---------------------------------------------------------
  * Pegar este archivo en Extensiones → Apps Script de la hoja de cálculo
- * "Ahead · Evaluaciones de propiedades" y desplegar como Aplicación web:
+ * (cuenta ahead.hospitality@gmail.com) y desplegar como Aplicación web:
  *   Ejecutar como: Yo   ·   Quién tiene acceso: Cualquier usuario
  * La URL que termina en /exec va en evaluador/config.js → endpoint.
  *
  * Qué hace:
  *  - registrar  (POST, público): agrega una fila por evaluación. No duplica
- *    si el mismo id llega dos veces (reintentos del modo offline).
- *  - listar     (GET, con clave): devuelve todas las evaluaciones al panel.
- *  - actualizar (POST, con clave): cambia estado comercial, asesor y notas.
+ *    si el mismo id llega dos veces (reintentos sin conexión).
+ *  - login      (POST): correo + contraseña del equipo → sesión firmada (7 días).
+ *  - listar     (GET, con sesión): devuelve todas las evaluaciones al panel.
+ *  - actualizar (POST, con sesión): cambia estado comercial, asesor y notas.
+ *
+ * La contraseña NO se guarda en este repositorio público: aquí va solo su
+ * huella SHA-256 (CLAVE_SHA256), y únicamente en la copia del Apps Script.
+ * Para cambiarla: ejecutar huella('nueva contraseña') en el editor y pegar
+ * el resultado en CLAVE_SHA256. Al cambiarla se cierran todas las sesiones.
  */
 
-// Clave del panel interno. Cámbiala antes de desplegar y compártela solo con el equipo.
-const CLAVE_EQUIPO = 'cambia-esta-clave';
+const HOJA_ID = '1V2pylFWbQc-5oo-2qWM1mmL9cYyXRCxNVVX3DTaq3Jk';
+const USUARIO_EQUIPO = 'ahead.hospitality@gmail.com';
+const CLAVE_SHA256 = 'PEGAR_AQUI_LA_HUELLA';
+const DIAS_SESION = 7;
 
 // Opcional: correo que recibe un aviso con cada lead nuevo (vacío = sin aviso).
 const CORREO_AVISO = '';
@@ -32,6 +40,7 @@ const COLUMNAS = [
 function doPost(e) {
   try {
     const body = JSON.parse(e.postData.contents);
+    if (body.accion === 'login') return login_(body);
     if (body.accion === 'actualizar') return actualizar_(body);
     return registrar_(body.registro || body);
   } catch (err) {
@@ -42,14 +51,14 @@ function doPost(e) {
 function doGet(e) {
   const p = (e && e.parameter) || {};
   if (p.accion === 'listar') {
-    if (p.clave !== CLAVE_EQUIPO) return json_({ ok: false, error: 'clave' });
+    if (!sesionValida_(p.token)) return json_({ ok: false, error: 'sesion' });
     return json_({ ok: true, registros: listar_() });
   }
   return json_({ ok: true, servicio: 'Ahead · Evaluador de propiedades' });
 }
 
 function hoja_() {
-  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const ss = SpreadsheetApp.openById(HOJA_ID);
   let sh = ss.getSheetByName(HOJA);
   if (!sh) {
     sh = ss.insertSheet(HOJA);
@@ -115,7 +124,7 @@ function listar_() {
 }
 
 function actualizar_(b) {
-  if (b.clave !== CLAVE_EQUIPO) return json_({ ok: false, error: 'clave' });
+  if (!sesionValida_(b.token)) return json_({ ok: false, error: 'sesion' });
   const sh = hoja_();
   const celda = sh.getRange('A:A').createTextFinder(b.id).matchEntireCell(true).findNext();
   if (!celda) return json_({ ok: false, error: 'no encontrado' });
@@ -125,6 +134,49 @@ function actualizar_(b) {
     if (b[k] !== undefined) sh.getRange(fila, cab.indexOf(k) + 1).setValue(b[k]);
   });
   return json_({ ok: true });
+}
+
+/* ---------- Sesión del panel ---------- */
+function huella(texto) {
+  const b = Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256, texto, Utilities.Charset.UTF_8);
+  const hex = b.map(function (x) { return ('0' + (x & 0xff).toString(16)).slice(-2); }).join('');
+  Logger.log(hex);
+  return hex;
+}
+
+function secreto_() {
+  const props = PropertiesService.getScriptProperties();
+  let s = props.getProperty('SECRETO_SESION');
+  if (!s) { s = Utilities.getUuid() + Utilities.getUuid(); props.setProperty('SECRETO_SESION', s); }
+  return s + CLAVE_SHA256; // cambiar la contraseña invalida las sesiones
+}
+
+function firmar_(texto) {
+  return Utilities.base64EncodeWebSafe(Utilities.computeHmacSha256Signature(texto, secreto_()));
+}
+
+function login_(b) {
+  const cache = CacheService.getScriptCache();
+  const fallos = Number(cache.get('fallos') || 0);
+  if (fallos >= 15) return json_({ ok: false, error: 'bloqueado' });
+  const email = String(b.email || '').trim().toLowerCase();
+  if (email !== USUARIO_EQUIPO || huella(String(b.password || '')) !== CLAVE_SHA256) {
+    cache.put('fallos', String(fallos + 1), 600);
+    Utilities.sleep(800);
+    return json_({ ok: false, error: 'credenciales' });
+  }
+  const exp = Date.now() + DIAS_SESION * 864e5;
+  const datos = email + '|' + exp;
+  return json_({ ok: true, token: Utilities.base64EncodeWebSafe(datos) + '.' + firmar_(datos), expira: exp });
+}
+
+function sesionValida_(token) {
+  if (!token || String(token).indexOf('.') < 0) return false;
+  const partes = String(token).split('.');
+  let datos;
+  try { datos = Utilities.newBlob(Utilities.base64DecodeWebSafe(partes[0])).getDataAsString(); } catch (e) { return false; }
+  if (firmar_(datos) !== partes[1]) return false;
+  return Number(datos.split('|')[1]) > Date.now();
 }
 
 function json_(o) {

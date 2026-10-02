@@ -18,18 +18,18 @@ window.AHEAD_EVAL = {
   endpoint: "",
 
   // Link a la hoja de cálculo (solo se muestra en el panel del equipo).
-  hojaUrl: "",
+  hojaUrl: "https://docs.google.com/spreadsheets/d/1V2pylFWbQc-5oo-2qWM1mmL9cYyXRCxNVVX3DTaq3Jk/edit",
 
   // Política de tratamiento de datos de Ahead (si existe una URL pública).
   politicaDatosUrl: "",
 
   // WhatsApp de propietarios (botón final del resultado).
-  whatsapp: "https://wa.me/573000000000?text=Hola%20Ahead%2C%20acabo%20de%20evaluar%20mi%20propiedad%20y%20quiero%20hablar%20con%20un%20asesor.",
+  whatsapp: "https://wa.me/573142701520?text=Hola%20Ahead%2C%20acabo%20de%20evaluar%20mi%20propiedad%20y%20quiero%20hablar%20con%20un%20asesor.",
 
-  /* ---------- Stand ---------- */
-  // Con ?modo=stand en la URL aparece el campo "Atendido por", el contador
-  // de pendientes y el botón de nueva evaluación.
-  asesores: ["María Paula", "Daniel", "Lina", "Andrés", "Kevin", "Otro"],
+  /* ---------- Equipo en el stand ---------- */
+  // Nombres del campo opcional "¿Te está atendiendo alguien de Ahead?".
+  // PENDIENTE: confirmar quién estará en el stand y editar esta lista.
+  asesores: ["Daniel", "Lina", "Otra persona de Ahead"],
 
   /* ---------- Motor de estimación ---------- */
   modelo: {

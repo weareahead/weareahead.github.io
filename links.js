@@ -10,8 +10,8 @@
    - Agregar un link  → copia un bloque { ... }, pégalo y cambia sus datos.
    Los links en "pendiente" NO se muestran al público.
 
-   Íconos disponibles: web, instagram, tiktok, linkedin, facebook, x, whatsapp
-   Estilos de botón:   "destacado" (naranja), "claro" (crema), "red" (lista de redes)
+   Íconos disponibles: web, instagram, tiktok, linkedin, facebook, x, whatsapp, evaluar
+   Estilos de botón:   "destacado" (naranja), "claro" (crema), "contorno" (borde crema), "red" (lista de redes)
    ============================================================ */
 
 window.AHEAD = {
@@ -38,6 +38,14 @@ window.AHEAD = {
           url: "https://api.whatsapp.com/send?phone=573212489748&text=Hola%20Ahead%2C%20quiero%20reservar%20una%20estad%C3%ADa.",
           icono: "whatsapp",
           estilo: "claro",
+          estado: "activo"
+        },
+        {
+          texto: "Evalúa tu propiedad",
+          detalle: "Descubre cuánto podría generar en 2 minutos",
+          url: "https://weareahead.github.io/evaluador/",
+          icono: "evaluar",
+          estilo: "contorno",
           estado: "activo"
         }
       ]

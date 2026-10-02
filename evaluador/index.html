@@ -46,13 +46,6 @@ body{margin:0;min-height:100vh;min-height:100dvh;
 main{position:relative;z-index:1;max-width:540px;margin:0 auto;padding-inline:20px;
   padding-block:calc(28px + env(safe-area-inset-top,0px)) calc(40px + env(safe-area-inset-bottom,0px))}
 
-/* Barra modo stand */
-.stand{display:flex;align-items:center;gap:8px;flex-wrap:nowrap;justify-content:space-between;
-  margin-bottom:18px;padding:8px 8px 8px 14px;border-radius:var(--radius-pill);
-  background:rgba(239,235,253,.08);border:1px solid var(--line);font-size:13px}
-.stand span{flex:1;white-space:nowrap}
-.stand b{font-weight:600;color:var(--soft-lila);letter-spacing:.12em;text-transform:uppercase;font-size:11px}
-.stand button{font:inherit;font-size:13px;font-weight:500;color:var(--cream);background:rgba(239,235,253,.1);border:0;border-radius:var(--radius-pill);padding:6px 12px;cursor:pointer}
 
 header{display:flex;flex-direction:column;align-items:center;text-align:center;gap:12px;margin-bottom:26px}
 .logo{width:72px;height:auto}
@@ -135,13 +128,13 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--naranja);outline-of
 .rango .barra{position:relative;height:10px;border-radius:10px;background:linear-gradient(90deg,#E6DCF5,#B149F0 50%,var(--naranja))}
 .rango .marca{position:absolute;top:50%;width:20px;height:20px;border-radius:50%;background:var(--dark-morada);border:3px solid var(--cream);transform:translate(-50%,-50%)}
 .rango .ext{display:flex;justify-content:space-between;margin-top:10px;font-size:12.5px;color:rgba(59,11,69,.75)}
-.rango .ext b{display:block;font-family:var(--font-display);font-weight:600;font-size:16px;color:var(--dark-morada)}
+.rango .ext b{display:block;font-family:var(--font-display);font-weight:600;font-size:15px;font-variant-numeric:tabular-nums;color:var(--dark-morada)}
 .rango .ext div:last-child{text-align:right}
 
 .stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .stat{background:rgba(239,235,253,.08);border:1px solid var(--line);border-radius:18px;padding:16px}
 .stat .k{font-size:12.5px;color:var(--muted)}
-.stat .v{margin-top:4px;font-family:var(--font-display);font-weight:600;font-size:22px;letter-spacing:-.02em;line-height:1.15}
+.stat .v{margin-top:4px;font-family:var(--font-display);font-weight:600;font-size:clamp(17px,5vw,22px);font-variant-numeric:tabular-nums;letter-spacing:-.02em;line-height:1.15}
 .stat .d{font-size:12px;color:var(--muted)}
 
 .bloque{background:rgba(239,235,253,.06);border:1px solid var(--line);border-radius:20px;padding:18px}
@@ -153,6 +146,13 @@ th:last-child,td:last-child{padding-right:0}
 thead th{font-size:11.5px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
 td.medio,th.medio{color:var(--cream);font-weight:600}
 tbody tr:last-child td{border-bottom:0}
+.escs{display:flex;flex-direction:column;gap:8px}
+.esc{display:grid;grid-template-columns:1fr auto;gap:2px 12px;padding:14px;border-radius:14px;background:rgba(239,235,253,.05);border:1px solid var(--line)}
+.esc.medio{background:rgba(239,235,253,.12);border-color:rgba(244,240,232,.4)}
+.esc .n{font-size:12px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--soft-lila)}
+.esc .m{grid-row:span 2;align-self:center;text-align:right;font-family:var(--font-display);font-weight:600;font-size:19px;letter-spacing:-.015em;font-variant-numeric:tabular-nums}
+.esc .m small{display:block;font-family:var(--font-body);font-weight:300;font-size:12px;color:var(--muted);letter-spacing:0}
+.esc .d{font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums}
 details summary{cursor:pointer;font-family:var(--font-display);font-weight:600;font-size:17px;list-style:none;display:flex;justify-content:space-between;align-items:center}
 details summary::-webkit-details-marker{display:none}
 details summary::after{content:"+";font-size:22px;font-weight:400;color:var(--muted)}
@@ -182,13 +182,6 @@ footer .firma{margin:0 0 4px;font-family:var(--font-display);font-weight:500;fon
 <svg class="watermark" viewBox="119 174 962 852" aria-hidden="true"><path d="M600,1024.76l-333.49.26c-86.76-2.51-147.01-70.37-146.63-155.98.48-105.93,1.63-209.36,15.85-315.14,6.65-49.48,32.65-90.79,67.74-125.64,90.53-89.9,194.09-162.32,304.52-226.08,29.78-17.2,60.7-26.98,92.01-27.21,31.31.23,62.22,10.01,92.01,27.21,110.43,63.77,213.99,136.19,304.52,226.08,35.09,34.85,61.09,76.16,67.74,125.64,14.22,105.78,15.37,209.21,15.85,315.14.39,85.61-59.86,153.47-146.63,155.98l-333.49-.26h0Z"/></svg>
 
 <main>
-  <div class="stand" id="barraStand" hidden>
-    <b>Modo stand</b>
-    <span id="pendientes">0 pendientes</span>
-    <button type="button" id="btnSync">Sincronizar</button>
-    <button type="button" id="btnCsv">CSV</button>
-  </div>
-
   <header class="in">
     <img class="logo" src="../assets/logo-ahead.svg" alt="Ahead" width="72" height="65">
     <p class="eyebrow">Evaluador de propiedades</p>
@@ -208,8 +201,8 @@ footer .firma{margin:0 0 4px;font-family:var(--font-display);font-weight:500;fon
       <h2 id="h-p1">Tus datos</h2>
       <p class="sub">Para enviarte el resultado y que un asesor pueda acompañarte.</p>
 
-      <div class="campo" id="c-asesor" hidden>
-        <label for="asesor">Atendido por</label>
+      <div class="campo" id="c-asesor">
+        <label for="asesor">¿Te está atendiendo alguien de Ahead? <span class="opc">(opcional)</span></label>
         <select id="asesor" name="asesor"></select>
       </div>
 
@@ -298,10 +291,7 @@ footer .firma{margin:0 0 4px;font-family:var(--font-display);font-weight:500;fon
 
     <div class="bloque in">
       <h3>Escenarios</h3>
-      <table>
-        <thead><tr><th></th><th>Conservador</th><th class="medio">Medio</th><th>Alto</th></tr></thead>
-        <tbody id="rTabla"></tbody>
-      </table>
+      <div class="escs" id="rEsc"></div>
     </div>
 
     <details class="bloque in">
@@ -334,8 +324,7 @@ footer .firma{margin:0 0 4px;font-family:var(--font-display);font-weight:500;fon
 (function(){
   var C = window.AHEAD_EVAL, M = C.modelo, Mo = window.AheadMotor;
   var qs = new URLSearchParams(location.search);
-  var MODO_STAND = qs.get("modo") === "stand";
-  var ORIGEN = qs.get("origen") || (MODO_STAND ? "stand" : "web");
+  var ORIGEN = qs.get("origen") || "web";
   var COLA = "ahead_eval_cola_v1";
   var $ = function(id){ return document.getElementById(id); };
   document.getElementById("anio").textContent = new Date().getFullYear();
@@ -370,16 +359,10 @@ footer .firma{margin:0 0 4px;font-family:var(--font-display);font-weight:500;fon
   }
   $("btnWhats").href = C.whatsapp;
 
-  /* ---------- Modo stand ---------- */
-  if (MODO_STAND) {
-    $("barraStand").hidden = false;
-    $("c-asesor").hidden = false;
-    $("asesor").innerHTML = '<option value="">Elige…</option>' + C.asesores.map(function(a){return '<option>'+esc(a)+'</option>'}).join("");
-    try { var ult = localStorage.getItem("ahead_eval_asesor"); if (ult) $("asesor").value = ult; } catch(e){}
-    $("asesor").addEventListener("change", function(){ try{ localStorage.setItem("ahead_eval_asesor", this.value) }catch(e){} });
-    $("c-asesor").setAttribute("data-req","");
-    $("c-asesor").insertAdjacentHTML("beforeend",'<span class="err">¿Quién está atendiendo?</span>');
-  }
+  /* ---------- Asesor (opcional) ---------- */
+  $("asesor").innerHTML = '<option value="">No, lo hago por mi cuenta</option>' + C.asesores.map(function(a){return '<option>'+esc(a)+'</option>'}).join("");
+  try { var ult = localStorage.getItem("ahead_eval_asesor"); if (ult && C.asesores.indexOf(ult) >= 0) $("asesor").value = ult; } catch(e){}
+  $("asesor").addEventListener("change", function(){ try{ localStorage.setItem("ahead_eval_asesor", this.value) }catch(e){} });
 
   /* ---------- Condicionales ---------- */
   var form = $("form");
@@ -479,7 +462,7 @@ footer .firma{margin:0 0 4px;font-family:var(--font-display);font-weight:500;fon
     irA(3);
 
     var registro = {
-      id: uid(), fecha: new Date().toISOString(), origen: ORIGEN, asesor: MODO_STAND ? val("asesor") : "",
+      id: uid(), fecha: new Date().toISOString(), origen: ORIGEN, asesor: val("asesor"),
       lead: lead, inmueble: inm, resultado: res, calificacion: cal,
       consentimiento: true, dispositivo: navigator.userAgent.slice(0,160)
     };
@@ -491,24 +474,20 @@ footer .firma{margin:0 0 4px;font-family:var(--font-display);font-weight:500;fon
   function pintar(lead, inm, r){
     var E = r.escenarios, m = E.medio;
     $("rPara").textContent = (lead.proyecto ? lead.proyecto + " · " : "") + inm.tipoInmueble + " en " + lead.ciudad + (r.unidades > 1 ? " · " + r.unidades + " unidades" : "");
-    $("rMensual").textContent = Mo.fmtCorto(m.mensual);
-    $("rCons").textContent = Mo.fmtCorto(E.conservador.mensual);
-    $("rAlto").textContent = Mo.fmtCorto(E.alto.mensual);
+    $("rMensual").textContent = Mo.fmt(m.mensual);
+    $("rCons").textContent = Mo.fmt(E.conservador.mensual);
+    $("rAlto").textContent = Mo.fmt(E.alto.mensual);
     var pct = (m.mensual - E.conservador.mensual) / Math.max(1, E.alto.mensual - E.conservador.mensual) * 100;
     $("rMarca").style.left = Math.max(6, Math.min(94, pct)) + "%";
     $("rTarifa").textContent = Mo.fmt(m.tarifa);
     $("rOcup").textContent = m.ocupacion + " %";
     $("rNoches").textContent = "≈ " + m.noches + " noches al mes";
-    $("rAnual").textContent = Mo.fmtCorto(m.anual);
-    $("rRangoAnual").textContent = Mo.fmtCorto(E.conservador.anual).replace(/ M$/,"") + "–" + Mo.fmtCorto(E.alto.anual);
-    var filas = [
-      ["Tarifa / noche", function(e){return Mo.fmt(e.tarifa)}],
-      ["Ocupación", function(e){return e.ocupacion+" %"}],
-      ["Mensual", function(e){return Mo.fmtCorto(e.mensual)}],
-      ["Anual", function(e){return Mo.fmtCorto(e.anual)}]
-    ];
-    $("rTabla").innerHTML = filas.map(function(f){
-      return "<tr><td>"+f[0]+"</td><td>"+f[1](E.conservador)+'</td><td class="medio">'+f[1](E.medio)+"</td><td>"+f[1](E.alto)+"</td></tr>";
+    $("rAnual").textContent = Mo.fmt(m.anual);
+    $("rRangoAnual").innerHTML = Mo.fmt(E.conservador.anual) + "<br>– " + Mo.fmt(E.alto.anual);
+    $("rEsc").innerHTML = [["conservador","Conservador"],["medio","Medio"],["alto","Alto"]].map(function(k){
+      var e = E[k[0]];
+      return '<div class="esc '+k[0]+'"><span class="n">'+k[1]+'</span><span class="m">'+Mo.fmt(e.mensual)+'<small>al mes</small></span>'
+        + '<span class="d">'+Mo.fmt(e.tarifa)+' / noche · '+e.ocupacion+' % ocupación<br>'+Mo.fmt(e.anual)+' al año</span></div>';
     }).join("");
     $("rVars").innerHTML = r.variables.map(function(v){return "<dt>"+esc(v[0])+"</dt><dd>"+esc(v[1])+"</dd>"}).join("")
       + "<dt>Modelo</dt><dd>"+esc(r.modelo)+"</dd>";
@@ -519,14 +498,14 @@ footer .firma{margin:0 0 4px;font-family:var(--font-display);font-weight:500;fon
   var memCola = [];
   function guardarCola(c){ memCola = c; try { localStorage.setItem(COLA, JSON.stringify(c)); } catch(e){} contar(); }
   function encolar(r){ var c = leerCola(); c.push(r); guardarCola(c); }
-  function contar(){ var n = leerCola().length; $("pendientes").textContent = n + (n === 1 ? " pendiente" : " pendientes"); }
+  function contar(){}
   function estadoEnvio(cls, txt){ var s = $("estadoEnvio"); s.className = "estado-envio " + cls; s.lastElementChild.textContent = txt; }
 
   var enviando = false;
   function sincronizar(){
     var cola = leerCola();
     if (!cola.length) { contar(); return; }
-    if (!C.endpoint) { estadoEnvio("cola", MODO_STAND ? "Guardado en este dispositivo (falta conectar la hoja)" : "Recibido"); contar(); return; }
+    if (!C.endpoint) { estadoEnvio("cola", "Recibido"); contar(); return; }
     if (enviando) return; enviando = true;
     var r = cola[0];
     fetch(C.endpoint, { method:"POST", headers:{"Content-Type":"text/plain;charset=utf-8"}, body: JSON.stringify({accion:"registrar", registro:r}) })
@@ -540,35 +519,19 @@ footer .firma{margin:0 0 4px;font-family:var(--font-display);font-weight:500;fon
       })
       .catch(function(){
         enviando = false;
-        estadoEnvio("cola", MODO_STAND ? "Sin conexión: guardado en el dispositivo, se enviará al reconectar" : "Recibido");
+        estadoEnvio("cola", "Recibido · se enviará al recuperar la conexión");
         contar();
       });
   }
   window.addEventListener("online", sincronizar);
   setInterval(sincronizar, 60000);
   sincronizar(); contar();
-  $("btnSync").addEventListener("click", sincronizar);
-
-  // Respaldo: descarga lo pendiente en CSV (por si el stand no tiene internet).
-  $("btnCsv").addEventListener("click", function(){
-    var c = leerCola();
-    if (!c.length) { $("pendientes").textContent = "Nada pendiente"; setTimeout(contar, 1800); return; }
-    var cols = ["id","fecha","origen","asesor","nombre","apellido","email","telefono","empresa","cargo","proyecto","ciudad","tipoProyecto","rol","tipoInmueble","unidades","estrato","habitaciones","banos","mensualMedio","anualMedio","clase","puntaje","json"];
-    var q = function(v){ v = v==null?"":String(v); return '"' + v.replace(/"/g,'""') + '"'; };
-    var lineas = [cols.join(",")].concat(c.map(function(r){
-      var L=r.lead, I=r.inmueble, m=r.resultado.escenarios.medio;
-      return [r.id,r.fecha,r.origen,r.asesor,L.nombre,L.apellido,L.email,L.telefono,L.empresa,L.cargo,L.proyecto,L.ciudad,L.tipoProyecto,L.rol,I.tipoInmueble,I.unidades,I.estrato,I.habitaciones,I.banos,m.mensual,m.anual,r.calificacion.clase,r.calificacion.puntaje,JSON.stringify(r)].map(q).join(",");
-    }));
-    var blob = new Blob(["﻿" + lineas.join("\n")], {type:"text/csv;charset=utf-8"});
-    var a = document.createElement("a"); a.href = URL.createObjectURL(blob);
-    a.download = "ahead-evaluaciones-pendientes-" + new Date().toISOString().slice(0,10) + ".csv"; a.click();
-  });
 
   /* ---------- Nueva evaluación ---------- */
   $("btnNueva").addEventListener("click", function(){
-    var asesor = MODO_STAND ? $("asesor").value : "";
+    var asesor = $("asesor").value;
     form.reset();
-    if (MODO_STAND) $("asesor").value = asesor;
+    $("asesor").value = asesor;
     $("c-ciudadOtra").hidden = true; $("c-unidades").hidden = true;
     form.querySelectorAll(".invalido").forEach(function(c){ c.classList.remove("invalido"); });
     estadoEnvio("", "Guardando…");
