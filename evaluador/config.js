@@ -15,7 +15,7 @@ window.AHEAD_EVAL = {
   /* ---------- Conexión ---------- */
   // URL del Web App de Google Apps Script (termina en /exec). Vacío = las
   // evaluaciones quedan en cola en el dispositivo hasta que se configure.
-  endpoint: "",
+  endpoint: "https://script.google.com/macros/s/AKfycbxuXhO_6-Yv9lrJ7pcjBofT4lPqX_j2kD8xzVrrFGBq-H-H6st1fwcotFBXQI_w4dQP/exec",
 
   // Link a la hoja de cálculo (solo se muestra en el panel del equipo).
   hojaUrl: "https://docs.google.com/spreadsheets/d/1V2pylFWbQc-5oo-2qWM1mmL9cYyXRCxNVVX3DTaq3Jk/edit",
