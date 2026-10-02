@@ -7,6 +7,10 @@
       multiplicadores) cuando Daniel o Lina entreguen datos reales.
    3. Cambiar la lista de asesores del stand.
 
+   Al editar este archivo, sube también el ?v= de los <script> en
+   evaluador/index.html y equipo/index.html para que los celulares no usen
+   una copia vieja.
+
    Versión del modelo: súbela cada vez que cambies un supuesto. Queda
    guardada con cada evaluación para saber con qué números se calculó.
    ===================================================================== */
