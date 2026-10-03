@@ -72,6 +72,8 @@ h1{margin:0;font-family:var(--font-display);font-weight:600;font-size:clamp(28px
 
 .fila{display:grid;grid-template-columns:1fr;gap:20px}
 @media (min-width:420px){.fila.dos{grid-template-columns:1fr 1fr;gap:14px}}
+.fila.par{grid-template-columns:1fr 1fr;gap:12px}
+.fila.par .campo{min-width:0}
 .campo{display:flex;flex-direction:column;gap:8px;min-width:0}
 .campo > label,.campo > .lbl{font-size:14px;font-weight:500;color:var(--cream)}
 .campo .opc{font-weight:300;color:var(--muted)}
@@ -291,11 +293,11 @@ footer .firma{margin:0 0 4px;font-family:var(--font-display);font-weight:500;fon
 
       <div class="firmado" id="avisoFirmado" hidden><span>Esta evaluación quedará registrada a nombre de <b id="firmadoNombre"></b>.</span></div>
 
-      <div class="fila dos">
+      <div class="fila dos par">
         <div class="campo" data-req><label for="nombre">Nombre</label><input id="nombre" name="nombre" type="text" autocomplete="given-name"><span class="err">Escribe tu nombre.</span></div>
         <div class="campo" data-req><label for="apellido">Apellido</label><input id="apellido" name="apellido" type="text" autocomplete="family-name"><span class="err">Escribe tu apellido.</span></div>
       </div>
-      <div class="fila dos">
+      <div class="fila">
         <div class="campo" data-req="email"><label for="email">Email</label><input id="email" name="email" type="email" autocomplete="email" inputmode="email" placeholder="nombre@correo.com"><span class="err">Revisa el correo.</span></div>
         <div class="campo" data-req="tel"><label for="telefono">Celular / WhatsApp</label>
           <div class="tel">
