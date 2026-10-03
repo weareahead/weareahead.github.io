@@ -178,6 +178,17 @@ tbody tr:hover{background:#FBF9F5}
 .tag.Bajo{background:var(--bajo-bg);color:var(--bajo)}
 .tag.No{background:var(--nov-bg);color:var(--nov)}
 .est{display:inline-block;padding:3px 9px;border-radius:6px;font-size:12px;background:var(--soft-lila);color:var(--morada);white-space:nowrap}
+/* Colores por estado comercial del lead */
+.ec{display:inline-flex;align-items:center;gap:6px;padding:3px 10px;border-radius:999px;font-size:12px;font-weight:600;white-space:nowrap}
+.ec::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+.ec.nuevo{background:#EFEBFD;color:#5C1F63}
+.ec.contactado{background:#FFF3C4;color:#7A5900}
+.ec.evaluacion{background:#FFE5D3;color:#B4470F}
+.ec.propuesta{background:#DCEAFF;color:#1D4F91}
+.ec.ganado{background:#DCF2E3;color:#1F7A4D}
+.ec.perdido{background:#EEEBE6;color:#7D766F}
+.ec.noviable{background:#FBE0DA;color:#A1301B}
+.det select#dEstado{font-weight:600}
 .vacio{padding:40px;text-align:center;color:var(--ink-2)}
 
 /* Detalle */
@@ -563,6 +574,8 @@ tbody tr:hover{background:#FBF9F5}
     S.post({accion:"usuarios", token:sesion().token}).then(function(j){
       if (!j.ok) return;
       var admin = !!j.admin, yoEmail = (sesion()||{}).email;
+      equipo = j.usuarios.filter(function(u){ return u.estado === "activo" || u.estado === "admin"; }).map(function(u){ return {email:u.email, nombre:u.nombre}; });
+      opcionesFiltros();
       var pend = admin ? j.usuarios.filter(function(u){return u.estado === "pendiente"}).length : 0;
       $("badgePend").hidden = !pend; $("badgePend").textContent = pend;
       $("equipoIntro").textContent = admin
@@ -622,13 +635,12 @@ tbody tr:hover{background:#FBF9F5}
     // Ciudades y orígenes: salen de los leads registrados, así cada ciudad nueva aparece sola.
     sel("fCiudad", "Todas las ciudades", uniq(datos.map(function(r){return r.lead.ciudad})).map(function(c){return [c,c]}));
     sel("fOrigen", "Todos los orígenes", uniq(datos.map(function(r){return r.origen})).map(function(c){return [c,c]}));
-    // Usuarios: todas las cuentas activas del equipo + quienes ya registraron leads.
+    // Usuarios: solo las cuentas creadas en Equipo (activas + administradora).
+    // Se actualiza cada vez que se cargan los datos o la lista del equipo.
     var us = {}; (equipo||[]).forEach(function(u){ if (u.email) us[u.email] = u.nombre || u.email; });
-    datos.forEach(function(r){ if (r.asesor && !us[r.asesor]) us[r.asesor] = r.asesorNombre || r.asesor; });
     var pares = Object.keys(us).sort(function(a,b){ return String(us[a]).localeCompare(String(us[b])); }).map(function(e){ return [e, us[e] + " · " + e]; });
-    if (yo && !demo) pares.unshift(["__yo", "Mis evaluaciones"]);
-    pares.push(["__qr", "Sin usuario · QR / por su cuenta"]);
     sel("fUsuario", "Todos los usuarios", pares);
+    if (F.usuario && !us[F.usuario]) { F.usuario = ""; pintarEstadoFiltros(); }
   }
   function leerPanel(){
     var mn = Number($("fMin").value), mx = Number($("fMax").value);
@@ -687,9 +699,7 @@ tbody tr:hover{background:#FBF9F5}
       if (F.ciudad && L.ciudad !== F.ciudad) return false;
       if (F.estado && (r.estadoComercial||"Nuevo") !== F.estado) return false;
       if (F.origen && r.origen !== F.origen) return false;
-      if (F.usuario === "__yo" && (!yo || r.asesor !== yo.email)) return false;
-      if (F.usuario === "__qr" && r.asesor) return false;
-      if (F.usuario && F.usuario.indexOf("__") !== 0 && r.asesor !== F.usuario) return false;
+      if (F.usuario && r.asesor !== F.usuario) return false;
       if (q && [L.nombre,L.apellido,L.empresa,L.proyecto,L.direccion,L.email,L.telefono,r.inmueble.zona,r.asesorNombre].join(" ").toLowerCase().indexOf(q) < 0) return false;
       return true;
     }).sort(function(a,b){
@@ -701,6 +711,8 @@ tbody tr:hover{background:#FBF9F5}
       var x = v(a), y = v(b); return (x>y?1:x<y?-1:0) * orden.dir;
     });
   }
+  var CLASE_ESTADO = {"Nuevo":"nuevo","Contactado":"contactado","En evaluación":"evaluacion","Propuesta enviada":"propuesta","Cerrado ganado":"ganado","Cerrado perdido":"perdido","No viable":"noviable"};
+  function estadoTag(e){ e = e || "Nuevo"; return '<span class="ec '+(CLASE_ESTADO[e]||"nuevo")+'">'+esc(e)+'</span>'; }
   function claseTag(c){ return '<span class="tag '+esc((c||"").split(" ")[0])+'">'+esc(c)+'</span>'; }
   function fecha(f){ var d = new Date(f); return d.toLocaleDateString("es-CO",{day:"2-digit",month:"short"}) + " · " + d.toLocaleTimeString("es-CO",{hour:"2-digit",minute:"2-digit"}); }
 
@@ -743,7 +755,7 @@ tbody tr:hover{background:#FBF9F5}
         + '<td>'+esc(L.tipoProyecto)+'<div class="sb">'+esc(r.inmueble.tipoInmueble)+(r.resultado.unidades>1?" · "+r.resultado.unidades+" u.":"")+'</div></td>'
         + '<td class="num">'+Mo.fmt(r.resultado.escenarios.medio.mensual)+'</td>'
         + '<td class="num">'+claseTag(r.calificacion.clase)+'<div class="sb">'+r.calificacion.puntaje+' / 100</div></td>'
-        + '<td><span class="est">'+esc(r.estadoComercial||"Nuevo")+'</span></td>'
+        + '<td>'+estadoTag(r.estadoComercial)+'</td>'
         + '<td>'+esc(r.asesorNombre||r.asesor||"—")+'</td></tr>';
     }).join("") : '<tr><td colspan="8" class="vacio">'+(datos.length ? "Ningún lead coincide con los filtros." : "Aún no hay evaluaciones registradas.")+'</td></tr>';
   }
@@ -832,7 +844,7 @@ tbody tr:hover{background:#FBF9F5}
       ["Natalia","Herrera","","","Apto Rodadero","Santa Marta","Unidad individual","Propietario","Apartamento",1,"El Rodadero","4","2","2","Zona turística o corporativa","Sí, básico","Buen estado",["Piscina","Vista"],"Sí","En trámite","Ya mismo","Q",""],
       ["Ricardo","Lozano","Lozano & Cía","Socio","Mirador del Lago","Girardot / Anapoima","Proyecto en construcción","Constructora / desarrollador","Casa campestre / finca",8,"Peñalisa","5","3","3","Buena conectividad","No","Nuevo o remodelado",["Piscina","Jacuzzi o BBQ","Pet friendly"],"No sé","No","Está en construcción","E","Daniel"]
     ];
-    var estados = ["Contactado","Nuevo","En evaluación","Nuevo","Propuesta enviada","No viable","Nuevo","Contactado"];
+    var estados = ["Contactado","Nuevo","En evaluación","Cerrado ganado","Propuesta enviada","No viable","Cerrado perdido","Contactado"];
     return base.map(function(b,i){
       var lead = {nombre:b[0],apellido:b[1],email:(b[0]+"."+b[1]).toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"")+"@ejemplo.com",telefono:"300 000 00"+(10+i),empresa:b[2],cargo:b[3],proyecto:b[4],ciudad:b[5],tipoProyecto:b[6],rol:b[7]};
       var inm = {ciudad:b[5],tipoInmueble:b[8],unidades:b[9],zona:b[10],estrato:b[11],habitaciones:b[12],banos:b[13],ubicacion:b[14],amoblado:b[15],estado:b[16],amenidades:b[17],ph:b[18],rnt:b[19],inicio:b[20],area:"",arriendoActual:i%3===0?3200000:""};
