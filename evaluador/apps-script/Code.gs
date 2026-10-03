@@ -1,5 +1,5 @@
 /**
- * EVALUADOR DE PROPIEDADES AHEAD — Backend en Google Sheets  (v4)
+ * EVALUADOR DE PROPIEDADES AHEAD — Backend en Google Sheets  (v5)
  * ---------------------------------------------------------------
  * Proyecto de Apps Script «Ahead · Evaluador de propiedades (backend)»
  * en la cuenta ahead.hospitality@gmail.com, publicado como Aplicación web:
@@ -16,7 +16,8 @@
  *  - login                   correo + contraseña → sesión firmada (7 días).
  *  - listar      (sesión)   evaluaciones + equipo activo.
  *  - actualizar  (sesión)   estado comercial, asesor y notas de un lead.
- *  - usuarios    (admin)    lista de cuentas.
+ *  - usuarios    (sesión)   lista del equipo. Admin: todas las cuentas con su estado;
+ *                           resto del equipo: solo las cuentas activas, sin acciones.
  *  - perfil      (sesión)   leer el perfil propio (nombre, celular, cargo, foto).
  *  - perfil_guardar (sesión) actualizar el perfil propio.
  *  - clave       (sesión)   cambiar la contraseña propia (pide la actual).
@@ -79,7 +80,7 @@ function doGet(e) {
     if (!s) return json_({ ok: false, error: 'sesion' });
     return json_({ ok: true, registros: listar_(), equipo: equipoActivo_(), yo: s });
   }
-  return json_({ ok: true, servicio: 'Ahead · Evaluador de propiedades', version: 4 });
+  return json_({ ok: true, servicio: 'Ahead · Evaluador de propiedades', version: 5 });
 }
 
 /* ================= Hojas ================= */
@@ -265,10 +266,17 @@ function registroCuenta_(b) {
 
 function usuarios_(b) {
   const s = sesion_(b.token);
-  if (!s || s.rol !== 'admin') return json_({ ok: false, error: 'sesion' });
-  return json_({ ok: true, usuarios: leerUsuarios_().map(function (u) {
-    return { email: u.email, nombre: u.nombre, estado: u.estado, creado: u.creado, ultimoAcceso: u.ultimoAcceso, telefono: u.telefono || '', cargo: u.cargo || '', foto: u.foto || '' };
-  }) });
+  if (!s) return json_({ ok: false, error: 'sesion' });
+  const admin = s.rol === 'admin';
+  const pa = perfilAdmin_();
+  const lista = [{ email: USUARIO_EQUIPO, nombre: pa.nombre || 'Equipo Ahead', estado: 'admin', cargo: pa.cargo || 'Cuenta administradora',
+    telefono: pa.telefono || '', foto: pa.foto || '', creado: '', ultimoAcceso: '' }];
+  leerUsuarios_().forEach(function (u) {
+    if (!admin && u.estado !== 'activo') return;
+    lista.push({ email: u.email, nombre: u.nombre, estado: u.estado, cargo: u.cargo || '', telefono: String(u.telefono || ''),
+      foto: u.foto || '', creado: admin ? u.creado : '', ultimoAcceso: admin ? u.ultimoAcceso : '' });
+  });
+  return json_({ ok: true, admin: admin, usuarios: lista });
 }
 
 function usuarioEstado_(b) {

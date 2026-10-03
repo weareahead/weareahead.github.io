@@ -151,7 +151,7 @@ tbody tr:hover{background:#FBF9F5}
 .cerrar-x:hover{background:#F6F2F7;color:var(--ink)}
 .cerrar-x:focus-visible{outline:2px solid var(--naranja);outline-offset:2px}
 .cerrar-x svg{width:22px;height:22px}
-#detPerfil h2{padding-right:48px}
+#detPerfil h2,#detEquipo h2{padding-right:48px}
 .plegable{margin-top:24px;border:1px solid var(--line);border-radius:12px}
 .plegable summary{list-style:none;display:flex;justify-content:space-between;align-items:center;padding:12px 14px;cursor:pointer;font-weight:600;font-size:14px;border-radius:12px}
 .plegable summary::-webkit-details-marker{display:none}
@@ -182,8 +182,19 @@ tbody tr:hover{background:#FBF9F5}
 .badge{display:inline-grid;place-items:center;min-width:18px;height:18px;padding:0 5px;margin-left:6px;border-radius:9px;background:var(--naranja);color:var(--dark-morada);font-size:11px;font-weight:700}
 .mios{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--ink-2);padding:0 6px}
 .mios input{accent-color:var(--morada);width:16px;height:16px}
-.usuarios{display:flex;flex-direction:column;gap:8px}
-.usr{display:grid;grid-template-columns:1fr auto;gap:4px 12px;align-items:center;padding:12px;border:1px solid var(--line);border-radius:12px}
+.usuarios{display:flex;flex-direction:column;gap:10px}
+.usr{display:grid;grid-template-columns:52px 1fr;gap:4px 14px;align-items:start;padding:14px;border:1px solid var(--line);border-radius:14px}
+.usr > .av{width:52px;height:52px;font-size:17px;background:var(--soft-lila);color:var(--morada)}
+.usr .info{min-width:0}
+.usr .nm{font-weight:600;font-size:15px;display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+.usr .cargo{font-size:13px;color:var(--ink);margin-top:1px}
+.usr .contacto{display:flex;flex-wrap:wrap;gap:4px 14px;margin-top:6px;font-size:12.5px}
+.usr .contacto a{color:var(--morada);text-decoration:none;display:inline-flex;align-items:center;gap:5px;overflow-wrap:anywhere}
+.usr .contacto a:hover{text-decoration:underline}
+.usr .contacto svg{width:14px;height:14px;flex:none}
+.usr .acc{grid-column:2;margin-top:8px;justify-content:flex-start!important}
+.usr.yo{border-color:var(--morada)}
+.est.admin{background:var(--dark-morada);color:var(--cream)}
 .usr .acc{margin:0}
 .usr .btn{min-height:36px;padding:6px 14px;font-size:13px}
 .usr .btn.del{background:transparent;color:var(--nov);border:1px solid #E8B4A8}
@@ -291,9 +302,9 @@ tbody tr:hover{background:#FBF9F5}
 
 <div class="velo" id="velo"></div>
 <aside class="det" id="detEquipo" aria-label="Cuentas del equipo">
-  <button class="cerrar" type="button" id="cerrarEquipo">Cerrar</button>
-  <h2>Cuentas del equipo</h2>
-  <p class="sb">Aprueba a quienes deben ver los leads y usar el evaluador con su nombre. Desactivar una cuenta cierra su acceso de inmediato. Las cuentas rechazadas o desactivadas se pueden eliminar; sus evaluaciones se conservan.</p>
+  <button class="cerrar-x" type="button" id="cerrarEquipo" aria-label="Cerrar equipo" title="Cerrar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+  <h2>Equipo Ahead</h2>
+  <p class="sb" id="equipoIntro"></p>
   <div class="usuarios" id="listaUsuarios" style="margin-top:14px"></div>
 </aside>
 <aside class="det" id="detPerfil" aria-label="Mi perfil">
@@ -363,7 +374,7 @@ tbody tr:hover{background:#FBF9F5}
         pintarUsuario();
         if (!perfilCargado) { perfilCargado = true; S.perfil().then(pintarUsuario).catch(function(){}); }
         $("lblMios").hidden = false;
-        if (yo.rol === "admin") { $("btnEquipo").hidden = false; cargarUsuarios(); }
+        $("btnEquipo").hidden = false; cargarUsuarios();
       })
       .catch(function(){ listo(); $("msgAcceso").textContent = "No se pudo conectar con la hoja. Revisa la conexión."; });
   }
@@ -437,7 +448,7 @@ tbody tr:hover{background:#FBF9F5}
     if (!nombre) { aviso("pfOk", "Escribe tu nombre.", true); return; }
     b.disabled = true; aviso("pfOk", "Guardando…");
     S.guardarPerfil({ nombre: nombre, telefono: $("pfTel").value.trim(), cargo: $("pfCargo").value.trim(), foto: fotoNueva === null ? (s.foto || "") : fotoNueva })
-      .then(function(j){ b.disabled = false; if (!j.ok) { aviso("pfOk", S.mensaje(j.error), true); return; } fotoNueva = null; aviso("pfOk", "Perfil guardado"); pintarUsuario(); })
+      .then(function(j){ b.disabled = false; if (!j.ok) { aviso("pfOk", S.mensaje(j.error), true); return; } fotoNueva = null; aviso("pfOk", "Perfil guardado"); pintarUsuario(); cargarUsuarios(); })
       .catch(function(){ b.disabled = false; aviso("pfOk", S.mensaje(), true); });
   });
   $("fClave").addEventListener("submit", function(e){
@@ -489,19 +500,34 @@ tbody tr:hover{background:#FBF9F5}
   $("btnRecargar").addEventListener("click", function(){ if (!demo) cargar(); });
   if (C.endpoint && sesion()) { $("acceso").hidden = true; cargar(); }
 
-  /* ---------- Cuentas del equipo (solo admin) ---------- */
+  /* ---------- Equipo: todos lo ven; aprobar/eliminar solo el admin ---------- */
   function cargarUsuarios(){
     S.post({accion:"usuarios", token:sesion().token}).then(function(j){
       if (!j.ok) return;
-      var pend = j.usuarios.filter(function(u){return u.estado === "pendiente"}).length;
+      var admin = !!j.admin, yoEmail = (sesion()||{}).email;
+      var pend = admin ? j.usuarios.filter(function(u){return u.estado === "pendiente"}).length : 0;
       $("badgePend").hidden = !pend; $("badgePend").textContent = pend;
-      $("listaUsuarios").innerHTML = j.usuarios.length ? j.usuarios.sort(function(a,b){ return (a.estado==="pendiente"?0:1)-(b.estado==="pendiente"?0:1); }).map(function(u){
-        var e = esc(u.email), acc;
-        if (u.estado === "activo") acc = '<button class="btn sec" data-u="'+e+'" data-e="desactivado">Desactivar</button>';
-        else if (u.estado === "pendiente") acc = '<button class="btn" data-u="'+e+'" data-e="activo">Aprobar</button> <button class="btn sec" data-u="'+e+'" data-e="desactivado">Rechazar</button>';
-        else acc = '<button class="btn sec" data-u="'+e+'" data-e="activo">Reactivar</button> <button class="btn del" data-u="'+e+'" data-e="eliminar">Eliminar</button>';
-        return '<div class="usr"><div><div class="nm">'+esc(u.nombre)+' <span class="est '+esc(u.estado)+'">'+esc(u.estado)+'</span></div><div class="sb">'+esc(u.email)+(u.ultimoAcceso ? ' · último acceso '+fecha(u.ultimoAcceso) : '')+'</div></div><div class="acc">'+acc+'</div></div>';
-      }).join("") : '<div class="sb">Aún nadie ha pedido una cuenta. Comparte el enlace del evaluador: en «Equipo Ahead → Crear cuenta» cada persona hace su solicitud.</div>';
+      $("equipoIntro").textContent = admin
+        ? "Aprueba a quienes deben ver los leads y usar el evaluador con su nombre. Desactivar una cuenta cierra su acceso de inmediato; las rechazadas o desactivadas se pueden eliminar (sus evaluaciones se conservan)."
+        : "Las personas del Equipo Ahead con cuenta activa. Completa tu foto, cargo y celular en «Mi perfil» para que el equipo te encuentre.";
+      var orden = {admin:0, pendiente:1, activo:2, desactivado:3};
+      var lista = j.usuarios.slice().sort(function(a,b){ var oa = a.estado in orden ? orden[a.estado] : 9, ob = b.estado in orden ? orden[b.estado] : 9; return oa - ob || String(a.nombre).localeCompare(String(b.nombre)); });
+      $("listaUsuarios").innerHTML = lista.map(function(u){
+        var e = esc(u.email), acc = "";
+        if (admin && u.estado !== "admin") {
+          if (u.estado === "activo") acc = '<button class="btn sec" data-u="'+e+'" data-e="desactivado">Desactivar</button>';
+          else if (u.estado === "pendiente") acc = '<button class="btn" data-u="'+e+'" data-e="activo">Aprobar</button> <button class="btn sec" data-u="'+e+'" data-e="desactivado">Rechazar</button>';
+          else acc = '<button class="btn sec" data-u="'+e+'" data-e="activo">Reactivar</button> <button class="btn del" data-u="'+e+'" data-e="eliminar">Eliminar</button>';
+        }
+        var tag = u.estado === "admin" ? '<span class="est admin">Administrador</span>' : (admin ? '<span class="est '+esc(u.estado)+'">'+esc(u.estado)+'</span>' : '');
+        var tel = String(u.telefono||"").replace(/^'/,""), wa = tel.replace(/\D/g,""); if (wa.length === 10) wa = "57" + wa;
+        return '<div class="usr'+(u.email === yoEmail ? ' yo' : '')+'"><span class="av">'+(u.foto ? '<img alt="" src="'+esc(u.foto)+'">' : esc(iniciales(u.nombre || u.email)))+'</span>'
+          + '<div class="info"><div class="nm">'+esc(u.nombre)+(u.email === yoEmail ? ' <span class="sb">(tú)</span>' : '')+' '+tag+'</div>'
+          + (u.cargo ? '<div class="cargo">'+esc(u.cargo)+'</div>' : '')
+          + '<div class="contacto"><a href="mailto:'+e+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3.5 6.5 8.5 6.5 8.5-6.5"/></svg>'+e+'</a>'+(tel ? '<a href="https://wa.me/'+esc(wa)+'" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg>'+esc(tel)+'</a>' : '')+'</div>'
+          + (admin && u.ultimoAcceso ? '<div class="sb" style="margin-top:4px">Último acceso '+fecha(u.ultimoAcceso)+'</div>' : '')
+          + '</div>' + (acc ? '<div class="acc">'+acc+'</div>' : '') + '</div>';
+      }).join("") + (lista.length <= 1 ? '<div class="sb" style="margin-top:6px">Aún no hay más cuentas. Comparte el enlace del evaluador: en «Equipo Ahead → Crear cuenta» cada persona hace su solicitud.</div>' : '');
     });
   }
   $("listaUsuarios").addEventListener("click", function(e){
@@ -515,7 +541,7 @@ tbody tr:hover{background:#FBF9F5}
     b.disabled = true;
     S.post({accion:"usuario", token:sesion().token, email:b.getAttribute("data-u"), estado:b.getAttribute("data-e")}).then(function(){ cargarUsuarios(); cargar(); });
   });
-  $("btnEquipo").addEventListener("click", function(){ $("detEquipo").classList.add("abierto"); $("velo").classList.add("abierto"); });
+  $("btnEquipo").addEventListener("click", function(){ cargarUsuarios(); $("detEquipo").classList.add("abierto"); $("velo").classList.add("abierto"); });
   new MutationObserver(function(){ $("puntoMenu").hidden = $("badgePend").hidden; }).observe($("badgePend"), {attributes:true, attributeFilter:["hidden"]});
   $("cerrarEquipo").addEventListener("click", function(){ $("detEquipo").classList.remove("abierto"); $("velo").classList.remove("abierto"); });
 
