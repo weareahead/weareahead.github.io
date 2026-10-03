@@ -195,6 +195,12 @@ dialog::backdrop{background:rgba(20,4,26,.6);-webkit-backdrop-filter:blur(4px);b
 textarea{width:100%;min-height:96px;padding:12px 16px;border-radius:14px;background:var(--campo);border:1px solid rgba(239,235,253,.18);color:var(--cream);font:inherit;font-size:16px;font-weight:400;outline:none;resize:vertical}
 textarea:focus{border-color:var(--naranja);background:rgba(239,235,253,.1)}
 textarea::placeholder{color:rgba(244,240,232,.4)}
+.con-ojo{position:relative;display:block}
+.con-ojo input{padding-right:52px!important}
+.ojo{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:40px;height:40px;border:0;border-radius:10px;background:transparent;color:var(--muted);display:grid;place-items:center;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.ojo:hover,.ojo:focus-visible{background:rgba(239,235,253,.1);color:var(--cream)}
+.ojo svg{width:21px;height:21px}
+.cuenta .av img{width:100%;height:100%;border-radius:50%;object-fit:cover}
 
 footer{margin-top:28px;text-align:center;font-size:12px;color:var(--muted)}
 footer .firma{margin:0 0 4px;font-family:var(--font-display);font-weight:500;font-size:15px;color:var(--cream)}
@@ -392,10 +398,10 @@ footer .firma{margin:0 0 4px;font-family:var(--font-display);font-weight:500;fon
   </footer>
 </main>
 
-<script src="config.js?v=20261002f"></script>
-<script src="motor.js?v=20261002f"></script>
-<script src="sesion.js?v=20261002f"></script>
-<script src="pdf.js?v=20261002f"></script>
+<script src="config.js?v=20261002g"></script>
+<script src="motor.js?v=20261002g"></script>
+<script src="sesion.js?v=20261002g"></script>
+<script src="pdf.js?v=20261002g"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
 <script>
 (function(){
@@ -445,7 +451,7 @@ footer .firma{margin:0 0 4px;font-family:var(--font-display);font-weight:500;fon
     $("vSesion").hidden = !s; $("vAcceso").hidden = !!s;
     if (s) {
       var ini = (s.nombre || s.email).split(/\s+/).map(function(w){return w[0]}).join("").slice(0,2).toUpperCase();
-      $("cuentaAv").textContent = ini;
+      if (s.foto) $("cuentaAv").innerHTML = '<img alt="" src="'+esc(s.foto)+'">'; else $("cuentaAv").textContent = ini;
       $("cuentaTxt").textContent = (s.nombre || "").split(" ")[0] || "Equipo";
       $("sesNombre").textContent = s.nombre; $("sesEmail").textContent = s.email;
       $("firmadoNombre").textContent = s.nombre + " (" + s.email + ")";
@@ -472,7 +478,8 @@ footer .firma{margin:0 0 4px;font-family:var(--font-display);font-weight:500;fon
     S.login($("lgEmail").value, $("lgPass").value).then(function(j){
       btn.disabled = false;
       if (!j.ok) { $("lgMsg").textContent = S.mensaje(j.error); return; }
-      $("lgPass").value = ""; $("lgMsg").textContent = ""; pintarCuenta(); cerrarDlg();
+      S.ocultarTodas(dlg); $("lgPass").value = ""; $("lgMsg").textContent = ""; pintarCuenta(); cerrarDlg();
+      S.perfil().then(pintarCuenta).catch(function(){});
     }).catch(function(err){ btn.disabled = false; $("lgMsg").textContent = S.mensaje(err && err.message); });
   });
   $("fCrear").addEventListener("submit", function(e){
@@ -490,7 +497,9 @@ footer .firma{margin:0 0 4px;font-family:var(--font-display);font-weight:500;fon
   });
   $("btnSalir").addEventListener("click", function(){ S.cerrar(); pintarCuenta(); cerrarDlg(); });
   window.addEventListener("storage", pintarCuenta);
+  S.ojos(dlg);
   pintarCuenta();
+  if (S.leer()) S.perfil().then(pintarCuenta).catch(function(){});
 
   /* ---------- Condicionales ---------- */
   var form = $("form");

@@ -1,5 +1,5 @@
 /**
- * EVALUADOR DE PROPIEDADES AHEAD — Backend en Google Sheets  (v3)
+ * EVALUADOR DE PROPIEDADES AHEAD — Backend en Google Sheets  (v4)
  * ---------------------------------------------------------------
  * Proyecto de Apps Script «Ahead · Evaluador de propiedades (backend)»
  * en la cuenta ahead.hospitality@gmail.com, publicado como Aplicación web:
@@ -17,6 +17,9 @@
  *  - listar      (sesión)   evaluaciones + equipo activo.
  *  - actualizar  (sesión)   estado comercial, asesor y notas de un lead.
  *  - usuarios    (admin)    lista de cuentas.
+ *  - perfil      (sesión)   leer el perfil propio (nombre, celular, cargo, foto).
+ *  - perfil_guardar (sesión) actualizar el perfil propio.
+ *  - clave       (sesión)   cambiar la contraseña propia (pide la actual).
  *  - usuario     (admin)    aprobar / desactivar / eliminar una cuenta
  *                           (eliminar solo si está rechazada o desactivada).
  *
@@ -45,7 +48,8 @@ const COLUMNAS = [
   'tarifaMedia', 'ocupacionMedia', 'mensualConservador', 'mensualMedio', 'mensualAlto', 'anualMedio',
   'puntaje', 'clase', 'riesgos', 'modelo', 'json'
 ];
-const COLUMNAS_USUARIOS = ['email', 'nombre', 'estado', 'rol', 'sal', 'huella', 'creado', 'ultimoAcceso'];
+const COLUMNAS_USUARIOS = ['email', 'nombre', 'estado', 'rol', 'sal', 'huella', 'creado', 'ultimoAcceso', 'telefono', 'cargo', 'foto'];
+const FOTO_MAX = 45000; // caracteres del data URL (una celda admite 50.000)
 
 /* ================= Entrada ================= */
 
@@ -58,6 +62,9 @@ function doPost(e) {
       case 'actualizar': return actualizar_(b);
       case 'usuarios': return usuarios_(b);
       case 'usuario': return usuarioEstado_(b);
+      case 'perfil': return perfil_(b);
+      case 'perfil_guardar': return perfilGuardar_(b);
+      case 'clave': return cambiarClave_(b);
       default: return registrar_(b.registro || b, b.token);
     }
   } catch (err) {
@@ -72,7 +79,7 @@ function doGet(e) {
     if (!s) return json_({ ok: false, error: 'sesion' });
     return json_({ ok: true, registros: listar_(), equipo: equipoActivo_(), yo: s });
   }
-  return json_({ ok: true, servicio: 'Ahead · Evaluador de propiedades', version: 3 });
+  return json_({ ok: true, servicio: 'Ahead · Evaluador de propiedades', version: 4 });
 }
 
 /* ================= Hojas ================= */
@@ -260,7 +267,7 @@ function usuarios_(b) {
   const s = sesion_(b.token);
   if (!s || s.rol !== 'admin') return json_({ ok: false, error: 'sesion' });
   return json_({ ok: true, usuarios: leerUsuarios_().map(function (u) {
-    return { email: u.email, nombre: u.nombre, estado: u.estado, creado: u.creado, ultimoAcceso: u.ultimoAcceso };
+    return { email: u.email, nombre: u.nombre, estado: u.estado, creado: u.creado, ultimoAcceso: u.ultimoAcceso, telefono: u.telefono || '', cargo: u.cargo || '', foto: u.foto || '' };
   }) });
 }
 
@@ -310,7 +317,7 @@ function login_(b) {
   let cuenta = null;
 
   if (email === USUARIO_EQUIPO) {
-    if (huella(pass) === CLAVE_SHA256) cuenta = { email: email, nombre: 'Equipo Ahead', rol: 'admin' };
+    if (huella(pass) === claveAdmin_()) cuenta = { email: email, nombre: perfilAdmin_().nombre || 'Equipo Ahead', rol: 'admin' };
   } else {
     const u = leerUsuarios_().filter(function (x) { return x.email === email; })[0];
     if (u && huella(u.sal + pass) === u.huella) {
@@ -348,8 +355,83 @@ function sesion_(token) {
   if (o.r !== 'admin') {
     const u = leerUsuarios_().filter(function (x) { return x.email === o.e; })[0];
     if (!u || u.estado !== 'activo') return null;
+    return { email: o.e, nombre: u.nombre || o.n, rol: o.r };
   }
-  return { email: o.e, nombre: o.n, rol: o.r };
+  return { email: o.e, nombre: perfilAdmin_().nombre || o.n, rol: o.r };
+}
+
+/* ================= Perfil ================= */
+
+// La cuenta administradora no vive en la pestaña Usuarios: su perfil y su
+// contraseña cambiada se guardan en las propiedades del script.
+function perfilAdmin_() {
+  try { return JSON.parse(PropertiesService.getScriptProperties().getProperty('PERFIL_ADMIN') || '{}'); } catch (e) { return {}; }
+}
+function claveAdmin_() {
+  return PropertiesService.getScriptProperties().getProperty('CLAVE_ADMIN') || CLAVE_SHA256;
+}
+
+function perfil_(b) {
+  const s = sesion_(b.token);
+  if (!s) return json_({ ok: false, error: 'sesion' });
+  if (s.rol === 'admin') {
+    const p = perfilAdmin_();
+    return json_({ ok: true, perfil: { email: s.email, nombre: p.nombre || 'Equipo Ahead', rol: 'admin', telefono: p.telefono || '', cargo: p.cargo || '', foto: p.foto || '' } });
+  }
+  const u = leerUsuarios_().filter(function (x) { return x.email === s.email; })[0];
+  return json_({ ok: true, perfil: { email: s.email, nombre: u.nombre, rol: 'equipo', telefono: u.telefono || '', cargo: u.cargo || '', foto: u.foto || '' } });
+}
+
+function perfilGuardar_(b) {
+  const s = sesion_(b.token);
+  if (!s) return json_({ ok: false, error: 'sesion' });
+  const nombre = String(b.nombre || '').trim().slice(0, 80);
+  const telefono = String(b.telefono || '').trim().slice(0, 30);
+  const cargo = String(b.cargo || '').trim().slice(0, 80);
+  const foto = String(b.foto || '');
+  if (!nombre) return json_({ ok: false, error: 'datos' });
+  if (foto && (!/^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+\/=]+$/.test(foto) || foto.length > FOTO_MAX)) return json_({ ok: false, error: 'foto' });
+
+  if (s.rol === 'admin') {
+    PropertiesService.getScriptProperties().setProperty('PERFIL_ADMIN', JSON.stringify({ nombre: nombre, telefono: telefono, cargo: cargo, foto: foto }));
+  } else {
+    const lock = LockService.getScriptLock();
+    lock.waitLock(20000);
+    try {
+      const u = leerUsuarios_().filter(function (x) { return x.email === s.email; })[0];
+      const sh = usuariosHoja_(), cab = cabecera_(sh);
+      [['nombre', nombre], ['telefono', "'" + telefono], ['cargo', cargo], ['foto', foto]].forEach(function (kv) {
+        sh.getRange(u.fila, cab.indexOf(kv[0]) + 1).setValue(kv[0] === 'telefono' && !telefono ? '' : kv[1]);
+      });
+    } finally {
+      lock.releaseLock();
+    }
+  }
+  return json_({ ok: true, perfil: { email: s.email, nombre: nombre, rol: s.rol, telefono: telefono, cargo: cargo, foto: foto } });
+}
+
+function cambiarClave_(b) {
+  const s = sesion_(b.token);
+  if (!s) return json_({ ok: false, error: 'sesion' });
+  const actual = String(b.actual || ''), nueva = String(b.nueva || '');
+  if (nueva.length < 8) return json_({ ok: false, error: 'clave_corta' });
+  if (s.rol === 'admin') {
+    if (huella(actual) !== claveAdmin_()) { Utilities.sleep(800); return json_({ ok: false, error: 'clave_actual' }); }
+    PropertiesService.getScriptProperties().setProperty('CLAVE_ADMIN', huella(nueva));
+    return json_({ ok: true });
+  }
+  const lock = LockService.getScriptLock();
+  lock.waitLock(20000);
+  try {
+    const u = leerUsuarios_().filter(function (x) { return x.email === s.email; })[0];
+    if (huella(u.sal + actual) !== u.huella) { Utilities.sleep(800); return json_({ ok: false, error: 'clave_actual' }); }
+    const sal = Utilities.getUuid(), sh = usuariosHoja_(), cab = cabecera_(sh);
+    sh.getRange(u.fila, cab.indexOf('sal') + 1).setValue(sal);
+    sh.getRange(u.fila, cab.indexOf('huella') + 1).setValue(huella(sal + nueva));
+  } finally {
+    lock.releaseLock();
+  }
+  return json_({ ok: true });
 }
 
 function json_(o) {

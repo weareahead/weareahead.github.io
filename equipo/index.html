@@ -28,8 +28,53 @@ button,input,select,textarea{font:inherit;color:inherit}
 .top img{height:26px;width:auto}
 .top h1{margin:0;font-family:var(--font-display);font-weight:600;font-size:17px;letter-spacing:-.01em}
 .top .sp{flex:1}
-.top a,.top button{color:var(--cream);background:rgba(239,235,253,.12);border:0;border-radius:999px;padding:7px 14px;font-size:13px;font-weight:500;text-decoration:none;cursor:pointer;white-space:nowrap}
-.top .demo{background:var(--naranja);color:var(--dark-morada)}
+.top .pill{color:var(--cream);background:rgba(239,235,253,.12);border:0;border-radius:999px;padding:7px 14px;font-size:13px;font-weight:500;text-decoration:none;cursor:pointer;white-space:nowrap}
+/* Íconos del header: actualizar · perfil · menú */
+.iconos{display:flex;align-items:center;gap:8px}
+.ibtn{position:relative;width:40px;height:40px;border-radius:50%;border:0;display:grid;place-items:center;background:rgba(239,235,253,.12);color:var(--cream);cursor:pointer;padding:0;-webkit-tap-highlight-color:transparent;transition:background-color .15s}
+.ibtn:hover{background:rgba(239,235,253,.22)}
+.ibtn svg{width:20px;height:20px}
+.ibtn:focus-visible,.menu-item:focus-visible{outline:2px solid var(--naranja);outline-offset:2px}
+.ibtn.girando svg{animation:girar .8s linear infinite}
+@keyframes girar{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.ibtn.girando svg{animation:none}}
+.av{width:100%;height:100%;border-radius:50%;display:grid;place-items:center;overflow:hidden;background:var(--cream);color:var(--dark-morada);font-family:var(--font-display);font-weight:600;font-size:13px}
+.av img{width:100%;height:100%;object-fit:cover}
+.ibtn.perfil{padding:2px;background:rgba(239,235,253,.25)}
+.punto{position:absolute;top:4px;right:4px;width:10px;height:10px;border-radius:50%;background:var(--naranja);border:2px solid var(--dark-morada)}
+.menu{position:relative}
+.desplegable{position:absolute;right:0;top:calc(100% + 10px);width:280px;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:16px;box-shadow:0 18px 40px rgba(42,8,50,.22);padding:8px;z-index:20}
+.menu-user{display:flex;gap:10px;align-items:center;padding:8px 10px 12px;border-bottom:1px solid var(--line);margin-bottom:6px}
+.menu-user .av{width:36px;height:36px;flex:none;background:var(--soft-lila);color:var(--morada)}
+.menu-user b{display:block;font-size:14px;line-height:1.2}
+.menu-user div span{display:block;font-size:12px;color:var(--ink-2);overflow-wrap:anywhere}
+.menu-user i{display:block;font-style:normal;font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--morada);margin-top:2px}
+.ok.mal{color:var(--nov)}
+.menu-item{display:flex;align-items:center;gap:12px;width:100%;padding:10px 10px;border:0;border-radius:10px;background:transparent;color:var(--ink);font:inherit;font-size:14px;text-align:left;text-decoration:none;cursor:pointer}
+.menu-item:hover{background:#F6F2F7}
+.menu-item svg{width:18px;height:18px;flex:none;color:var(--morada)}
+.menu-item .badge{margin-left:auto}
+.menu hr{border:0;border-top:1px solid var(--line);margin:6px 2px}
+.menu-item.salir,.menu-item.salir svg{color:var(--nov)}
+/* Ojo de contraseña */
+.con-ojo{position:relative;display:block}
+.con-ojo input{padding-right:48px!important}
+.ojo{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:36px;height:36px;border:0;border-radius:8px;background:transparent;color:var(--ink-2);display:grid;place-items:center;cursor:pointer}
+.ojo:hover{background:var(--soft-lila);color:var(--morada)}
+.ojo svg{width:20px;height:20px}
+/* Perfil */
+.perfil-cab{display:flex;gap:16px;align-items:center;margin:18px 0 6px}
+.perfil-cab .av{width:84px;height:84px;font-size:26px;background:var(--soft-lila);color:var(--morada);flex:none}
+.perfil-cab .acc{display:flex;flex-direction:column;gap:6px;align-items:flex-start}
+.perfil-cab .acc .btn{min-height:36px;padding:6px 14px;font-size:13px}
+.det .campo{display:flex;flex-direction:column;gap:4px;margin-top:10px}
+.det .campo label{font-size:13px;font-weight:500}
+.det input[type=text],.det input[type=tel],.det input[type=email],.det input[type=password]{width:100%;min-height:44px;padding:9px 12px;border:1px solid var(--line);border-radius:10px;background:#fff;font-size:15px}
+.det input[readonly]{background:#F6F2F7;color:var(--ink-2)}
+.det .salir-perfil{margin-top:26px;padding-top:18px;border-top:1px solid var(--line)}
+.btn.rojo{background:transparent;color:var(--nov);border:1px solid #E8B4A8}
+.aviso-admin{margin-top:8px;padding:10px 12px;border-radius:10px;background:var(--pot-bg);color:var(--pot);font-size:12.5px}
+.top .pill.demo{background:var(--naranja);color:var(--dark-morada)}
 main{max-width:1280px;margin:0 auto;padding:20px}
 
 /* Acceso */
@@ -40,8 +85,6 @@ main{max-width:1280px;margin:0 auto;padding:20px}
 .acceso label{font-size:13px;font-weight:500;margin-top:6px}
 .acceso input{width:100%;min-height:48px;padding:10px 14px;border:1px solid var(--line);border-radius:12px;background:#fff;font-size:16px}
 .acceso input:focus{outline:2px solid var(--naranja);outline-offset:0;border-color:transparent}
-.acceso .pass{position:relative}
-.acceso .pass button{position:absolute;right:6px;top:6px;bottom:6px;padding:0 12px;border:0;border-radius:8px;background:var(--soft-lila);color:var(--morada);font-size:12.5px;font-weight:600;cursor:pointer}
 .acceso .btn{margin-top:12px;min-height:50px}
 .top .user{font-size:12.5px;opacity:.75}
 .btn{min-height:44px;padding:10px 18px;border-radius:999px;border:0;background:var(--dark-morada);color:var(--cream);font-weight:600;cursor:pointer}
@@ -123,7 +166,7 @@ tbody tr:hover{background:#FBF9F5}
 .tabs button{min-height:38px;border:0;border-radius:999px;background:transparent;color:var(--morada);font-weight:600;cursor:pointer}
 .tabs button[aria-selected=true]{background:var(--dark-morada);color:var(--cream)}
 .msg.okv{color:var(--prio)}
-.top .badge{display:inline-grid;place-items:center;min-width:18px;height:18px;padding:0 5px;margin-left:6px;border-radius:9px;background:var(--naranja);color:var(--dark-morada);font-size:11px;font-weight:700}
+.badge{display:inline-grid;place-items:center;min-width:18px;height:18px;padding:0 5px;margin-left:6px;border-radius:9px;background:var(--naranja);color:var(--dark-morada);font-size:11px;font-weight:700}
 .mios{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--ink-2);padding:0 6px}
 .mios input{accent-color:var(--morada);width:16px;height:16px}
 .usuarios{display:flex;flex-direction:column;gap:8px}
@@ -142,14 +185,24 @@ tbody tr:hover{background:#FBF9F5}
   <img src="../assets/logo-ahead.svg" alt="Ahead" style="filter:none">
   <h1>Panel de leads · Evaluador de propiedades</h1>
   <span class="sp"></span>
-  <span id="modoDemo" hidden><button class="demo" type="button" id="salirDemo">Datos de ejemplo · salir</button></span>
-  <a id="lnkHoja" href="#" target="_blank" rel="noopener" hidden>Abrir hoja de cálculo</a>
-  <button type="button" id="btnRecargar" hidden>Actualizar</button>
-  <button type="button" id="btnCsv" hidden>Exportar CSV</button>
-  <a href="../evaluador/">Ir al evaluador</a>
-  <button type="button" id="btnEquipo" hidden>Equipo<span class="badge" id="badgePend" hidden></span></button>
-  <span class="user" id="usuario" hidden></span>
-  <button type="button" id="btnSalir" hidden>Cerrar sesión</button>
+  <span id="modoDemo" hidden><button class="pill demo" type="button" id="salirDemo">Datos de ejemplo · salir</button></span>
+  <div class="iconos" id="iconos" hidden>
+    <button type="button" class="ibtn" id="btnRecargar" aria-label="Actualizar datos" title="Actualizar datos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11.5a8 8 0 1 1-2.6-5.9"/><path d="M20 4v5h-5"/></svg></button>
+    <button type="button" class="ibtn perfil" id="btnPerfil" aria-label="Mi perfil" title="Mi perfil"><span class="av" id="avTop"></span></button>
+    <div class="menu">
+      <button type="button" class="ibtn" id="btnMenu" aria-haspopup="menu" aria-expanded="false" aria-controls="menu" aria-label="Menú" title="Menú"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg><span class="punto" id="puntoMenu" hidden></span></button>
+      <div class="desplegable" id="menu" role="menu" hidden>
+        <div class="menu-user"><span class="av" id="avMenu"></span><div><b id="usuario"></b><span id="usuarioEmail"></span><i id="usuarioRol" hidden>Administrador</i></div></div>
+        <a class="menu-item" role="menuitem" id="lnkHoja" href="#" target="_blank" rel="noopener" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M4 9h16M4 15h16M10 9v12"/></svg> Abrir hoja de cálculo</a>
+        <button type="button" class="menu-item" role="menuitem" id="btnCsv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7.5 10.5 12 15l4.5-4.5"/><path d="M5 19h14"/></svg> Exportar CSV</button>
+        <a class="menu-item" role="menuitem" href="../evaluador/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2.5"/><path d="M8.5 6.5h7v3h-7z"/><path d="M9 13h.01M12 13h.01M15 13h.01M9 16.5h.01M12 16.5h.01M15 16.5h.01"/></svg> Ir al evaluador</a>
+        <button type="button" class="menu-item" role="menuitem" id="btnEquipo" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8.5" r="3.2"/><path d="M3.5 19c.6-3 2.8-4.8 5.5-4.8s4.9 1.8 5.5 4.8"/><circle cx="17" cy="9.5" r="2.4"/><path d="M15.8 14.4c2.3.1 4 1.6 4.6 4.1"/></svg> Equipo<span class="badge" id="badgePend" hidden></span></button>
+        <button type="button" class="menu-item" role="menuitem" id="btnPerfil2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8.5" r="3.6"/><path d="M5 20c.8-3.6 3.6-5.6 7-5.6s6.2 2 7 5.6"/></svg> Mi perfil</button>
+        <hr>
+        <button type="button" class="menu-item salir" role="menuitem" id="btnSalir"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h4a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-4"/><path d="M10 16l-4-4 4-4M6 12h10"/></svg> Cerrar sesión</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <main>
@@ -175,7 +228,7 @@ tbody tr:hover{background:#FBF9F5}
       <label for="correo">Correo</label>
       <input id="correo" type="email" autocomplete="username" inputmode="email" placeholder="correo@gmail.com" required>
       <label for="clave">Contraseña</label>
-      <div class="pass"><input id="clave" type="password" autocomplete="current-password" required><button type="button" id="verClave" aria-label="Mostrar contraseña">Ver</button></div>
+      <input id="clave" type="password" autocomplete="current-password" required>
       <button class="btn" type="submit" id="btnEntrar">Entrar</button>
     </form>
     <div class="msg" id="msgAcceso"></div>
@@ -230,11 +283,42 @@ tbody tr:hover{background:#FBF9F5}
   <p class="sb">Aprueba a quienes deben ver los leads y usar el evaluador con su nombre. Desactivar una cuenta cierra su acceso de inmediato. Las cuentas rechazadas o desactivadas se pueden eliminar; sus evaluaciones se conservan.</p>
   <div class="usuarios" id="listaUsuarios" style="margin-top:14px"></div>
 </aside>
+<aside class="det" id="detPerfil" aria-label="Mi perfil">
+  <button class="cerrar" type="button" id="cerrarPerfil">Cerrar</button>
+  <h2>Mi perfil</h2>
+  <div class="sb" id="pfRol"></div>
+  <div class="perfil-cab">
+    <span class="av" id="avPerfil"></span>
+    <div class="acc">
+      <label class="btn sec" for="pfFotoInput" style="cursor:pointer">Cambiar foto</label>
+      <input type="file" id="pfFotoInput" accept="image/*" hidden>
+      <button type="button" class="btn sec" id="pfQuitarFoto" hidden>Quitar foto</button>
+    </div>
+  </div>
+  <h4>Datos</h4>
+  <div class="campo"><label for="pfNombre">Nombre y apellido</label><input type="text" id="pfNombre" autocomplete="name" maxlength="80"></div>
+  <div class="campo"><label for="pfEmail">Correo</label><input type="email" id="pfEmail" readonly></div>
+  <div class="campo"><label for="pfTel">Celular / WhatsApp</label><input type="tel" id="pfTel" inputmode="tel" autocomplete="tel" maxlength="30" placeholder="+57 300 000 0000"></div>
+  <div class="campo"><label for="pfCargo">Cargo en Ahead</label><input type="text" id="pfCargo" maxlength="80" placeholder="Ej. Asesora comercial"></div>
+  <div style="margin-top:14px"><button type="button" class="btn" id="pfGuardar">Guardar perfil</button> <span class="ok" id="pfOk"></span></div>
+
+  <h4 style="margin-top:28px">Cambiar contraseña</h4>
+  <form id="fClave" autocomplete="on">
+    <input type="text" autocomplete="username" id="pfUserHidden" hidden>
+    <div class="campo"><label for="pfActual">Contraseña actual</label><input type="password" id="pfActual" autocomplete="current-password"></div>
+    <div class="campo"><label for="pfNueva">Nueva contraseña <span class="sb">(mínimo 8 caracteres)</span></label><input type="password" id="pfNueva" autocomplete="new-password" minlength="8"></div>
+    <div class="campo"><label for="pfNueva2">Repite la nueva contraseña</label><input type="password" id="pfNueva2" autocomplete="new-password"></div>
+    <div class="aviso-admin" id="pfAvisoAdmin" hidden>Esta es la cuenta compartida del equipo: si cambias su contraseña, avísales a todos los que entran con ella.</div>
+    <div style="margin-top:14px"><button type="submit" class="btn" id="pfCambiar">Cambiar contraseña</button> <span class="ok" id="pfClaveOk"></span></div>
+  </form>
+
+  <div class="salir-perfil"><button type="button" class="btn rojo" id="btnSalir2">Cerrar sesión</button></div>
+</aside>
 <aside class="det" id="det" aria-label="Detalle del lead"></aside>
 
-<script src="../evaluador/config.js?v=20261002f"></script>
-<script src="../evaluador/motor.js?v=20261002f"></script>
-<script src="../evaluador/sesion.js?v=20261002f"></script>
+<script src="../evaluador/config.js?v=20261002g"></script>
+<script src="../evaluador/motor.js?v=20261002g"></script>
+<script src="../evaluador/sesion.js?v=20261002g"></script>
 <script>
 (function(){
   var C = window.AHEAD_EVAL, Mo = window.AheadMotor, $ = function(i){return document.getElementById(i)};
@@ -251,19 +335,110 @@ tbody tr:hover{background:#FBF9F5}
   function sesion(){ return S.leer(); }
   function cargar(){
     var s = sesion(); if (!s) return;
-    $("msgAcceso").className = "msg"; $("msgAcceso").textContent = "Cargando leads…";
+    $("btnRecargar").classList.add("girando"); $("btnRecargar").disabled = true;
+    var listo = function(){ $("btnRecargar").classList.remove("girando"); $("btnRecargar").disabled = false; };
+    if ($("app").hidden) { $("msgAcceso").className = "msg"; $("msgAcceso").textContent = "Cargando leads…"; }
     fetch(C.endpoint + "?accion=listar&token=" + encodeURIComponent(s.token))
       .then(function(r){return r.json()})
       .then(function(j){
-        if (!j.ok) { S.cerrar(); $("msgAcceso").textContent = S.mensaje(j.error); $("acceso").hidden = false; $("app").hidden = true; return; }
+        listo();
+        if (!j.ok) { S.cerrar(); $("msgAcceso").textContent = S.mensaje(j.error); $("acceso").hidden = false; $("app").hidden = true; $("iconos").hidden = true; return; }
         demo = false; datos = j.registros || []; equipo = j.equipo || []; yo = j.yo || s;
         $("msgAcceso").textContent = ""; abrirApp();
-        $("usuario").textContent = (yo.nombre || s.email) + (yo.rol === "admin" ? " · admin" : ""); $("usuario").hidden = false;
+        pintarUsuario();
+        if (!perfilCargado) { perfilCargado = true; S.perfil().then(pintarUsuario).catch(function(){}); }
         $("lblMios").hidden = false;
         if (yo.rol === "admin") { $("btnEquipo").hidden = false; cargarUsuarios(); }
       })
-      .catch(function(){ $("msgAcceso").textContent = "No se pudo conectar con la hoja. Revisa la conexión."; });
+      .catch(function(){ listo(); $("msgAcceso").textContent = "No se pudo conectar con la hoja. Revisa la conexión."; });
   }
+  var perfilCargado = false;
+
+  /* ---------- Avatar, menú y perfil ---------- */
+  function iniciales(n){ return String(n||"").trim().split(/\s+/).map(function(w){return w[0]||""}).join("").slice(0,2).toUpperCase() || "EA"; }
+  function avatar(el, s){ el.innerHTML = s && s.foto ? '<img alt="" src="'+esc(s.foto)+'">' : esc(iniciales(s && (s.nombre || s.email))); }
+  function pintarUsuario(){
+    var s = sesion() || {};
+    var nombre = s.nombre || (yo && yo.nombre) || s.email || "";
+    $("usuario").textContent = nombre; $("usuarioEmail").textContent = s.email || ""; $("usuarioRol").hidden = (s.rol || (yo||{}).rol) !== "admin";
+    avatar($("avTop"), s); avatar($("avMenu"), s);
+    $("btnPerfil").setAttribute("aria-label", "Mi perfil · " + nombre);
+  }
+  function abrirMenu(abrir){
+    var m = $("menu"); var ab = abrir === undefined ? m.hidden : abrir;
+    m.hidden = !ab; $("btnMenu").setAttribute("aria-expanded", String(ab));
+    if (ab) { var f = m.querySelector(".menu-item:not([hidden])"); if (f) f.focus(); }
+  }
+  $("btnMenu").addEventListener("click", function(e){ e.stopPropagation(); abrirMenu(); });
+  document.addEventListener("click", function(e){ if (!$("menu").hidden && !e.target.closest(".menu")) abrirMenu(false); });
+  document.addEventListener("keydown", function(e){ if (e.key === "Escape" && !$("menu").hidden) { abrirMenu(false); $("btnMenu").focus(); } });
+  $("menu").addEventListener("click", function(e){ if (e.target.closest(".menu-item")) abrirMenu(false); });
+
+  function aviso(id, txt, mal){ var el = $(id); el.textContent = txt; el.classList.toggle("mal", !!mal); }
+  var fotoNueva = null;
+  function abrirPerfil(){
+    var s = sesion(); if (!s) return;
+    fotoNueva = null;
+    $("pfNombre").value = s.nombre || ""; $("pfEmail").value = s.email; $("pfUserHidden").value = s.email;
+    $("pfTel").value = s.telefono || ""; $("pfCargo").value = s.cargo || "";
+    $("pfRol").textContent = s.rol === "admin" ? "Administrador · cuenta compartida del Equipo Ahead" : "Equipo Ahead";
+    $("pfAvisoAdmin").hidden = s.rol !== "admin";
+    avatar($("avPerfil"), s); $("pfQuitarFoto").hidden = !s.foto;
+    aviso("pfOk", ""); aviso("pfClaveOk", ""); ["pfActual","pfNueva","pfNueva2"].forEach(function(i){ $(i).value = ""; });
+    $("detPerfil").classList.add("abierto"); $("velo").classList.add("abierto");
+    S.perfil().then(function(j){ if (!j.ok) return; var p = j.perfil;
+      if (!$("pfNombre").value) $("pfNombre").value = p.nombre || "";
+      $("pfTel").value = $("pfTel").value || p.telefono || ""; $("pfCargo").value = $("pfCargo").value || p.cargo || "";
+      if (fotoNueva === null) { avatar($("avPerfil"), p); $("pfQuitarFoto").hidden = !p.foto; }
+      pintarUsuario();
+    }).catch(function(){});
+  }
+  $("btnPerfil").addEventListener("click", abrirPerfil);
+  $("btnPerfil2").addEventListener("click", abrirPerfil);
+  $("cerrarPerfil").addEventListener("click", function(){ S.ocultarTodas($("detPerfil")); cerrar(); });
+
+  // Foto: se recorta al centro y se reduce a 192 px para guardarla liviana.
+  $("pfFotoInput").addEventListener("change", function(){
+    var f = this.files && this.files[0]; this.value = ""; if (!f) return;
+    var img = new Image(), url = URL.createObjectURL(f);
+    img.onload = function(){
+      var lado = Math.min(img.naturalWidth, img.naturalHeight), T = 192, cv = document.createElement("canvas");
+      cv.width = T; cv.height = T;
+      cv.getContext("2d").drawImage(img, (img.naturalWidth-lado)/2, (img.naturalHeight-lado)/2, lado, lado, 0, 0, T, T);
+      var q = .85, d = cv.toDataURL("image/jpeg", q);
+      while (d.length > 44000 && q > .4) { q -= .1; d = cv.toDataURL("image/jpeg", q); }
+      fotoNueva = d; URL.revokeObjectURL(url);
+      avatar($("avPerfil"), {foto: d}); $("pfQuitarFoto").hidden = false; $("pfOk").textContent = "Foto lista: guarda el perfil para aplicarla.";
+    };
+    img.onerror = function(){ aviso("pfOk", S.mensaje("foto"), true); };
+    img.src = url;
+  });
+  $("pfQuitarFoto").addEventListener("click", function(){ fotoNueva = ""; avatar($("avPerfil"), {nombre: $("pfNombre").value}); this.hidden = true; $("pfOk").textContent = "Guarda el perfil para quitar la foto."; });
+
+  $("pfGuardar").addEventListener("click", function(){
+    var s = sesion(); if (!s) return;
+    var b = this, nombre = $("pfNombre").value.trim();
+    if (!nombre) { aviso("pfOk", "Escribe tu nombre.", true); return; }
+    b.disabled = true; aviso("pfOk", "Guardando…");
+    S.guardarPerfil({ nombre: nombre, telefono: $("pfTel").value.trim(), cargo: $("pfCargo").value.trim(), foto: fotoNueva === null ? (s.foto || "") : fotoNueva })
+      .then(function(j){ b.disabled = false; if (!j.ok) { aviso("pfOk", S.mensaje(j.error), true); return; } fotoNueva = null; aviso("pfOk", "Perfil guardado"); pintarUsuario(); })
+      .catch(function(){ b.disabled = false; aviso("pfOk", S.mensaje(), true); });
+  });
+  $("fClave").addEventListener("submit", function(e){
+    e.preventDefault();
+    var a = $("pfActual").value, n = $("pfNueva").value;
+    if (n.length < 8) { aviso("pfClaveOk", S.mensaje("clave_corta"), true); return; }
+    if (n !== $("pfNueva2").value) { aviso("pfClaveOk", "Las dos contraseñas nuevas no coinciden.", true); return; }
+    $("pfCambiar").disabled = true; aviso("pfClaveOk", "Cambiando…");
+    S.clave(a, n).then(function(j){
+      $("pfCambiar").disabled = false;
+      if (!j.ok) { aviso("pfClaveOk", S.mensaje(j.error), true); return; }
+      S.ocultarTodas($("fClave")); ["pfActual","pfNueva","pfNueva2"].forEach(function(i){ $(i).value = ""; });
+      aviso("pfClaveOk", "Contraseña actualizada");
+    }).catch(function(){ $("pfCambiar").disabled = false; aviso("pfClaveOk", S.mensaje(), true); });
+  });
+  $("btnSalir2").addEventListener("click", function(){ S.cerrar(); location.reload(); });
+  S.ojos();
   document.querySelectorAll("[data-tab]").forEach(function(b){
     b.addEventListener("click", function(){
       var crear = b.getAttribute("data-tab") === "crear";
@@ -271,7 +446,6 @@ tbody tr:hover{background:#FBF9F5}
       $("fAcceso").hidden = crear; $("fCrear").hidden = !crear; $("msgAcceso").textContent = "";
     });
   });
-  $("verClave").addEventListener("click", function(){ var i = $("clave"); i.type = i.type === "password" ? "text" : "password"; this.textContent = i.type === "password" ? "Ver" : "Ocultar"; });
   $("fAcceso").addEventListener("submit", function(e){
     e.preventDefault();
     if (!C.endpoint) { $("msgAcceso").textContent = "El panel aún no está conectado a la hoja. Puedes ver los datos de ejemplo."; return; }
@@ -326,11 +500,13 @@ tbody tr:hover{background:#FBF9F5}
     S.post({accion:"usuario", token:sesion().token, email:b.getAttribute("data-u"), estado:b.getAttribute("data-e")}).then(function(){ cargarUsuarios(); cargar(); });
   });
   $("btnEquipo").addEventListener("click", function(){ $("detEquipo").classList.add("abierto"); $("velo").classList.add("abierto"); });
+  new MutationObserver(function(){ $("puntoMenu").hidden = $("badgePend").hidden; }).observe($("badgePend"), {attributes:true, attributeFilter:["hidden"]});
   $("cerrarEquipo").addEventListener("click", function(){ $("detEquipo").classList.remove("abierto"); $("velo").classList.remove("abierto"); });
 
   function abrirApp(){
     $("acceso").hidden = true; $("app").hidden = false;
-    $("modoDemo").hidden = !demo; $("btnSalir").hidden = demo; $("btnRecargar").hidden = demo; $("btnCsv").hidden = false;
+    $("modoDemo").hidden = !demo; $("iconos").hidden = false; $("btnSalir").hidden = demo; $("btnRecargar").hidden = demo; $("btnPerfil").hidden = demo; $("btnPerfil2").hidden = demo; $("btnCsv").hidden = false;
+    if (demo) { $("usuario").textContent = "Vista de ejemplo"; $("usuarioEmail").textContent = "Datos inventados"; avatar($("avMenu"), {nombre:"Ejemplo"}); }
     $("lnkHoja").hidden = demo || !C.hojaUrl;
     var ciudades = uniq(datos.map(function(r){return r.lead.ciudad}));
     $("fCiudad").innerHTML = '<option value="">Toda ciudad</option>' + ciudades.map(function(c){return "<option>"+esc(c)+"</option>"}).join("");
@@ -430,7 +606,7 @@ tbody tr:hover{background:#FBF9F5}
     var tr = e.target.closest("tr[data-id]"); if (!tr) return;
     abrir(datos.filter(function(r){return r.id === tr.getAttribute("data-id")})[0]);
   });
-  function cerrar(){ $("det").classList.remove("abierto"); $("detEquipo").classList.remove("abierto"); $("velo").classList.remove("abierto"); }
+  function cerrar(){ $("det").classList.remove("abierto"); $("detEquipo").classList.remove("abierto"); $("detPerfil").classList.remove("abierto"); $("velo").classList.remove("abierto"); }
   $("velo").addEventListener("click", cerrar);
   document.addEventListener("keydown", function(e){ if (e.key === "Escape") cerrar(); });
 
