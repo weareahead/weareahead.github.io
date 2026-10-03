@@ -5,7 +5,7 @@
    1. Conectar la hoja de cálculo (endpoint del Apps Script).
    2. Ajustar los supuestos del motor de estimación (tarifas, ocupación,
       multiplicadores) cuando Daniel o Lina entreguen datos reales.
-   3. Cambiar la lista de asesores del stand.
+   3. Cambiar el WhatsApp y el número que aparecen en el resultado y el PDF.
 
    Al editar este archivo, sube también el ?v= de los <script> en
    evaluador/index.html y equipo/index.html para que los celulares no usen
@@ -30,10 +30,11 @@ window.AHEAD_EVAL = {
   // WhatsApp de propietarios (botón final del resultado).
   whatsapp: "https://wa.me/573142701520?text=Hola%20Ahead%2C%20acabo%20de%20evaluar%20mi%20propiedad%20y%20quiero%20hablar%20con%20un%20asesor.",
 
-  /* ---------- Equipo en el stand ---------- */
-  // Nombres del campo opcional "¿Te está atendiendo alguien de Ahead?".
-  // PENDIENTE: confirmar quién estará en el stand y editar esta lista.
-  asesores: ["Daniel", "Lina", "Otra persona de Ahead"],
+  // Número que se imprime en el PDF del propietario.
+  whatsappNumero: "+57 314 270 1520",
+
+  // Las evaluaciones quedan a nombre de quien tenga la sesión del Equipo
+  // Ahead iniciada; sin sesión, quedan como «QR / por su cuenta».
 
   /* ---------- Motor de estimación ---------- */
   modelo: {

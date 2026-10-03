@@ -29,6 +29,7 @@
   color-scheme:dark;
 }
 *{box-sizing:border-box}
+[hidden]{display:none!important}
 html{-webkit-text-size-adjust:100%;background:var(--morada)}
 body{margin:0;min-height:100vh;min-height:100dvh;
   background:linear-gradient(180deg,var(--morada) 0%,var(--dark-morada) 100%) var(--dark-morada);
@@ -75,7 +76,7 @@ h1{margin:0;font-family:var(--font-display);font-weight:600;font-size:clamp(28px
 .campo > label,.campo > .lbl{font-size:14px;font-weight:500;color:var(--cream)}
 .campo .opc{font-weight:300;color:var(--muted)}
 .campo .ayuda{font-size:12.5px;color:var(--muted);margin-top:-2px}
-input[type=text],input[type=email],input[type=tel],input[type=number],select{
+input[type=text],input[type=email],input[type=tel],input[type=number],input[type=password],select{
   width:100%;min-height:52px;padding:12px 16px;border-radius:14px;
   background:var(--campo);border:1px solid rgba(239,235,253,.18);color:var(--cream);
   font:inherit;font-size:16px;font-weight:400;outline:none;transition:border-color .15s,background-color .15s;-webkit-appearance:none;appearance:none}
@@ -168,6 +169,33 @@ dt{color:var(--muted)} dd{margin:0}
 .estado-envio.ok i{background:#7BD88F}
 .estado-envio.cola i{background:var(--naranja)}
 
+/* Barra de cuenta del Equipo Ahead */
+.topbar{display:flex;justify-content:flex-end;align-items:center;gap:8px;margin:-8px 0 14px;min-height:40px}
+.cuenta{display:inline-flex;align-items:center;gap:8px;min-height:40px;padding:6px 14px 6px 6px;border-radius:var(--radius-pill);
+  border:1px solid rgba(244,240,232,.3);background:rgba(239,235,253,.08);color:var(--cream);font:inherit;font-size:13.5px;font-weight:500;cursor:pointer;text-decoration:none;-webkit-tap-highlight-color:transparent}
+.cuenta .av{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:var(--cream);color:var(--dark-morada);font-family:var(--font-display);font-weight:600;font-size:12px}
+.cuenta .av svg{width:16px;height:16px;fill:var(--morada)}
+.cuenta.activa{border-color:rgba(123,216,143,.6)}
+.cuenta.sec{padding:6px 14px}
+.firmado{display:flex;gap:10px;align-items:center;padding:10px 14px;margin-top:-6px;border-radius:14px;background:rgba(123,216,143,.1);border:1px solid rgba(123,216,143,.35);font-size:13px}
+.firmado b{font-weight:600}
+dialog{width:min(420px,calc(100vw - 32px));max-height:calc(100dvh - 32px);overflow:auto;padding:0;border:1px solid var(--line);border-radius:24px;background:var(--dark-morada);color:var(--cream)}
+dialog::backdrop{background:rgba(20,4,26,.6);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
+.dlg{padding:22px 20px;display:flex;flex-direction:column;gap:16px}
+.dlg-top{display:flex;justify-content:space-between;align-items:center}
+.dlg-top h2{margin:0;font-family:var(--font-display);font-weight:600;font-size:20px}
+.dlg-top button{background:transparent;border:0;color:var(--muted);font:inherit;font-size:22px;cursor:pointer;padding:4px 8px}
+.tabs{display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:4px;border-radius:var(--radius-pill);background:rgba(239,235,253,.08)}
+.tabs button{min-height:38px;border:0;border-radius:var(--radius-pill);background:transparent;color:var(--muted);font:inherit;font-size:14px;font-weight:500;cursor:pointer}
+.tabs button[aria-selected=true]{background:var(--cream);color:var(--dark-morada)}
+.dlg form{display:flex;flex-direction:column;gap:14px;margin-top:18px}
+.dlg .nota{margin:0;font-size:12.5px;color:var(--muted)}
+.dlg .msg{margin:0;font-size:13px;color:var(--error);min-height:1em}
+.dlg .msg.ok{color:#9BE3AC}
+textarea{width:100%;min-height:96px;padding:12px 16px;border-radius:14px;background:var(--campo);border:1px solid rgba(239,235,253,.18);color:var(--cream);font:inherit;font-size:16px;font-weight:400;outline:none;resize:vertical}
+textarea:focus{border-color:var(--naranja);background:rgba(239,235,253,.1)}
+textarea::placeholder{color:rgba(244,240,232,.4)}
+
 footer{margin-top:28px;text-align:center;font-size:12px;color:var(--muted)}
 footer .firma{margin:0 0 4px;font-family:var(--font-display);font-weight:500;font-size:15px;color:var(--cream)}
 
@@ -182,6 +210,51 @@ footer .firma{margin:0 0 4px;font-family:var(--font-display);font-weight:500;fon
 <svg class="watermark" viewBox="119 174 962 852" aria-hidden="true"><path d="M600,1024.76l-333.49.26c-86.76-2.51-147.01-70.37-146.63-155.98.48-105.93,1.63-209.36,15.85-315.14,6.65-49.48,32.65-90.79,67.74-125.64,90.53-89.9,194.09-162.32,304.52-226.08,29.78-17.2,60.7-26.98,92.01-27.21,31.31.23,62.22,10.01,92.01,27.21,110.43,63.77,213.99,136.19,304.52,226.08,35.09,34.85,61.09,76.16,67.74,125.64,14.22,105.78,15.37,209.21,15.85,315.14.39,85.61-59.86,153.47-146.63,155.98l-333.49-.26h0Z"/></svg>
 
 <main>
+  <div class="topbar">
+    <button type="button" class="cuenta" id="btnCuenta" aria-haspopup="dialog">
+      <span class="av" id="cuentaAv"><svg viewBox="0 -960 960 960" aria-hidden="true"><path d="M480-480q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47ZM160-240v-32q0-34 17.5-62.5T224-378q62-31 126-46.5T480-440q66 0 130 15.5T736-378q29 15 46.5 43.5T800-272v32q0 33-23.5 56.5T720-160H240q-33 0-56.5-23.5T160-240Z"/></svg></span>
+      <span id="cuentaTxt">Equipo Ahead</span>
+    </button>
+    <a class="cuenta sec" id="btnLeads" href="../equipo/" hidden>Leads y datos</a>
+  </div>
+
+  <dialog id="dlgCuenta" aria-labelledby="dlgTitulo">
+    <div class="dlg">
+      <div class="dlg-top"><h2 id="dlgTitulo">Equipo Ahead</h2><button type="button" id="dlgCerrar" aria-label="Cerrar">×</button></div>
+
+      <div id="vSesion" hidden>
+        <p style="margin:0 0 14px">Sesión iniciada como <b id="sesNombre"></b><br><span class="nota" id="sesEmail"></span></p>
+        <p class="nota" style="margin-bottom:16px">Las evaluaciones que hagas desde este dispositivo quedan registradas a tu nombre.</p>
+        <div class="acciones" style="flex-direction:column">
+          <a class="btn primario" href="../equipo/">Ver leads y datos</a>
+          <button type="button" class="btn secundario" id="btnSalir">Cerrar sesión</button>
+        </div>
+      </div>
+
+      <div id="vAcceso">
+        <div class="tabs" role="tablist">
+          <button type="button" role="tab" aria-selected="true" data-tab="entrar">Iniciar sesión</button>
+          <button type="button" role="tab" aria-selected="false" data-tab="crear">Crear cuenta</button>
+        </div>
+        <form id="fEntrar" novalidate>
+          <div class="campo"><label for="lgEmail">Correo</label><input id="lgEmail" type="email" autocomplete="username" inputmode="email" required></div>
+          <div class="campo"><label for="lgPass">Contraseña</label><input id="lgPass" type="password" autocomplete="current-password" required></div>
+          <p class="msg" id="lgMsg" role="status"></p>
+          <button type="submit" class="btn primario">Entrar</button>
+          <p class="nota">Solo para el equipo de Ahead. Si eres propietario, no necesitas cuenta: usa el evaluador directamente.</p>
+        </form>
+        <form id="fCrear" novalidate hidden>
+          <div class="campo"><label for="rgNombre">Nombre y apellido</label><input id="rgNombre" type="text" autocomplete="name" required></div>
+          <div class="campo"><label for="rgEmail">Correo</label><input id="rgEmail" type="email" autocomplete="email" inputmode="email" required></div>
+          <div class="campo"><label for="rgPass">Contraseña <span class="opc">(mínimo 8 caracteres)</span></label><input id="rgPass" type="password" autocomplete="new-password" minlength="8" required></div>
+          <p class="msg" id="rgMsg" role="status"></p>
+          <button type="submit" class="btn primario">Solicitar acceso</button>
+          <p class="nota">Tu cuenta queda pendiente hasta que el administrador del Equipo Ahead la apruebe.</p>
+        </form>
+      </div>
+    </div>
+  </dialog>
+
   <header class="in">
     <img class="logo" src="../assets/logo-ahead.svg" alt="Ahead" width="72" height="65">
     <p class="eyebrow">Evaluador de propiedades</p>
@@ -201,10 +274,7 @@ footer .firma{margin:0 0 4px;font-family:var(--font-display);font-weight:500;fon
       <h2 id="h-p1">Tus datos</h2>
       <p class="sub">Para enviarte el resultado y que un asesor pueda acompañarte.</p>
 
-      <div class="campo" id="c-asesor">
-        <label for="asesor">¿Te está atendiendo alguien de Ahead? <span class="opc">(opcional)</span></label>
-        <select id="asesor" name="asesor"></select>
-      </div>
+      <div class="firmado" id="avisoFirmado" hidden><span>Esta evaluación quedará registrada a nombre de <b id="firmadoNombre"></b>.</span></div>
 
       <div class="fila dos">
         <div class="campo" data-req><label for="nombre">Nombre</label><input id="nombre" name="nombre" type="text" autocomplete="given-name"><span class="err">Escribe tu nombre.</span></div>
@@ -219,6 +289,7 @@ footer .firma{margin:0 0 4px;font-family:var(--font-display);font-weight:500;fon
         <div class="campo"><label for="cargo">Cargo <span class="opc">(opcional)</span></label><input id="cargo" name="cargo" type="text" autocomplete="organization-title"></div>
       </div>
       <div class="campo"><label for="proyecto">Nombre del proyecto o inmueble <span class="opc">(opcional)</span></label><input id="proyecto" name="proyecto" type="text" placeholder="Ej. Edificio Mirador 93, apto 501"></div>
+      <div class="campo"><label for="direccion">Dirección exacta del proyecto <span class="opc">(opcional)</span></label><input id="direccion" name="direccion" type="text" autocomplete="street-address" placeholder="Ej. Calle 93 # 11-26, Bogotá"></div>
 
       <div class="campo" data-req="radio:ciudad"><span class="lbl" id="l-ciudad">Ciudad del inmueble</span><div class="chips" role="radiogroup" aria-labelledby="l-ciudad" data-chips="ciudad"></div><span class="err">Elige la ciudad.</span></div>
       <div class="campo" id="c-ciudadOtra" hidden><label for="ciudadOtra">¿Cuál ciudad o municipio?</label><input id="ciudadOtra" name="ciudadOtra" type="text"></div>
@@ -257,10 +328,12 @@ footer .firma{margin:0 0 4px;font-family:var(--font-display);font-weight:500;fon
       <div class="campo" data-req="radio:amoblado"><span class="lbl" id="l-am">¿Está amoblado?</span><div class="chips" role="radiogroup" aria-labelledby="l-am" data-chips="amoblado"></div><span class="err">Elige una opción.</span></div>
       <div class="campo" data-req="radio:estado"><span class="lbl" id="l-ed">Estado</span><div class="chips" role="radiogroup" aria-labelledby="l-ed" data-chips="estado"></div><span class="err">Elige el estado.</span></div>
       <div class="campo"><span class="lbl" id="l-amen">Amenidades <span class="opc">(elige todas las que apliquen)</span></span><div class="chips" aria-labelledby="l-amen" data-chips="amenidades" data-multi></div></div>
+      <div class="campo"><label for="amenidadesOtras">Otras amenidades <span class="opc">(opcional)</span></label><input id="amenidadesOtras" name="amenidadesOtras" type="text" placeholder="Ej. sauna, cancha de pádel, zona infantil"></div>
       <div class="campo" data-req="radio:ph"><span class="lbl" id="l-ph">¿El reglamento de propiedad horizontal permite renta corta?</span><div class="chips" role="radiogroup" aria-labelledby="l-ph" data-chips="ph"></div><span class="err">Elige una opción.</span></div>
       <div class="campo" data-req="radio:rnt"><span class="lbl" id="l-rnt">¿Tiene Registro Nacional de Turismo (RNT)?</span><div class="chips" role="radiogroup" aria-labelledby="l-rnt" data-chips="rnt"></div><span class="err">Elige una opción.</span></div>
       <div class="campo" data-req="radio:inicio"><span class="lbl" id="l-in">¿Cuándo podría empezar a operar?</span><div class="chips" role="radiogroup" aria-labelledby="l-in" data-chips="inicio"></div><span class="err">Elige una opción.</span></div>
       <div class="campo"><label for="arriendoActual">Si hoy lo arriendas, ¿cuánto recibes al mes? <span class="opc">(opcional)</span></label><input id="arriendoActual" name="arriendoActual" type="text" inputmode="numeric" placeholder="$ 0"><span class="ayuda">Nos ayuda a preparar una comparación con tu asesor.</span></div>
+      <div class="campo"><label for="observaciones">Observaciones o detalles del proyecto o inmueble <span class="opc">(opcional)</span></label><textarea id="observaciones" name="observaciones" rows="4" maxlength="1500" placeholder="Cuéntanos lo que creas importante: estado de la obra, fechas de entrega, normas del edificio, expectativas…"></textarea></div>
 
       <div class="acciones">
         <button type="button" class="btn secundario" data-ir="1" aria-label="Volver al paso anterior">Atrás</button>
@@ -308,7 +381,8 @@ footer .firma{margin:0 0 4px;font-family:var(--font-display);font-weight:500;fon
 
     <div class="acciones" style="flex-direction:column">
       <a class="btn primario" id="btnWhats" href="#" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>Hablar con un asesor</a>
-      <button type="button" class="btn claro" id="btnNueva">Nueva evaluación</button>
+      <button type="button" class="btn claro" id="btnPdf"><svg viewBox="0 -960 960 960" aria-hidden="true"><path d="M480-337q-8 0-15-2.5t-13-8.5L308-492q-12-12-11.5-28t11.5-28q12-12 28.5-12.5T365-549l75 75v-286q0-17 11.5-28.5T480-800q17 0 28.5 11.5T520-760v286l75-75q12-12 28.5-11.5T652-548q11 12 11.5 28T652-492L508-348q-6 6-13 8.5t-15 2.5ZM240-160q-33 0-56.5-23.5T160-240v-80q0-17 11.5-28.5T200-360q17 0 28.5 11.5T240-320v80h480v-80q0-17 11.5-28.5T760-360q17 0 28.5 11.5T800-320v80q0 33-23.5 56.5T720-160H240Z"/></svg>Descargar mi resumen en PDF</button>
+      <button type="button" class="btn secundario" id="btnNueva" style="flex:1">Nueva evaluación</button>
     </div>
   </section>
 
@@ -318,13 +392,15 @@ footer .firma{margin:0 0 4px;font-family:var(--font-display);font-weight:500;fon
   </footer>
 </main>
 
-<script src="config.js?v=20261002c"></script>
-<script src="motor.js?v=20261002c"></script>
+<script src="config.js?v=20261002f"></script>
+<script src="motor.js?v=20261002f"></script>
+<script src="sesion.js?v=20261002f"></script>
+<script src="pdf.js?v=20261002f"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
 <script>
 (function(){
   var C = window.AHEAD_EVAL, M = C.modelo, Mo = window.AheadMotor;
   var qs = new URLSearchParams(location.search);
-  var ORIGEN = qs.get("origen") || "web";
   var COLA = "ahead_eval_cola_v1";
   var $ = function(id){ return document.getElementById(id); };
   document.getElementById("anio").textContent = new Date().getFullYear();
@@ -359,10 +435,62 @@ footer .firma{margin:0 0 4px;font-family:var(--font-display);font-weight:500;fon
   }
   $("btnWhats").href = C.whatsapp;
 
-  /* ---------- Asesor (opcional) ---------- */
-  $("asesor").innerHTML = '<option value="">No, lo hago por mi cuenta</option>' + C.asesores.map(function(a){return '<option>'+esc(a)+'</option>'}).join("");
-  try { var ult = localStorage.getItem("ahead_eval_asesor"); if (ult && C.asesores.indexOf(ult) >= 0) $("asesor").value = ult; } catch(e){}
-  $("asesor").addEventListener("change", function(){ try{ localStorage.setItem("ahead_eval_asesor", this.value) }catch(e){} });
+  /* ---------- Cuenta del Equipo Ahead ---------- */
+  var S = window.AheadSesion, dlg = $("dlgCuenta");
+  function pintarCuenta(){
+    var s = S.leer();
+    $("btnCuenta").classList.toggle("activa", !!s);
+    $("btnLeads").hidden = !s;
+    $("avisoFirmado").hidden = !s;
+    $("vSesion").hidden = !s; $("vAcceso").hidden = !!s;
+    if (s) {
+      var ini = (s.nombre || s.email).split(/\s+/).map(function(w){return w[0]}).join("").slice(0,2).toUpperCase();
+      $("cuentaAv").textContent = ini;
+      $("cuentaTxt").textContent = (s.nombre || "").split(" ")[0] || "Equipo";
+      $("sesNombre").textContent = s.nombre; $("sesEmail").textContent = s.email;
+      $("firmadoNombre").textContent = s.nombre + " (" + s.email + ")";
+    } else {
+      $("cuentaAv").innerHTML = '<svg viewBox="0 -960 960 960" aria-hidden="true"><path d="M480-480q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47ZM160-240v-32q0-34 17.5-62.5T224-378q62-31 126-46.5T480-440q66 0 130 15.5T736-378q29 15 46.5 43.5T800-272v32q0 33-23.5 56.5T720-160H240q-33 0-56.5-23.5T160-240Z"/></svg>';
+      $("cuentaTxt").textContent = "Equipo Ahead";
+    }
+  }
+  function abrirDlg(){ pintarCuenta(); if (dlg.showModal) dlg.showModal(); else dlg.setAttribute("open",""); }
+  function cerrarDlg(){ if (dlg.close) dlg.close(); else dlg.removeAttribute("open"); }
+  $("btnCuenta").addEventListener("click", abrirDlg);
+  $("dlgCerrar").addEventListener("click", cerrarDlg);
+  dlg.addEventListener("click", function(e){ if (e.target === dlg) cerrarDlg(); });
+  document.querySelectorAll("[data-tab]").forEach(function(b){
+    b.addEventListener("click", function(){
+      var crear = b.getAttribute("data-tab") === "crear";
+      document.querySelectorAll("[data-tab]").forEach(function(x){ x.setAttribute("aria-selected", String(x === b)); });
+      $("fEntrar").hidden = crear; $("fCrear").hidden = !crear;
+    });
+  });
+  $("fEntrar").addEventListener("submit", function(e){
+    e.preventDefault();
+    var btn = this.querySelector("button[type=submit]"); btn.disabled = true; $("lgMsg").className = "msg"; $("lgMsg").textContent = "Verificando…";
+    S.login($("lgEmail").value, $("lgPass").value).then(function(j){
+      btn.disabled = false;
+      if (!j.ok) { $("lgMsg").textContent = S.mensaje(j.error); return; }
+      $("lgPass").value = ""; $("lgMsg").textContent = ""; pintarCuenta(); cerrarDlg();
+    }).catch(function(err){ btn.disabled = false; $("lgMsg").textContent = S.mensaje(err && err.message); });
+  });
+  $("fCrear").addEventListener("submit", function(e){
+    e.preventDefault();
+    var btn = this.querySelector("button[type=submit]"), m = $("rgMsg");
+    m.className = "msg";
+    if ($("rgPass").value.length < 8) { m.textContent = S.mensaje("datos"); return; }
+    btn.disabled = true; m.textContent = "Enviando…";
+    S.registro($("rgNombre").value, $("rgEmail").value, $("rgPass").value).then(function(j){
+      btn.disabled = false;
+      if (!j.ok) { m.textContent = S.mensaje(j.error); return; }
+      m.className = "msg ok"; m.textContent = "Solicitud enviada. Podrás iniciar sesión cuando el Equipo Ahead apruebe tu cuenta.";
+      $("rgPass").value = "";
+    }).catch(function(err){ btn.disabled = false; m.textContent = S.mensaje(err && err.message); });
+  });
+  $("btnSalir").addEventListener("click", function(){ S.cerrar(); pintarCuenta(); cerrarDlg(); });
+  window.addEventListener("storage", pintarCuenta);
+  pintarCuenta();
 
   /* ---------- Condicionales ---------- */
   var form = $("form");
@@ -445,34 +573,57 @@ footer .firma{margin:0 0 4px;font-family:var(--font-display);font-weight:500;fon
     var ciudadSel = val("ciudad");
     var lead = {
       nombre: val("nombre"), apellido: val("apellido"), email: val("email").toLowerCase(), telefono: val("telefono"),
-      empresa: val("empresa"), cargo: val("cargo"), proyecto: val("proyecto"),
+      empresa: val("empresa"), cargo: val("cargo"), proyecto: val("proyecto"), direccion: val("direccion"),
       ciudad: ciudadSel === "Otra" ? (val("ciudadOtra") || "Otra") : ciudadSel,
       tipoProyecto: val("tipoProyecto"), rol: val("rol")
     };
     var inm = {
       ciudad: ciudadSel, tipoInmueble: val("tipoInmueble"), unidades: $("c-unidades").hidden ? 1 : Math.max(1, Number(val("unidades"))||1),
       zona: val("zona"), area: Number(val("area"))||"", estrato: val("estrato"), habitaciones: val("habitaciones"), banos: val("banos"),
-      ubicacion: val("ubicacion"), amoblado: val("amoblado"), estado: val("estado"), amenidades: val("amenidades"),
+      ubicacion: val("ubicacion"), amoblado: val("amoblado"), estado: val("estado"), amenidades: val("amenidades"), amenidadesOtras: val("amenidadesOtras"),
       ph: val("ph"), rnt: val("rnt"), inicio: val("inicio"),
-      arriendoActual: Number(String(val("arriendoActual")).replace(/\D/g,"")) || ""
+      arriendoActual: Number(String(val("arriendoActual")).replace(/\D/g,"")) || "",
+      observaciones: val("observaciones")
     };
     var res = Mo.estimar(inm);
     var cal = Mo.calificar(lead, inm, res);
-    pintar(lead, inm, res);
-    irA(3);
-
+    var ses = S.leer();
     var registro = {
-      id: uid(), fecha: new Date().toISOString(), origen: ORIGEN, asesor: val("asesor"),
+      id: uid(), fecha: new Date().toISOString(),
+      origen: ses ? "Equipo Ahead" : "QR / por su cuenta", asesor: ses ? ses.email : "", asesorNombre: ses ? ses.nombre : "",
+      token: ses ? ses.token : "",
       lead: lead, inmueble: inm, resultado: res, calificacion: cal,
       consentimiento: true, dispositivo: navigator.userAgent.slice(0,160)
     };
+    ultimo = registro;
+    pintar(lead, inm, res);
+    irA(3);
     encolar(registro);
     sincronizar();
+  });
+  var ultimo = null;
+
+  /* ---------- WhatsApp y PDF ---------- */
+  function linkWhats(r){
+    var base = C.whatsapp.split("?")[0], L = r.lead;
+    var txt = "Hola Ahead, soy " + L.nombre + " " + L.apellido + ". Hice la evaluación de " + (L.proyecto || ("mi " + r.inmueble.tipoInmueble.toLowerCase())) +
+      " en " + L.ciudad + " (ref. " + r.id + ") y quiero agendar una reunión para hablar de mi propiedad.";
+    return base + "?text=" + encodeURIComponent(txt);
+  }
+  $("btnPdf").addEventListener("click", function(){
+    if (!ultimo) return;
+    var b = this, txt = b.lastChild.textContent;
+    if (!window.jspdf) { b.lastChild.textContent = "Cargando…"; setTimeout(function(){ b.lastChild.textContent = txt; if (window.jspdf) b.click(); else alert("No se pudo generar el PDF sin conexión. Intenta de nuevo con internet."); }, 1500); return; }
+    b.disabled = true; b.lastChild.textContent = "Generando PDF…";
+    window.AheadPDF.generar(ultimo, { whatsapp: linkWhats(ultimo), numero: C.whatsappNumero || "+57 314 270 1520" })
+      .then(function(){ b.disabled = false; b.lastChild.textContent = txt; })
+      .catch(function(){ b.disabled = false; b.lastChild.textContent = txt; });
   });
 
   /* ---------- Resultado ---------- */
   function pintar(lead, inm, r){
     var E = r.escenarios, m = E.medio;
+    $("btnWhats").href = linkWhats(ultimo);
     $("rPara").textContent = (lead.proyecto ? lead.proyecto + " · " : "") + inm.tipoInmueble + " en " + lead.ciudad + (r.unidades > 1 ? " · " + r.unidades + " unidades" : "");
     $("rMensual").textContent = Mo.fmt(m.mensual);
     $("rCons").textContent = Mo.fmt(E.conservador.mensual);
@@ -529,9 +680,7 @@ footer .firma{margin:0 0 4px;font-family:var(--font-display);font-weight:500;fon
 
   /* ---------- Nueva evaluación ---------- */
   $("btnNueva").addEventListener("click", function(){
-    var asesor = $("asesor").value;
-    form.reset();
-    $("asesor").value = asesor;
+    form.reset(); ultimo = null;
     $("c-ciudadOtra").hidden = true; $("c-unidades").hidden = true;
     form.querySelectorAll(".invalido").forEach(function(c){ c.classList.remove("invalido"); });
     estadoEnvio("", "Guardando…");

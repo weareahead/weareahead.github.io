@@ -21,6 +21,7 @@
   color-scheme:light;
 }
 *{box-sizing:border-box}
+[hidden]{display:none!important}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font-body);font-size:14px;line-height:1.45;-webkit-font-smoothing:antialiased}
 button,input,select,textarea{font:inherit;color:inherit}
 .top{position:sticky;top:0;z-index:5;background:var(--dark-morada);color:var(--cream);padding:12px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
@@ -118,6 +119,19 @@ tbody tr:hover{background:#FBF9F5}
 .det .acc{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
 .det .acc a{text-decoration:none}
 .ok{color:var(--prio);font-size:13px}
+.tabs{display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:4px;border-radius:999px;background:var(--soft-lila);margin-bottom:6px}
+.tabs button{min-height:38px;border:0;border-radius:999px;background:transparent;color:var(--morada);font-weight:600;cursor:pointer}
+.tabs button[aria-selected=true]{background:var(--dark-morada);color:var(--cream)}
+.msg.okv{color:var(--prio)}
+.top .badge{display:inline-grid;place-items:center;min-width:18px;height:18px;padding:0 5px;margin-left:6px;border-radius:9px;background:var(--naranja);color:var(--dark-morada);font-size:11px;font-weight:700}
+.mios{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--ink-2);padding:0 6px}
+.mios input{accent-color:var(--morada);width:16px;height:16px}
+.usuarios{display:flex;flex-direction:column;gap:8px}
+.usr{display:grid;grid-template-columns:1fr auto;gap:4px 12px;align-items:center;padding:12px;border:1px solid var(--line);border-radius:12px}
+.usr .acc{margin:0}
+.usr .btn{min-height:36px;padding:6px 14px;font-size:13px}
+.est.pendiente{background:var(--pot-bg);color:var(--pot)} .est.activo{background:var(--prio-bg);color:var(--prio)} .est.desactivado{background:var(--nov-bg);color:var(--nov)}
+.det .obs{white-space:pre-wrap;background:#FBF9F5;border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:13.5px}
 </style>
 </head>
 <body>
@@ -129,6 +143,8 @@ tbody tr:hover{background:#FBF9F5}
   <a id="lnkHoja" href="#" target="_blank" rel="noopener" hidden>Abrir hoja de cálculo</a>
   <button type="button" id="btnRecargar" hidden>Actualizar</button>
   <button type="button" id="btnCsv" hidden>Exportar CSV</button>
+  <a href="../evaluador/">Ir al evaluador</a>
+  <button type="button" id="btnEquipo" hidden>Equipo<span class="badge" id="badgePend" hidden></span></button>
   <span class="user" id="usuario" hidden></span>
   <button type="button" id="btnSalir" hidden>Cerrar sesión</button>
 </div>
@@ -136,8 +152,22 @@ tbody tr:hover{background:#FBF9F5}
 <main>
   <section class="acceso" id="acceso">
     <img src="../assets/isotipo-ahead.svg" alt="" width="40" height="36" style="display:block;margin-bottom:14px">
-    <h2>Iniciar sesión</h2>
-    <p>Panel interno del equipo Ahead · leads del Evaluador de propiedades.</p>
+    <h2>Equipo Ahead</h2>
+    <p>Panel interno · leads y datos del Evaluador de propiedades.</p>
+    <div class="tabs" role="tablist">
+      <button type="button" role="tab" aria-selected="true" data-tab="entrar">Iniciar sesión</button>
+      <button type="button" role="tab" aria-selected="false" data-tab="crear">Crear cuenta</button>
+    </div>
+    <form id="fCrear" hidden>
+      <label for="rgNombre">Nombre y apellido</label>
+      <input id="rgNombre" type="text" autocomplete="name" required>
+      <label for="rgEmail">Correo</label>
+      <input id="rgEmail" type="email" autocomplete="email" inputmode="email" required>
+      <label for="rgPass">Contraseña (mínimo 8 caracteres)</label>
+      <input id="rgPass" type="password" autocomplete="new-password" minlength="8" required>
+      <button class="btn" type="submit" id="btnCrear">Solicitar acceso</button>
+      <p class="sb" style="margin:6px 0 0">Tu cuenta queda pendiente hasta que el administrador del Equipo Ahead la apruebe.</p>
+    </form>
     <form id="fAcceso">
       <label for="correo">Correo</label>
       <input id="correo" type="email" autocomplete="username" inputmode="email" placeholder="correo@gmail.com" required>
@@ -175,6 +205,7 @@ tbody tr:hover{background:#FBF9F5}
       <select id="fCiudad"><option value="">Toda ciudad</option></select>
       <select id="fEstado"><option value="">Todo estado</option></select>
       <select id="fOrigen"><option value="">Todo origen</option></select>
+      <label class="mios" id="lblMios" hidden><input type="checkbox" id="fMios"> Solo mis evaluaciones</label>
       <span class="cnt" id="cnt"></span>
     </div>
     <div class="tabla">
@@ -190,10 +221,17 @@ tbody tr:hover{background:#FBF9F5}
 </main>
 
 <div class="velo" id="velo"></div>
+<aside class="det" id="detEquipo" aria-label="Cuentas del equipo">
+  <button class="cerrar" type="button" id="cerrarEquipo">Cerrar</button>
+  <h2>Cuentas del equipo</h2>
+  <p class="sb">Aprueba a quienes deben ver los leads y usar el evaluador con su nombre. Desactivar una cuenta cierra su acceso de inmediato.</p>
+  <div class="usuarios" id="listaUsuarios" style="margin-top:14px"></div>
+</aside>
 <aside class="det" id="det" aria-label="Detalle del lead"></aside>
 
-<script src="../evaluador/config.js?v=20261002c"></script>
-<script src="../evaluador/motor.js?v=20261002c"></script>
+<script src="../evaluador/config.js?v=20261002f"></script>
+<script src="../evaluador/motor.js?v=20261002f"></script>
+<script src="../evaluador/sesion.js?v=20261002f"></script>
 <script>
 (function(){
   var C = window.AHEAD_EVAL, Mo = window.AheadMotor, $ = function(i){return document.getElementById(i)};
@@ -205,41 +243,79 @@ tbody tr:hover{background:#FBF9F5}
   if (C.hojaUrl) { $("lnkHoja").href = C.hojaUrl; }
   $("fEstado").innerHTML += ESTADOS.map(function(e){return "<option>"+e+"</option>"}).join("");
 
-  /* ---------- Sesión ---------- */
-  var KEY = "ahead_panel_sesion";
-  function sesion(){ try { var s = JSON.parse(ls(KEY) || "null"); return s && s.expira > Date.now() ? s : null; } catch(e){ return null; } }
+  /* ---------- Sesión (compartida con el evaluador) ---------- */
+  var S = window.AheadSesion, equipo = [], yo = null;
+  function sesion(){ return S.leer(); }
   function cargar(){
     var s = sesion(); if (!s) return;
-    $("msgAcceso").textContent = "Cargando leads…";
+    $("msgAcceso").className = "msg"; $("msgAcceso").textContent = "Cargando leads…";
     fetch(C.endpoint + "?accion=listar&token=" + encodeURIComponent(s.token))
       .then(function(r){return r.json()})
       .then(function(j){
-        if (!j.ok) { ls(KEY,null); $("msgAcceso").textContent = j.error === "sesion" ? "Tu sesión expiró. Inicia sesión de nuevo." : "Error: " + j.error; $("acceso").hidden = false; $("app").hidden = true; return; }
-        demo = false; datos = j.registros || []; $("msgAcceso").textContent = ""; abrirApp();
-        $("usuario").textContent = s.email; $("usuario").hidden = false;
+        if (!j.ok) { S.cerrar(); $("msgAcceso").textContent = S.mensaje(j.error); $("acceso").hidden = false; $("app").hidden = true; return; }
+        demo = false; datos = j.registros || []; equipo = j.equipo || []; yo = j.yo || s;
+        $("msgAcceso").textContent = ""; abrirApp();
+        $("usuario").textContent = (yo.nombre || s.email) + (yo.rol === "admin" ? " · admin" : ""); $("usuario").hidden = false;
+        $("lblMios").hidden = false;
+        if (yo.rol === "admin") { $("btnEquipo").hidden = false; cargarUsuarios(); }
       })
       .catch(function(){ $("msgAcceso").textContent = "No se pudo conectar con la hoja. Revisa la conexión."; });
   }
+  document.querySelectorAll("[data-tab]").forEach(function(b){
+    b.addEventListener("click", function(){
+      var crear = b.getAttribute("data-tab") === "crear";
+      document.querySelectorAll("[data-tab]").forEach(function(x){ x.setAttribute("aria-selected", String(x === b)); });
+      $("fAcceso").hidden = crear; $("fCrear").hidden = !crear; $("msgAcceso").textContent = "";
+    });
+  });
   $("verClave").addEventListener("click", function(){ var i = $("clave"); i.type = i.type === "password" ? "text" : "password"; this.textContent = i.type === "password" ? "Ver" : "Ocultar"; });
   $("fAcceso").addEventListener("submit", function(e){
     e.preventDefault();
     if (!C.endpoint) { $("msgAcceso").textContent = "El panel aún no está conectado a la hoja. Puedes ver los datos de ejemplo."; return; }
-    var email = $("correo").value.trim().toLowerCase(), pass = $("clave").value;
-    $("btnEntrar").disabled = true; $("msgAcceso").textContent = "Verificando…";
-    fetch(C.endpoint, {method:"POST", headers:{"Content-Type":"text/plain;charset=utf-8"}, body: JSON.stringify({accion:"login", email:email, password:pass})})
-      .then(function(r){return r.json()})
-      .then(function(j){
-        $("btnEntrar").disabled = false;
-        if (!j.ok) { $("msgAcceso").textContent = j.error === "bloqueado" ? "Demasiados intentos. Espera 10 minutos." : "Correo o contraseña incorrectos."; return; }
-        ls(KEY, JSON.stringify({token:j.token, expira:j.expira, email:email})); $("clave").value = ""; cargar();
-      })
-      .catch(function(){ $("btnEntrar").disabled = false; $("msgAcceso").textContent = "No se pudo conectar. Revisa la conexión."; });
+    $("btnEntrar").disabled = true; $("msgAcceso").className = "msg"; $("msgAcceso").textContent = "Verificando…";
+    S.login($("correo").value, $("clave").value).then(function(j){
+      $("btnEntrar").disabled = false;
+      if (!j.ok) { $("msgAcceso").textContent = S.mensaje(j.error); return; }
+      $("clave").value = ""; cargar();
+    }).catch(function(err){ $("btnEntrar").disabled = false; $("msgAcceso").textContent = S.mensaje(err && err.message); });
   });
-  $("verDemo").addEventListener("click", function(){ demo = true; datos = ejemplo(); abrirApp(); });
+  $("fCrear").addEventListener("submit", function(e){
+    e.preventDefault();
+    var m = $("msgAcceso"); m.className = "msg";
+    if ($("rgPass").value.length < 8) { m.textContent = S.mensaje("datos"); return; }
+    $("btnCrear").disabled = true; m.textContent = "Enviando…";
+    S.registro($("rgNombre").value, $("rgEmail").value, $("rgPass").value).then(function(j){
+      $("btnCrear").disabled = false;
+      if (!j.ok) { m.textContent = S.mensaje(j.error); return; }
+      m.className = "msg okv"; m.textContent = "Solicitud enviada. Podrás entrar cuando el administrador apruebe tu cuenta."; $("rgPass").value = "";
+    }).catch(function(err){ $("btnCrear").disabled = false; m.textContent = S.mensaje(err && err.message); });
+  });
+  $("verDemo").addEventListener("click", function(){ demo = true; datos = ejemplo(); equipo = [{email:"daniel@ejemplo.com",nombre:"Daniel"},{email:"lina@ejemplo.com",nombre:"Lina"}]; abrirApp(); });
   $("salirDemo").addEventListener("click", function(){ location.reload(); });
-  $("btnSalir").addEventListener("click", function(){ ls(KEY,null); location.reload(); });
+  $("btnSalir").addEventListener("click", function(){ S.cerrar(); location.reload(); });
   $("btnRecargar").addEventListener("click", function(){ if (!demo) cargar(); });
   if (C.endpoint && sesion()) { $("acceso").hidden = true; cargar(); }
+
+  /* ---------- Cuentas del equipo (solo admin) ---------- */
+  function cargarUsuarios(){
+    S.post({accion:"usuarios", token:sesion().token}).then(function(j){
+      if (!j.ok) return;
+      var pend = j.usuarios.filter(function(u){return u.estado === "pendiente"}).length;
+      $("badgePend").hidden = !pend; $("badgePend").textContent = pend;
+      $("listaUsuarios").innerHTML = j.usuarios.length ? j.usuarios.sort(function(a,b){ return (a.estado==="pendiente"?0:1)-(b.estado==="pendiente"?0:1); }).map(function(u){
+        var acc = u.estado === "activo" ? '<button class="btn sec" data-u="'+esc(u.email)+'" data-e="desactivado">Desactivar</button>'
+          : '<button class="btn" data-u="'+esc(u.email)+'" data-e="activo">Aprobar</button>' + (u.estado === "pendiente" ? ' <button class="btn sec" data-u="'+esc(u.email)+'" data-e="desactivado">Rechazar</button>' : '');
+        return '<div class="usr"><div><div class="nm">'+esc(u.nombre)+' <span class="est '+esc(u.estado)+'">'+esc(u.estado)+'</span></div><div class="sb">'+esc(u.email)+(u.ultimoAcceso ? ' · último acceso '+fecha(u.ultimoAcceso) : '')+'</div></div><div class="acc">'+acc+'</div></div>';
+      }).join("") : '<div class="sb">Aún nadie ha pedido una cuenta. Comparte el enlace del evaluador: en «Equipo Ahead → Crear cuenta» cada persona hace su solicitud.</div>';
+    });
+  }
+  $("listaUsuarios").addEventListener("click", function(e){
+    var b = e.target.closest("button[data-u]"); if (!b) return;
+    b.disabled = true;
+    S.post({accion:"usuario", token:sesion().token, email:b.getAttribute("data-u"), estado:b.getAttribute("data-e")}).then(function(){ cargarUsuarios(); cargar(); });
+  });
+  $("btnEquipo").addEventListener("click", function(){ $("detEquipo").classList.add("abierto"); $("velo").classList.add("abierto"); });
+  $("cerrarEquipo").addEventListener("click", function(){ $("detEquipo").classList.remove("abierto"); $("velo").classList.remove("abierto"); });
 
   function abrirApp(){
     $("acceso").hidden = true; $("app").hidden = false;
@@ -254,21 +330,22 @@ tbody tr:hover{background:#FBF9F5}
 
   /* ---------- Vista ---------- */
   function filtrados(){
-    var q = $("q").value.trim().toLowerCase(), fc = $("fClase").value, fci = $("fCiudad").value, fe = $("fEstado").value, fo = $("fOrigen").value;
+    var q = $("q").value.trim().toLowerCase(), fc = $("fClase").value, fci = $("fCiudad").value, fe = $("fEstado").value, fo = $("fOrigen").value, mios = $("fMios").checked && yo;
     return datos.filter(function(r){
       var L = r.lead;
       if (fc && r.calificacion.clase !== fc) return false;
       if (fci && L.ciudad !== fci) return false;
       if (fe && (r.estadoComercial||"Nuevo") !== fe) return false;
       if (fo && r.origen !== fo) return false;
-      if (q && [L.nombre,L.apellido,L.empresa,L.proyecto,L.email,L.telefono,r.inmueble.zona].join(" ").toLowerCase().indexOf(q) < 0) return false;
+      if (mios && r.asesor !== yo.email) return false;
+      if (q && [L.nombre,L.apellido,L.empresa,L.proyecto,L.direccion,L.email,L.telefono,r.inmueble.zona,r.asesorNombre].join(" ").toLowerCase().indexOf(q) < 0) return false;
       return true;
     }).sort(function(a,b){
       var v = function(r){ switch(orden.k){
         case "fecha": return r.fecha; case "nombre": return (r.lead.nombre+" "+r.lead.apellido).toLowerCase();
         case "proyecto": return (r.lead.proyecto||"").toLowerCase(); case "tipo": return r.lead.tipoProyecto;
         case "mensual": return r.resultado.escenarios.medio.mensual; case "puntaje": return r.calificacion.puntaje;
-        case "estado": return r.estadoComercial||""; case "asesor": return r.asesor||""; } };
+        case "estado": return r.estadoComercial||""; case "asesor": return r.asesorNombre||r.asesor||""; } };
       var x = v(a), y = v(b); return (x>y?1:x<y?-1:0) * orden.dir;
     });
   }
@@ -315,7 +392,7 @@ tbody tr:hover{background:#FBF9F5}
         + '<td class="num">'+Mo.fmt(r.resultado.escenarios.medio.mensual)+'</td>'
         + '<td class="num">'+claseTag(r.calificacion.clase)+'<div class="sb">'+r.calificacion.puntaje+' / 100</div></td>'
         + '<td><span class="est">'+esc(r.estadoComercial||"Nuevo")+'</span></td>'
-        + '<td>'+esc(r.asesor||"—")+'</td></tr>';
+        + '<td>'+esc(r.asesorNombre||r.asesor||"—")+'</td></tr>';
     }).join("") : '<tr><td colspan="8" class="vacio">'+(datos.length ? "Ningún lead coincide con los filtros." : "Aún no hay evaluaciones registradas.")+'</td></tr>';
   }
   function barras(id, pares){
@@ -331,7 +408,7 @@ tbody tr:hover{background:#FBF9F5}
     $("proyD").textContent = "ingreso bruto anual gestionado (escenario medio) · ≈ " + Math.round(u) + " unidades";
   }
   $("tasa").addEventListener("input", function(){ proyectar(filtrados()); });
-  ["q","fClase","fCiudad","fEstado","fOrigen"].forEach(function(id){ $(id).addEventListener("input", pintar); });
+  ["q","fClase","fCiudad","fEstado","fOrigen","fMios"].forEach(function(id){ $(id).addEventListener("input", pintar); });
   document.querySelector("thead").addEventListener("click", function(e){
     var th = e.target.closest("th"); if (!th) return;
     var k = th.getAttribute("data-o"); orden = {k:k, dir: orden.k===k ? -orden.dir : -1}; pintar();
@@ -342,7 +419,7 @@ tbody tr:hover{background:#FBF9F5}
     var tr = e.target.closest("tr[data-id]"); if (!tr) return;
     abrir(datos.filter(function(r){return r.id === tr.getAttribute("data-id")})[0]);
   });
-  function cerrar(){ $("det").classList.remove("abierto"); $("velo").classList.remove("abierto"); }
+  function cerrar(){ $("det").classList.remove("abierto"); $("detEquipo").classList.remove("abierto"); $("velo").classList.remove("abierto"); }
   $("velo").addEventListener("click", cerrar);
   document.addEventListener("keydown", function(e){ if (e.key === "Escape") cerrar(); });
 
@@ -360,17 +437,19 @@ tbody tr:hover{background:#FBF9F5}
       + (K.riesgos.length ? '<h4>Factores de riesgo</h4><ul>'+K.riesgos.map(function(x){return "<li>"+esc(x)+"</li>"}).join("")+'</ul>' : '')
       + (K.fortalezas.length ? '<h4>Fortalezas</h4><ul>'+K.fortalezas.map(function(x){return "<li>"+esc(x)+"</li>"}).join("")+'</ul>' : '')
       + '<h4>Seguimiento</h4><div class="edit"><select id="dEstado">'+ESTADOS.map(function(e){return "<option"+((r.estadoComercial||"Nuevo")===e?" selected":"")+">"+e+"</option>"}).join("")+'</select>'
-      + '<select id="dAsesor"><option value="">Sin asesor</option>'+C.asesores.map(function(a){return "<option"+(r.asesor===a?" selected":"")+">"+esc(a)+"</option>"}).join("")+'</select>'
+      + '<select id="dAsesor"><option value="">Sin asesor (QR / por su cuenta)</option>'+equipo.map(function(a){return '<option value="'+esc(a.email)+'"'+(r.asesor===a.email?" selected":"")+'>'+esc(a.nombre)+' · '+esc(a.email)+'</option>'}).join("")+'</select>'
       + '<textarea id="dNotas" placeholder="Notas de la conversación, próximos pasos…">'+esc(r.notas||"")+'</textarea>'
       + '<div><button class="btn" type="button" id="dGuardar">Guardar seguimiento</button> <span id="dOk" class="ok"></span></div></div>'
-      + '<h4>Contacto</h4>' + dl([["Email",L.email],["Teléfono",L.telefono],["Empresa",L.empresa],["Cargo",L.cargo],["Rol",L.rol],["Origen",r.origen],["Atendido por",r.asesor]])
-      + '<h4>Proyecto e inmueble</h4>' + dl([["Proyecto",L.proyecto],["Ciudad",L.ciudad],["Zona",I.zona],["Tipo de proyecto",L.tipoProyecto],["Tipo de inmueble",I.tipoInmueble],["Unidades",I.unidades],["Área (m²)",I.area],["Estrato",I.estrato],["Habitaciones",I.habitaciones],["Baños",I.banos],["Ubicación",I.ubicacion],["Amoblado",I.amoblado],["Estado",I.estado],["Amenidades",(I.amenidades||[]).join(", ")],["Reglamento P.H.",I.ph],["RNT",I.rnt],["Inicio",I.inicio]])
+      + '<h4>Contacto</h4>' + dl([["Email",L.email],["Teléfono",L.telefono],["Empresa",L.empresa],["Cargo",L.cargo],["Rol",L.rol],["Origen",r.origen],["Atendido por",r.asesorNombre ? r.asesorNombre+" · "+r.asesor : r.asesor]])
+      + '<h4>Proyecto e inmueble</h4>' + dl([["Proyecto",L.proyecto],["Dirección",L.direccion],["Ciudad",L.ciudad],["Zona",I.zona],["Tipo de proyecto",L.tipoProyecto],["Tipo de inmueble",I.tipoInmueble],["Unidades",I.unidades],["Área (m²)",I.area],["Estrato",I.estrato],["Habitaciones",I.habitaciones],["Baños",I.banos],["Ubicación",I.ubicacion],["Amoblado",I.amoblado],["Estado",I.estado],["Amenidades",(I.amenidades||[]).join(", ")],["Reglamento P.H.",I.ph],["RNT",I.rnt],["Inicio",I.inicio]])
+      + (I.amenidadesOtras ? '<h4>Otras amenidades</h4><div class="obs">'+esc(I.amenidadesOtras)+'</div>' : '')
+      + (I.observaciones ? '<h4>Observaciones del propietario</h4><div class="obs">'+esc(I.observaciones)+'</div>' : '')
       + '<h4>Modelo</h4><div class="sb">'+esc(r.resultado.modelo)+'</div>';
     $("det").classList.add("abierto"); $("velo").classList.add("abierto");
     $("cerrarDet").addEventListener("click", cerrar);
     $("dGuardar").addEventListener("click", function(){
       var cambios = {estadoComercial:$("dEstado").value, asesor:$("dAsesor").value, notas:$("dNotas").value};
-      var aplicar = function(){ Object.assign(r, cambios); $("dOk").textContent = "Guardado"; pintar(); };
+      var aplicar = function(){ Object.assign(r, cambios); var u = equipo.filter(function(x){return x.email===cambios.asesor})[0]; r.asesorNombre = u ? u.nombre : ""; $("dOk").textContent = "Guardado"; pintar(); };
       if (demo) { aplicar(); $("dOk").textContent = "Guardado (solo en esta vista de ejemplo)"; return; }
       $("dOk").textContent = "Guardando…";
       fetch(C.endpoint, {method:"POST", headers:{"Content-Type":"text/plain;charset=utf-8"}, body: JSON.stringify(Object.assign({accion:"actualizar", token:(sesion()||{}).token, id:r.id}, cambios))})
@@ -382,10 +461,10 @@ tbody tr:hover{background:#FBF9F5}
   /* ---------- Exportar ---------- */
   $("btnCsv").addEventListener("click", function(){
     var F = filtrados();
-    var cols = ["id","fecha","origen","asesor","estadoComercial","nombre","apellido","email","telefono","empresa","cargo","proyecto","ciudad","tipoProyecto","rol","tipoInmueble","unidades","zona","estrato","habitaciones","banos","amoblado","estado","ph","rnt","inicio","arriendoActual","tarifaMedia","ocupacionMedia","mensualConservador","mensualMedio","mensualAlto","anualMedio","puntaje","clase","riesgos","notas"];
+    var cols = ["id","fecha","origen","asesor","asesorNombre","estadoComercial","nombre","apellido","email","telefono","empresa","cargo","proyecto","direccion","ciudad","tipoProyecto","rol","tipoInmueble","unidades","zona","estrato","habitaciones","banos","amoblado","estado","amenidades","amenidadesOtras","ph","rnt","inicio","arriendoActual","observaciones","tarifaMedia","ocupacionMedia","mensualConservador","mensualMedio","mensualAlto","anualMedio","puntaje","clase","riesgos","notas"];
     var q = function(v){ v = v==null?"":String(v); return '"'+v.replace(/"/g,'""')+'"'; };
     var rows = F.map(function(r){ var L=r.lead,I=r.inmueble,E=r.resultado.escenarios,K=r.calificacion;
-      return [r.id,r.fecha,r.origen,r.asesor,r.estadoComercial||"Nuevo",L.nombre,L.apellido,L.email,L.telefono,L.empresa,L.cargo,L.proyecto,L.ciudad,L.tipoProyecto,L.rol,I.tipoInmueble,I.unidades,I.zona,I.estrato,I.habitaciones,I.banos,I.amoblado,I.estado,I.ph,I.rnt,I.inicio,I.arriendoActual,E.medio.tarifa,E.medio.ocupacion,E.conservador.mensual,E.medio.mensual,E.alto.mensual,E.medio.anual,K.puntaje,K.clase,(K.riesgos||[]).join(" · "),r.notas||""].map(q).join(","); });
+      return [r.id,r.fecha,r.origen,r.asesor,r.asesorNombre,r.estadoComercial||"Nuevo",L.nombre,L.apellido,L.email,L.telefono,L.empresa,L.cargo,L.proyecto,L.direccion,L.ciudad,L.tipoProyecto,L.rol,I.tipoInmueble,I.unidades,I.zona,I.estrato,I.habitaciones,I.banos,I.amoblado,I.estado,(I.amenidades||[]).join(", "),I.amenidadesOtras,I.ph,I.rnt,I.inicio,I.arriendoActual,I.observaciones,E.medio.tarifa,E.medio.ocupacion,E.conservador.mensual,E.medio.mensual,E.alto.mensual,E.medio.anual,K.puntaje,K.clase,(K.riesgos||[]).join(" · "),r.notas||""].map(q).join(","); });
     var blob = new Blob(["﻿"+[cols.join(",")].concat(rows).join("\n")],{type:"text/csv;charset=utf-8"});
     var a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "ahead-leads-"+new Date().toISOString().slice(0,10)+".csv"; a.click();
   });
@@ -393,21 +472,21 @@ tbody tr:hover{background:#FBF9F5}
   /* ---------- Datos de ejemplo (solo para revisar el panel) ---------- */
   function ejemplo(){
     var base = [
-      ["Laura","Méndez","Constructora Andina","Gerente comercial","Torre Usaquén 118","Bogotá","Edificio / proyecto completo","Constructora / desarrollador","Edificio completo",24,"Usaquén","5","1","1","Zona turística o corporativa","Sí, listo para huéspedes","Nuevo o remodelado",["Gimnasio","Coworking","Parqueadero"],"Sí","En trámite","En 3–6 meses","web","Lina"],
-      ["Andrés","Rojas","","Inversionista","Apto Provenza","Medellín","Unidad individual","Inversionista","Apartamento",1,"El Poblado","5","2","2","Zona turística o corporativa","Sí, básico","Buen estado",["Balcón o terraza","Piscina"],"Sí","No","Ya mismo","web","Daniel"],
-      ["Camila","Ortiz","Familia Ortiz","Propietaria","Casa Bocagrande","Cartagena","Casa vacacional","Propietario","Casa",1,"Bocagrande","6","4","4","Zona turística o corporativa","Sí, listo para huéspedes","Buen estado",["Piscina","Aire acondicionado","Jacuzzi o BBQ"],"No aplica","Sí","Ya mismo","web","Lina"],
-      ["Jorge","Pardo","","","","Bogotá","Unidad individual","Propietario","Aparta-estudio",1,"Kennedy","3","Estudio","1","Residencial / alejada","No","Requiere mejoras",[],"No sé","No","En 1–3 meses","web",""],
-      ["Valentina","Gómez","VG Inversiones","Directora","Portafolio Chicó","Bogotá","Varias unidades","Inversionista","Apartamento",4,"Chicó","6","2","2","Zona turística o corporativa","Sí, listo para huéspedes","Nuevo o remodelado",["Gimnasio","Parqueadero","Vista"],"Sí","Sí","Ya mismo","web","Daniel"],
-      ["Felipe","Castaño","Inmobiliaria Norte","Agente","Edificio Laureles","Medellín","Varias unidades","Administrador o agente","Apartamento",6,"Laureles","4","1","1","Buena conectividad","Sí, básico","Buen estado",["Lavadora"],"No","No","En 1–3 meses","web","Lina"],
-      ["Natalia","Herrera","","","Apto Rodadero","Santa Marta","Unidad individual","Propietario","Apartamento",1,"El Rodadero","4","2","2","Zona turística o corporativa","Sí, básico","Buen estado",["Piscina","Vista"],"Sí","En trámite","Ya mismo","web",""],
-      ["Ricardo","Lozano","Lozano & Cía","Socio","Mirador del Lago","Girardot / Anapoima","Proyecto en construcción","Constructora / desarrollador","Casa campestre / finca",8,"Peñalisa","5","3","3","Buena conectividad","No","Nuevo o remodelado",["Piscina","Jacuzzi o BBQ","Pet friendly"],"No sé","No","Está en construcción","web","Daniel"]
+      ["Laura","Méndez","Constructora Andina","Gerente comercial","Torre Usaquén 118","Bogotá","Edificio / proyecto completo","Constructora / desarrollador","Edificio completo",24,"Usaquén","5","1","1","Zona turística o corporativa","Sí, listo para huéspedes","Nuevo o remodelado",["Gimnasio","Coworking","Parqueadero"],"Sí","En trámite","En 3–6 meses","E","Lina"],
+      ["Andrés","Rojas","","Inversionista","Apto Provenza","Medellín","Unidad individual","Inversionista","Apartamento",1,"El Poblado","5","2","2","Zona turística o corporativa","Sí, básico","Buen estado",["Balcón o terraza","Piscina"],"Sí","No","Ya mismo","E","Daniel"],
+      ["Camila","Ortiz","Familia Ortiz","Propietaria","Casa Bocagrande","Cartagena","Casa vacacional","Propietario","Casa",1,"Bocagrande","6","4","4","Zona turística o corporativa","Sí, listo para huéspedes","Buen estado",["Piscina","Aire acondicionado","Jacuzzi o BBQ"],"No aplica","Sí","Ya mismo","E","Lina"],
+      ["Jorge","Pardo","","","","Bogotá","Unidad individual","Propietario","Aparta-estudio",1,"Kennedy","3","Estudio","1","Residencial / alejada","No","Requiere mejoras",[],"No sé","No","En 1–3 meses","Q",""],
+      ["Valentina","Gómez","VG Inversiones","Directora","Portafolio Chicó","Bogotá","Varias unidades","Inversionista","Apartamento",4,"Chicó","6","2","2","Zona turística o corporativa","Sí, listo para huéspedes","Nuevo o remodelado",["Gimnasio","Parqueadero","Vista"],"Sí","Sí","Ya mismo","E","Daniel"],
+      ["Felipe","Castaño","Inmobiliaria Norte","Agente","Edificio Laureles","Medellín","Varias unidades","Administrador o agente","Apartamento",6,"Laureles","4","1","1","Buena conectividad","Sí, básico","Buen estado",["Lavadora"],"No","No","En 1–3 meses","E","Lina"],
+      ["Natalia","Herrera","","","Apto Rodadero","Santa Marta","Unidad individual","Propietario","Apartamento",1,"El Rodadero","4","2","2","Zona turística o corporativa","Sí, básico","Buen estado",["Piscina","Vista"],"Sí","En trámite","Ya mismo","Q",""],
+      ["Ricardo","Lozano","Lozano & Cía","Socio","Mirador del Lago","Girardot / Anapoima","Proyecto en construcción","Constructora / desarrollador","Casa campestre / finca",8,"Peñalisa","5","3","3","Buena conectividad","No","Nuevo o remodelado",["Piscina","Jacuzzi o BBQ","Pet friendly"],"No sé","No","Está en construcción","E","Daniel"]
     ];
     var estados = ["Contactado","Nuevo","En evaluación","Nuevo","Propuesta enviada","No viable","Nuevo","Contactado"];
     return base.map(function(b,i){
       var lead = {nombre:b[0],apellido:b[1],email:(b[0]+"."+b[1]).toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"")+"@ejemplo.com",telefono:"300 000 00"+(10+i),empresa:b[2],cargo:b[3],proyecto:b[4],ciudad:b[5],tipoProyecto:b[6],rol:b[7]};
       var inm = {ciudad:b[5],tipoInmueble:b[8],unidades:b[9],zona:b[10],estrato:b[11],habitaciones:b[12],banos:b[13],ubicacion:b[14],amoblado:b[15],estado:b[16],amenidades:b[17],ph:b[18],rnt:b[19],inicio:b[20],area:"",arriendoActual:i%3===0?3200000:""};
       var res = Mo.estimar(inm), cal = Mo.calificar(lead, inm, res);
-      return {id:"EJEMPLO-"+(i+1), fecha:new Date(Date.now()-i*16200000).toISOString(), origen:b[21], asesor:b[22], estadoComercial: cal.clase==="No viable"?"No viable":estados[i], notas:"", lead:lead, inmueble:inm, resultado:res, calificacion:cal};
+      return {id:"EJEMPLO-"+(i+1), fecha:new Date(Date.now()-i*16200000).toISOString(), origen: b[21]==="E" ? "Equipo Ahead" : "QR / por su cuenta", asesor: b[22] ? b[22].toLowerCase()+"@ejemplo.com" : "", asesorNombre: b[22], estadoComercial: cal.clase==="No viable"?"No viable":estados[i], notas:"", lead:lead, inmueble:inm, resultado:res, calificacion:cal};
     });
   }
 })();
