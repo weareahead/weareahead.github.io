@@ -87,11 +87,11 @@ window.AHEAD = {
         },
         {
           texto: "Facebook",
-          detalle: "",
-          url: "",
+          detalle: "We Are Ahead",
+          url: "https://www.facebook.com/weareahead1",
           icono: "facebook",
           estilo: "red",
-          estado: "pendiente"
+          estado: "activo"
         },
         {
           texto: "X",
