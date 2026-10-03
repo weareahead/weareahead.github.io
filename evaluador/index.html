@@ -304,6 +304,7 @@ footer .firma{margin:0 0 4px;font-family:var(--font-display);font-weight:500;fon
           </div>
           <span class="err" id="errTel">Escribe un celular de 10 dígitos.</span></div>
       </div>
+      <div class="campo" data-req="multi:contacto"><span class="lbl" id="l-contacto">¿Cómo prefieres que te contactemos? <span class="opc">(elige una o varias)</span></span><div class="chips" aria-labelledby="l-contacto" data-chips="contacto" data-multi></div><span class="err">Elige al menos un medio de contacto.</span></div>
       <div class="fila dos">
         <div class="campo"><label for="empresa">Empresa <span class="opc">(opcional)</span></label><input id="empresa" name="empresa" type="text" autocomplete="organization"></div>
         <div class="campo"><label for="cargo">Cargo <span class="opc">(opcional)</span></label><input id="cargo" name="cargo" type="text" autocomplete="organization-title"></div>
@@ -413,10 +414,10 @@ footer .firma{margin:0 0 4px;font-family:var(--font-display);font-weight:500;fon
   </footer>
 </main>
 
-<script src="config.js?v=20261002h"></script>
-<script src="motor.js?v=20261002h"></script>
-<script src="sesion.js?v=20261002h"></script>
-<script src="pdf.js?v=20261002h"></script>
+<script src="config.js?v=20261002i"></script>
+<script src="motor.js?v=20261002i"></script>
+<script src="sesion.js?v=20261002i"></script>
+<script src="pdf.js?v=20261002i"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
 <script>
 (function(){
@@ -439,6 +440,7 @@ footer .firma{margin:0 0 4px;font-family:var(--font-display);font-weight:500;fon
     amoblado: Object.keys(M.amoblado),
     estado: Object.keys(M.estado),
     amenidades: Object.keys(M.amenidades),
+    contacto: ["WhatsApp","Llamada","Email"],
     ph: ["Sí","No","No sé","No aplica"],
     rnt: ["Sí","En trámite","No"],
     inicio: ["Ya mismo","En 1–3 meses","En 3–6 meses","Está en construcción"]
@@ -574,10 +576,11 @@ footer .firma{margin:0 0 4px;font-family:var(--font-display);font-weight:500;fon
     if (r === null) return true;
     if (r.indexOf("radio:")===0) ok = !!val(r.slice(6));
     else if (r.indexOf("check:")===0) ok = $(r.slice(6)).checked;
+    else if (r.indexOf("multi:")===0) ok = val(r.slice(6)).length > 0;
     else {
       var inp = c.querySelector("input,select"), v = (inp.value||"").trim();
       if (r === "email") ok = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v);
-      else if (r === "tel") { var pi = paisTel(), n = v.replace(/\D/g,"").length; ok = n >= pi.min && n <= pi.max; }
+      else if (r === "tel") { var pi = paisTel(), n = $("telefono").value.replace(/\D/g,"").length; ok = n >= pi.min && n <= pi.max; }
       else ok = v.length > 0;
     }
     c.classList.toggle("invalido", !ok);
@@ -620,7 +623,7 @@ footer .firma{margin:0 0 4px;font-family:var(--font-display);font-weight:500;fon
       nombre: val("nombre"), apellido: val("apellido"), email: val("email").toLowerCase(), telefono: "+" + paisTel().cod + " " + val("telefono").replace(/\D/g,""),
       empresa: val("empresa"), cargo: val("cargo"), proyecto: val("proyecto"), direccion: val("direccion"),
       ciudad: ciudadSel === "Otra" ? (val("ciudadOtra") || "Otra") : ciudadSel === "Eje Cafetero" ? (val("ciudadOtra") ? val("ciudadOtra") + " (Eje Cafetero)" : "Eje Cafetero") : ciudadSel,
-      tipoProyecto: val("tipoProyecto"), rol: val("rol")
+      tipoProyecto: val("tipoProyecto"), rol: val("rol"), contacto: val("contacto")
     };
     var inm = {
       ciudad: ciudadSel, tipoInmueble: val("tipoInmueble"), unidades: $("c-unidades").hidden ? 1 : Math.max(1, Number(val("unidades"))||1),

@@ -1,5 +1,5 @@
 /**
- * EVALUADOR DE PROPIEDADES AHEAD — Backend en Google Sheets  (v5)
+ * EVALUADOR DE PROPIEDADES AHEAD — Backend en Google Sheets  (v6)
  * ---------------------------------------------------------------
  * Proyecto de Apps Script «Ahead · Evaluador de propiedades (backend)»
  * en la cuenta ahead.hospitality@gmail.com, publicado como Aplicación web:
@@ -43,7 +43,7 @@ const HOJA = 'Evaluaciones';
 const HOJA_USUARIOS = 'Usuarios';
 const COLUMNAS = [
   'id', 'fecha', 'origen', 'asesor', 'asesorNombre', 'estadoComercial', 'notas',
-  'nombre', 'apellido', 'email', 'telefono', 'empresa', 'cargo', 'proyecto', 'direccion', 'ciudad', 'tipoProyecto', 'rol',
+  'nombre', 'apellido', 'email', 'telefono', 'preferenciaContacto', 'empresa', 'cargo', 'proyecto', 'direccion', 'ciudad', 'tipoProyecto', 'rol',
   'tipoInmueble', 'unidades', 'zona', 'area', 'estrato', 'habitaciones', 'banos', 'ubicacion', 'amoblado', 'estado',
   'amenidades', 'amenidadesOtras', 'ph', 'rnt', 'inicio', 'arriendoActual', 'observaciones',
   'tarifaMedia', 'ocupacionMedia', 'mensualConservador', 'mensualMedio', 'mensualAlto', 'anualMedio',
@@ -145,6 +145,7 @@ function registrar_(r, token) {
       id: r.id, fecha: new Date(r.fecha || Date.now()), origen: r.origen, asesor: r.asesor, asesorNombre: r.asesorNombre,
       estadoComercial: K.clase === 'No viable' ? 'No viable' : 'Nuevo', notas: '',
       nombre: L.nombre, apellido: L.apellido, email: L.email, telefono: "'" + (L.telefono || ''),
+      preferenciaContacto: [].concat(L.contacto || []).join(', '),
       empresa: L.empresa, cargo: L.cargo, proyecto: L.proyecto, direccion: L.direccion, ciudad: L.ciudad,
       tipoProyecto: L.tipoProyecto, rol: L.rol,
       tipoInmueble: I.tipoInmueble, unidades: I.unidades, zona: I.zona, area: I.area, estrato: I.estrato,
@@ -163,7 +164,8 @@ function registrar_(r, token) {
         'Proyecto: ' + (L.proyecto || '-') + '\nCiudad: ' + (L.ciudad || '') +
         '\nIngreso mensual medio estimado: $' + Number(m.mensual || 0).toLocaleString('es-CO') +
         '\nOrigen: ' + r.origen + (r.asesorNombre ? ' (' + r.asesorNombre + ')' : '') +
-        '\nTeléfono: ' + (L.telefono || '') + '\nEmail: ' + (L.email || ''));
+        '\nTeléfono: ' + (L.telefono || '') + '\nEmail: ' + (L.email || '') +
+        '\nPrefiere contacto por: ' + ([].concat(L.contacto || []).join(', ') || '-'));
     }
     return json_({ ok: true, origen: r.origen });
   } finally {

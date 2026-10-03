@@ -29,9 +29,9 @@ button,input,select,textarea{font:inherit;color:inherit}
 .top .marca:focus-visible{outline:2px solid var(--naranja);outline-offset:4px}
 .top .logo-h{display:block;height:30px;width:auto;max-width:100%}
 .top .iconos{margin-left:auto;flex:none}
-.titulo-panel{margin:0 0 16px;font-family:var(--font-display);font-weight:600;font-size:22px;letter-spacing:-.015em;color:var(--dark-morada)}
-.titulo-panel span{color:var(--ink-2);font-weight:500}
-@media (max-width:480px){.top .logo-h{height:24px}.titulo-panel{font-size:18px}.iconos{gap:6px}.ibtn{width:38px;height:38px}}
+.titulo-panel{margin:4px 0 18px;font-family:var(--font-display);font-weight:600;font-size:34px;line-height:1.1;letter-spacing:-.02em;color:var(--dark-morada)}
+.titulo-panel span{display:block;margin-top:4px;font-family:var(--font-body,inherit);font-size:16px;font-weight:500;letter-spacing:0;color:var(--ink-2)}
+@media (max-width:480px){.top .logo-h{height:24px}.titulo-panel{font-size:28px}.titulo-panel span{font-size:15px}.iconos{gap:6px}.ibtn{width:38px;height:38px}}
 .top img.iso{height:32px;width:auto;display:block}
 .top .pill{color:var(--cream);background:rgba(239,235,253,.12);border:0;border-radius:999px;padding:7px 14px;font-size:13px;font-weight:500;text-decoration:none;cursor:pointer;white-space:nowrap}
 /* Íconos del header: actualizar · perfil · menú */
@@ -169,6 +169,10 @@ main{max-width:1280px;margin:0 auto;padding:20px}
 .contactar .btn{display:inline-flex;align-items:center;gap:8px;text-decoration:none}
 .contactar .btn svg{width:18px;height:18px}
 .contactar .sb{flex-basis:100%}
+.contactar .btn.sec{background:#fff;color:var(--dark-morada);border:1px solid var(--line)}
+.pref{display:inline-flex;flex-wrap:wrap;gap:4px;margin-top:4px}
+.pref i{font-style:normal;font-size:11px;font-weight:600;padding:2px 8px;border-radius:999px;background:#EFE7F2;color:var(--dark-morada)}
+.contactar .pref-txt{flex-basis:100%;font-size:13px;color:var(--ink-2)}
 #det h2{padding-right:48px}
 .tabla{background:var(--surface);border:1px solid var(--line);border-radius:16px;overflow:auto}
 table{width:100%;border-collapse:collapse;min-width:900px}
@@ -312,7 +316,7 @@ tbody tr:hover{background:#FBF9F5}
   </section>
 
   <section id="app" hidden>
-    <h1 class="titulo-panel">Panel de leads <span>· Evaluador de propiedades</span></h1>
+    <h1 class="titulo-panel">Panel de leads <span>Evaluador de propiedades</span></h1>
     <div class="kpis" id="kpis"></div>
     <div class="grid2">
       <div class="panel"><h3>Calificación de leads</h3><div class="barras" id="bClase"></div></div>
@@ -417,9 +421,9 @@ tbody tr:hover{background:#FBF9F5}
 </aside>
 <aside class="det" id="det" aria-label="Detalle del lead"></aside>
 
-<script src="../evaluador/config.js?v=20261002h"></script>
-<script src="../evaluador/motor.js?v=20261002h"></script>
-<script src="../evaluador/sesion.js?v=20261002h"></script>
+<script src="../evaluador/config.js?v=20261002i"></script>
+<script src="../evaluador/motor.js?v=20261002i"></script>
+<script src="../evaluador/sesion.js?v=20261002i"></script>
 <script>
 (function(){
   var C = window.AHEAD_EVAL, Mo = window.AheadMotor, $ = function(i){return document.getElementById(i)};
@@ -753,7 +757,7 @@ tbody tr:hover{background:#FBF9F5}
     $("filas").innerHTML = F.length ? F.map(function(r){
       var L = r.lead;
       return '<tr data-id="'+esc(r.id)+'"><td>'+fecha(r.fecha)+'<div class="sb">'+esc(r.origen)+'</div></td>'
-        + '<td><div class="nm">'+esc(L.nombre+" "+L.apellido)+'</div><div class="sb">'+esc([L.cargo,L.empresa].filter(Boolean).join(" · "))+'</div></td>'
+        + '<td><div class="nm">'+esc(L.nombre+" "+L.apellido)+'</div><div class="sb">'+esc([L.cargo,L.empresa].filter(Boolean).join(" · "))+'</div>'+prefTags(L)+'</td>'
         + '<td>'+esc(L.proyecto||"—")+'<div class="sb">'+esc(L.ciudad)+(r.inmueble.zona?" · "+esc(r.inmueble.zona):"")+'</div></td>'
         + '<td>'+esc(L.tipoProyecto)+'<div class="sb">'+esc(r.inmueble.tipoInmueble)+(r.resultado.unidades>1?" · "+r.resultado.unidades+" u.":"")+'</div></td>'
         + '<td class="num">'+Mo.fmt(r.resultado.escenarios.medio.mensual)+'</td>'
@@ -789,14 +793,33 @@ tbody tr:hover{background:#FBF9F5}
   $("velo").addEventListener("click", cerrar);
   document.addEventListener("keydown", function(e){ if (e.key === "Escape") cerrar(); });
 
+  var ICO_WA = '<svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>';
+  var ICO_TEL = '<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg>';
+  var ICO_MAIL = '<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>';
+  /* Bloque «Contactar»: muestra los medios que el lead prefirió (WhatsApp, Llamada, Email).
+     Los leads anteriores a esta pregunta no tienen preferencia: se ofrece WhatsApp. */
+  function contactar(r){
+    var L = r.lead, pref = prefContacto(L), sinPref = !pref.length;
+    var tel = String(L.telefono||"").replace(/\D/g,""); if (tel.length === 10) tel = "57" + tel;
+    var msg = "Hola "+L.nombre+", te escribe el equipo de Ahead sobre la evaluación de "+(L.proyecto || "tu propiedad")+".";
+    var b = [];
+    if ((sinPref || pref.indexOf("WhatsApp") >= 0) && tel.length >= 10) b.push('<a class="btn nar" href="https://wa.me/'+tel+'?text='+encodeURIComponent(msg)+'" target="_blank" rel="noopener">'+ICO_WA+' Por WhatsApp</a>');
+    if (pref.indexOf("Llamada") >= 0 && tel.length >= 10) b.push('<a class="btn '+(b.length?"sec":"nar")+'" href="tel:+'+tel+'">'+ICO_TEL+' Llamar</a>');
+    if (pref.indexOf("Email") >= 0 && L.email) b.push('<a class="btn '+(b.length?"sec":"nar")+'" href="mailto:'+esc(L.email)+'?subject='+encodeURIComponent("Ahead · Evaluación de "+(L.proyecto || "tu propiedad"))+'&body='+encodeURIComponent(msg)+'">'+ICO_MAIL+' Por email</a>');
+    return '<div class="contactar"><b>Contactar</b>'
+      + (sinPref ? '' : '<span class="pref-txt">Prefiere que lo contacten por: <strong>'+esc(pref.join(" · "))+'</strong></span>')
+      + (b.length ? b.join("") : '<span class="sb">Este lead no dejó datos de contacto válidos para el medio que prefirió.</span>')
+      + '</div>';
+  }
+  function prefContacto(L){ var c = L && L.contacto; if (typeof c === "string") c = c.split(/\s*,\s*/); return (c || []).filter(Boolean); }
+  function prefTags(L){ var c = prefContacto(L); return c.length ? '<div class="pref" title="Prefiere que lo contacten por">'+c.map(function(x){return '<i>'+esc(x)+'</i>'}).join("")+'</div>' : ''; }
   function abrir(r){
     var L = r.lead, I = r.inmueble, E = r.resultado.escenarios, K = r.calificacion;
     var dl = function(pares){ return "<dl>" + pares.filter(function(p){return p[1]!==""&&p[1]!=null}).map(function(p){return "<dt>"+p[0]+"</dt><dd>"+esc(p[1])+"</dd>"}).join("") + "</dl>"; };
-    var tel = String(L.telefono||"").replace(/\D/g,""); if (tel.length === 10) tel = "57" + tel;
     $("det").innerHTML = '<button class="cerrar-x" type="button" id="cerrarDet" aria-label="Cerrar lead" title="Cerrar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button>'
       + '<h2>'+esc(L.nombre+" "+L.apellido)+'</h2><div class="sb">'+esc([L.cargo,L.empresa].filter(Boolean).join(" · "))+'</div>'
       + '<div style="margin-top:10px">'+claseTag(K.clase)+' <span class="sb">'+K.puntaje+' / 100 · '+fecha(r.fecha)+' · '+esc(r.id)+'</span></div>'
-      + '<div class="contactar"><b>Contactar</b>' + (tel.length >= 10 ? '<a class="btn nar" href="https://wa.me/'+tel+'?text='+encodeURIComponent("Hola "+L.nombre+", te escribe el equipo de Ahead sobre la evaluación de "+(L.proyecto || "tu propiedad")+".")+'" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg> Por WhatsApp</a>' : '<span class="sb">Este lead no dejó un número de WhatsApp válido.</span>') + '</div>'
+      + contactar(r)
       + '<h4>Potencial estimado</h4><div class="esc">'
       + ["conservador","medio","alto"].map(function(k){var e=E[k];return '<div class="'+(k==="medio"?"m":"")+'"><span class="sb">'+k[0].toUpperCase()+k.slice(1)+'</span><b>'+Mo.fmt(e.mensual)+'</b><span class="sb">'+Mo.fmt(e.tarifa)+' · '+e.ocupacion+' %</span></div>'}).join("")
       + '</div><div class="sb" style="margin-top:6px">Anual medio: '+Mo.fmt(E.medio.anual)+(I.arriendoActual ? ' · Arriendo actual: '+Mo.fmt(I.arriendoActual)+'/mes' : '')+'</div>'
@@ -806,7 +829,7 @@ tbody tr:hover{background:#FBF9F5}
       + '<select id="dAsesor"><option value="">Sin asesor (QR / por su cuenta)</option>'+equipo.map(function(a){return '<option value="'+esc(a.email)+'"'+(r.asesor===a.email?" selected":"")+'>'+esc(a.nombre)+' · '+esc(a.email)+'</option>'}).join("")+'</select>'
       + '<textarea id="dNotas" placeholder="Notas de la conversación, próximos pasos…">'+esc(r.notas||"")+'</textarea>'
       + '<div><button class="btn" type="button" id="dGuardar">Guardar seguimiento</button> <span id="dOk" class="ok"></span></div></div>'
-      + '<h4>Contacto</h4>' + dl([["Email",L.email],["Teléfono",L.telefono],["Empresa",L.empresa],["Cargo",L.cargo],["Rol",L.rol],["Origen",r.origen],["Atendido por",r.asesorNombre ? r.asesorNombre+" · "+r.asesor : r.asesor]])
+      + '<h4>Contacto</h4>' + dl([["Prefiere contacto por",prefContacto(L).join(" · ")],["Email",L.email],["Teléfono",L.telefono],["Empresa",L.empresa],["Cargo",L.cargo],["Rol",L.rol],["Origen",r.origen],["Atendido por",r.asesorNombre ? r.asesorNombre+" · "+r.asesor : r.asesor]])
       + '<h4>Proyecto e inmueble</h4>' + dl([["Proyecto",L.proyecto],["Dirección",L.direccion],["Ciudad",L.ciudad],["Zona",I.zona],["Tipo de proyecto",L.tipoProyecto],["Tipo de inmueble",I.tipoInmueble],["Unidades",I.unidades],["Área (m²)",I.area],["Estrato",I.estrato],["Habitaciones",I.habitaciones],["Baños",I.banos],["Ubicación",I.ubicacion],["Amoblado",I.amoblado],["Estado",I.estado],["Amenidades",(I.amenidades||[]).join(", ")],["Reglamento P.H.",I.ph],["RNT",I.rnt],["Inicio",I.inicio]])
       + (I.amenidadesOtras ? '<h4>Otras amenidades</h4><div class="obs">'+esc(I.amenidadesOtras)+'</div>' : '')
       + (I.observaciones ? '<h4>Observaciones del propietario</h4><div class="obs">'+esc(I.observaciones)+'</div>' : '')
@@ -827,10 +850,10 @@ tbody tr:hover{background:#FBF9F5}
   /* ---------- Exportar ---------- */
   $("btnCsv").addEventListener("click", function(){
     var F = filtrados();
-    var cols = ["id","fecha","origen","asesor","asesorNombre","estadoComercial","nombre","apellido","email","telefono","empresa","cargo","proyecto","direccion","ciudad","tipoProyecto","rol","tipoInmueble","unidades","zona","estrato","habitaciones","banos","amoblado","estado","amenidades","amenidadesOtras","ph","rnt","inicio","arriendoActual","observaciones","tarifaMedia","ocupacionMedia","mensualConservador","mensualMedio","mensualAlto","anualMedio","puntaje","clase","riesgos","notas"];
+    var cols = ["id","fecha","origen","asesor","asesorNombre","estadoComercial","nombre","apellido","email","telefono","preferenciaContacto","empresa","cargo","proyecto","direccion","ciudad","tipoProyecto","rol","tipoInmueble","unidades","zona","estrato","habitaciones","banos","amoblado","estado","amenidades","amenidadesOtras","ph","rnt","inicio","arriendoActual","observaciones","tarifaMedia","ocupacionMedia","mensualConservador","mensualMedio","mensualAlto","anualMedio","puntaje","clase","riesgos","notas"];
     var q = function(v){ v = v==null?"":String(v); return '"'+v.replace(/"/g,'""')+'"'; };
     var rows = F.map(function(r){ var L=r.lead,I=r.inmueble,E=r.resultado.escenarios,K=r.calificacion;
-      return [r.id,r.fecha,r.origen,r.asesor,r.asesorNombre,r.estadoComercial||"Nuevo",L.nombre,L.apellido,L.email,L.telefono,L.empresa,L.cargo,L.proyecto,L.direccion,L.ciudad,L.tipoProyecto,L.rol,I.tipoInmueble,I.unidades,I.zona,I.estrato,I.habitaciones,I.banos,I.amoblado,I.estado,(I.amenidades||[]).join(", "),I.amenidadesOtras,I.ph,I.rnt,I.inicio,I.arriendoActual,I.observaciones,E.medio.tarifa,E.medio.ocupacion,E.conservador.mensual,E.medio.mensual,E.alto.mensual,E.medio.anual,K.puntaje,K.clase,(K.riesgos||[]).join(" · "),r.notas||""].map(q).join(","); });
+      return [r.id,r.fecha,r.origen,r.asesor,r.asesorNombre,r.estadoComercial||"Nuevo",L.nombre,L.apellido,L.email,L.telefono,prefContacto(L).join(", "),L.empresa,L.cargo,L.proyecto,L.direccion,L.ciudad,L.tipoProyecto,L.rol,I.tipoInmueble,I.unidades,I.zona,I.estrato,I.habitaciones,I.banos,I.amoblado,I.estado,(I.amenidades||[]).join(", "),I.amenidadesOtras,I.ph,I.rnt,I.inicio,I.arriendoActual,I.observaciones,E.medio.tarifa,E.medio.ocupacion,E.conservador.mensual,E.medio.mensual,E.alto.mensual,E.medio.anual,K.puntaje,K.clase,(K.riesgos||[]).join(" · "),r.notas||""].map(q).join(","); });
     var blob = new Blob(["﻿"+[cols.join(",")].concat(rows).join("\n")],{type:"text/csv;charset=utf-8"});
     var a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "ahead-leads-"+new Date().toISOString().slice(0,10)+".csv"; a.click();
   });
