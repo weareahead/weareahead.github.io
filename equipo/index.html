@@ -130,6 +130,9 @@ tbody tr:hover{background:#FBF9F5}
 .usr{display:grid;grid-template-columns:1fr auto;gap:4px 12px;align-items:center;padding:12px;border:1px solid var(--line);border-radius:12px}
 .usr .acc{margin:0}
 .usr .btn{min-height:36px;padding:6px 14px;font-size:13px}
+.usr .btn.del{background:transparent;color:var(--nov);border:1px solid #E8B4A8}
+.usr .btn.del.confirmar{background:var(--nov);color:#fff;border-color:var(--nov)}
+.usr .acc{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
 .est.pendiente{background:var(--pot-bg);color:var(--pot)} .est.activo{background:var(--prio-bg);color:var(--prio)} .est.desactivado{background:var(--nov-bg);color:var(--nov)}
 .det .obs{white-space:pre-wrap;background:#FBF9F5;border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:13.5px}
 </style>
@@ -224,7 +227,7 @@ tbody tr:hover{background:#FBF9F5}
 <aside class="det" id="detEquipo" aria-label="Cuentas del equipo">
   <button class="cerrar" type="button" id="cerrarEquipo">Cerrar</button>
   <h2>Cuentas del equipo</h2>
-  <p class="sb">Aprueba a quienes deben ver los leads y usar el evaluador con su nombre. Desactivar una cuenta cierra su acceso de inmediato.</p>
+  <p class="sb">Aprueba a quienes deben ver los leads y usar el evaluador con su nombre. Desactivar una cuenta cierra su acceso de inmediato. Las cuentas rechazadas o desactivadas se pueden eliminar; sus evaluaciones se conservan.</p>
   <div class="usuarios" id="listaUsuarios" style="margin-top:14px"></div>
 </aside>
 <aside class="det" id="det" aria-label="Detalle del lead"></aside>
@@ -303,14 +306,22 @@ tbody tr:hover{background:#FBF9F5}
       var pend = j.usuarios.filter(function(u){return u.estado === "pendiente"}).length;
       $("badgePend").hidden = !pend; $("badgePend").textContent = pend;
       $("listaUsuarios").innerHTML = j.usuarios.length ? j.usuarios.sort(function(a,b){ return (a.estado==="pendiente"?0:1)-(b.estado==="pendiente"?0:1); }).map(function(u){
-        var acc = u.estado === "activo" ? '<button class="btn sec" data-u="'+esc(u.email)+'" data-e="desactivado">Desactivar</button>'
-          : '<button class="btn" data-u="'+esc(u.email)+'" data-e="activo">Aprobar</button>' + (u.estado === "pendiente" ? ' <button class="btn sec" data-u="'+esc(u.email)+'" data-e="desactivado">Rechazar</button>' : '');
+        var e = esc(u.email), acc;
+        if (u.estado === "activo") acc = '<button class="btn sec" data-u="'+e+'" data-e="desactivado">Desactivar</button>';
+        else if (u.estado === "pendiente") acc = '<button class="btn" data-u="'+e+'" data-e="activo">Aprobar</button> <button class="btn sec" data-u="'+e+'" data-e="desactivado">Rechazar</button>';
+        else acc = '<button class="btn sec" data-u="'+e+'" data-e="activo">Reactivar</button> <button class="btn del" data-u="'+e+'" data-e="eliminar">Eliminar</button>';
         return '<div class="usr"><div><div class="nm">'+esc(u.nombre)+' <span class="est '+esc(u.estado)+'">'+esc(u.estado)+'</span></div><div class="sb">'+esc(u.email)+(u.ultimoAcceso ? ' · último acceso '+fecha(u.ultimoAcceso) : '')+'</div></div><div class="acc">'+acc+'</div></div>';
       }).join("") : '<div class="sb">Aún nadie ha pedido una cuenta. Comparte el enlace del evaluador: en «Equipo Ahead → Crear cuenta» cada persona hace su solicitud.</div>';
     });
   }
   $("listaUsuarios").addEventListener("click", function(e){
     var b = e.target.closest("button[data-u]"); if (!b) return;
+    // Eliminar pide confirmación con un segundo clic (sin diálogos del navegador).
+    if (b.getAttribute("data-e") === "eliminar" && !b.classList.contains("confirmar")) {
+      b.classList.add("confirmar"); b.textContent = "¿Eliminar? Confirmar";
+      setTimeout(function(){ if (document.body.contains(b)) { b.classList.remove("confirmar"); b.textContent = "Eliminar"; } }, 4000);
+      return;
+    }
     b.disabled = true;
     S.post({accion:"usuario", token:sesion().token, email:b.getAttribute("data-u"), estado:b.getAttribute("data-e")}).then(function(){ cargarUsuarios(); cargar(); });
   });

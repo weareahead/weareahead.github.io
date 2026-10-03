@@ -1,5 +1,5 @@
 /**
- * EVALUADOR DE PROPIEDADES AHEAD — Backend en Google Sheets  (v2)
+ * EVALUADOR DE PROPIEDADES AHEAD — Backend en Google Sheets  (v3)
  * ---------------------------------------------------------------
  * Proyecto de Apps Script «Ahead · Evaluador de propiedades (backend)»
  * en la cuenta ahead.hospitality@gmail.com, publicado como Aplicación web:
@@ -17,7 +17,8 @@
  *  - listar      (sesión)   evaluaciones + equipo activo.
  *  - actualizar  (sesión)   estado comercial, asesor y notas de un lead.
  *  - usuarios    (admin)    lista de cuentas.
- *  - usuario     (admin)    aprobar / desactivar una cuenta.
+ *  - usuario     (admin)    aprobar / desactivar / eliminar una cuenta
+ *                           (eliminar solo si está rechazada o desactivada).
  *
  * La cuenta administradora es USUARIO_EQUIPO con la contraseña cuya huella
  * SHA-256 está en CLAVE_SHA256 (la contraseña nunca está en el repositorio
@@ -71,7 +72,7 @@ function doGet(e) {
     if (!s) return json_({ ok: false, error: 'sesion' });
     return json_({ ok: true, registros: listar_(), equipo: equipoActivo_(), yo: s });
   }
-  return json_({ ok: true, servicio: 'Ahead · Evaluador de propiedades', version: 2 });
+  return json_({ ok: true, servicio: 'Ahead · Evaluador de propiedades', version: 3 });
 }
 
 /* ================= Hojas ================= */
@@ -266,12 +267,25 @@ function usuarios_(b) {
 function usuarioEstado_(b) {
   const s = sesion_(b.token);
   if (!s || s.rol !== 'admin') return json_({ ok: false, error: 'sesion' });
-  if (['activo', 'pendiente', 'desactivado'].indexOf(b.estado) < 0) return json_({ ok: false, error: 'datos' });
-  const u = leerUsuarios_().filter(function (x) { return x.email === String(b.email || '').toLowerCase(); })[0];
-  if (!u) return json_({ ok: false, error: 'no encontrado' });
-  const sh = usuariosHoja_();
-  sh.getRange(u.fila, cabecera_(sh).indexOf('estado') + 1).setValue(b.estado);
-  return json_({ ok: true });
+  if (['activo', 'pendiente', 'desactivado', 'eliminar'].indexOf(b.estado) < 0) return json_({ ok: false, error: 'datos' });
+  const lock = LockService.getScriptLock();
+  lock.waitLock(20000);
+  try {
+    const u = leerUsuarios_().filter(function (x) { return x.email === String(b.email || '').toLowerCase(); })[0];
+    if (!u) return json_({ ok: false, error: 'no encontrado' });
+    const sh = usuariosHoja_();
+    if (b.estado === 'eliminar') {
+      // Solo se eliminan cuentas rechazadas o desactivadas. Sus evaluaciones
+      // se conservan en la hoja con el correo de quien las registró.
+      if (u.estado === 'activo') return json_({ ok: false, error: 'activo' });
+      sh.deleteRow(u.fila);
+      return json_({ ok: true, eliminado: true });
+    }
+    sh.getRange(u.fila, cabecera_(sh).indexOf('estado') + 1).setValue(b.estado);
+    return json_({ ok: true });
+  } finally {
+    lock.releaseLock();
+  }
 }
 
 /* ================= Sesión ================= */
