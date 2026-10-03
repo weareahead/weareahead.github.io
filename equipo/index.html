@@ -25,7 +25,7 @@
 body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font-body);font-size:14px;line-height:1.45;-webkit-font-smoothing:antialiased}
 button,input,select,textarea{font:inherit;color:inherit}
 .top{position:sticky;top:0;z-index:5;background:var(--dark-morada);color:var(--cream);padding:12px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
-.top img{height:26px;width:auto}
+.top img.iso{height:32px;width:auto;display:block}
 .top h1{margin:0;font-family:var(--font-display);font-weight:600;font-size:17px;letter-spacing:-.01em}
 .top .sp{flex:1}
 .top .pill{color:var(--cream);background:rgba(239,235,253,.12);border:0;border-radius:999px;padding:7px 14px;font-size:13px;font-weight:500;text-decoration:none;cursor:pointer;white-space:nowrap}
@@ -147,6 +147,19 @@ tbody tr:hover{background:#FBF9F5}
 .det{position:fixed;top:0;right:0;bottom:0;width:min(560px,100%);background:var(--surface);z-index:11;transform:translateX(100%);transition:transform .25s ease;overflow:auto;padding:22px}
 .det.abierto{transform:none}
 .det h2{margin:0;font-family:var(--font-display);font-size:22px;letter-spacing:-.015em}
+.cerrar-x{position:absolute;top:16px;right:16px;width:40px;height:40px;border-radius:50%;border:0;background:transparent;color:var(--ink-2);display:grid;place-items:center;cursor:pointer}
+.cerrar-x:hover{background:#F6F2F7;color:var(--ink)}
+.cerrar-x:focus-visible{outline:2px solid var(--naranja);outline-offset:2px}
+.cerrar-x svg{width:22px;height:22px}
+#detPerfil h2{padding-right:48px}
+.plegable{margin-top:24px;border:1px solid var(--line);border-radius:12px}
+.plegable summary{list-style:none;display:flex;justify-content:space-between;align-items:center;padding:12px 14px;cursor:pointer;font-weight:600;font-size:14px;border-radius:12px}
+.plegable summary::-webkit-details-marker{display:none}
+.plegable summary:hover{background:#FBF9F5}
+.plegable summary:focus-visible{outline:2px solid var(--naranja);outline-offset:2px}
+.plegable .flecha{width:18px;height:18px;color:var(--ink-2);transition:transform .2s}
+.plegable[open] .flecha{transform:rotate(180deg)}
+.plegable form{padding:0 14px 14px}
 .det .cerrar{float:right;background:transparent;border:1px solid var(--line);border-radius:999px;padding:6px 12px;cursor:pointer}
 .det h4{margin:20px 0 8px;font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2)}
 .det dl{display:grid;grid-template-columns:150px 1fr;gap:6px 12px;margin:0}
@@ -182,7 +195,7 @@ tbody tr:hover{background:#FBF9F5}
 </head>
 <body>
 <div class="top">
-  <img src="../assets/logo-ahead.svg" alt="Ahead" style="filter:none">
+  <img src="../assets/isotipo-ahead.svg" alt="Ahead" class="iso">
   <h1>Panel de leads · Evaluador de propiedades</h1>
   <span class="sp"></span>
   <span id="modoDemo" hidden><button class="pill demo" type="button" id="salirDemo">Datos de ejemplo · salir</button></span>
@@ -284,7 +297,7 @@ tbody tr:hover{background:#FBF9F5}
   <div class="usuarios" id="listaUsuarios" style="margin-top:14px"></div>
 </aside>
 <aside class="det" id="detPerfil" aria-label="Mi perfil">
-  <button class="cerrar" type="button" id="cerrarPerfil">Cerrar</button>
+  <button class="cerrar-x" type="button" id="cerrarPerfil" aria-label="Cerrar mi perfil" title="Cerrar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
   <h2>Mi perfil</h2>
   <div class="sb" id="pfRol"></div>
   <div class="perfil-cab">
@@ -302,7 +315,8 @@ tbody tr:hover{background:#FBF9F5}
   <div class="campo"><label for="pfCargo">Cargo en Ahead</label><input type="text" id="pfCargo" maxlength="80" placeholder="Ej. Asesora comercial"></div>
   <div style="margin-top:14px"><button type="button" class="btn" id="pfGuardar">Guardar perfil</button> <span class="ok" id="pfOk"></span></div>
 
-  <h4 style="margin-top:28px">Cambiar contraseña</h4>
+  <details class="plegable" id="plegClave">
+  <summary><span>Cambiar contraseña</span><svg class="flecha" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
   <form id="fClave" autocomplete="on">
     <input type="text" autocomplete="username" id="pfUserHidden" hidden>
     <div class="campo"><label for="pfActual">Contraseña actual</label><input type="password" id="pfActual" autocomplete="current-password"></div>
@@ -311,6 +325,7 @@ tbody tr:hover{background:#FBF9F5}
     <div class="aviso-admin" id="pfAvisoAdmin" hidden>Esta es la cuenta compartida del equipo: si cambias su contraseña, avísales a todos los que entran con ella.</div>
     <div style="margin-top:14px"><button type="submit" class="btn" id="pfCambiar">Cambiar contraseña</button> <span class="ok" id="pfClaveOk"></span></div>
   </form>
+  </details>
 
   <div class="salir-perfil"><button type="button" class="btn rojo" id="btnSalir2">Cerrar sesión</button></div>
 </aside>
@@ -385,6 +400,7 @@ tbody tr:hover{background:#FBF9F5}
     $("pfAvisoAdmin").hidden = s.rol !== "admin";
     avatar($("avPerfil"), s); $("pfQuitarFoto").hidden = !s.foto;
     aviso("pfOk", ""); aviso("pfClaveOk", ""); ["pfActual","pfNueva","pfNueva2"].forEach(function(i){ $(i).value = ""; });
+    $("plegClave").open = false;
     $("detPerfil").classList.add("abierto"); $("velo").classList.add("abierto");
     S.perfil().then(function(j){ if (!j.ok) return; var p = j.perfil;
       if (!$("pfNombre").value) $("pfNombre").value = p.nombre || "";
