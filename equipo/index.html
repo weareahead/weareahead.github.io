@@ -24,10 +24,15 @@
 [hidden]{display:none!important}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font-body);font-size:14px;line-height:1.45;-webkit-font-smoothing:antialiased}
 button,input,select,textarea{font:inherit;color:inherit}
-.top{position:sticky;top:0;z-index:5;background:var(--dark-morada);color:var(--cream);padding:12px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.top{position:sticky;top:0;z-index:5;background:var(--dark-morada);color:var(--cream);padding:10px max(16px,env(safe-area-inset-right)) 10px max(16px,env(safe-area-inset-left));display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:nowrap;min-height:64px}
+.top .marca{display:block;flex:0 1 auto;min-width:0;border-radius:6px}
+.top .marca:focus-visible{outline:2px solid var(--naranja);outline-offset:4px}
+.top .logo-h{display:block;height:30px;width:auto;max-width:100%}
+.top .iconos{margin-left:auto;flex:none}
+.titulo-panel{margin:0 0 16px;font-family:var(--font-display);font-weight:600;font-size:22px;letter-spacing:-.015em;color:var(--dark-morada)}
+.titulo-panel span{color:var(--ink-2);font-weight:500}
+@media (max-width:480px){.top .logo-h{height:24px}.titulo-panel{font-size:18px}.iconos{gap:6px}.ibtn{width:38px;height:38px}}
 .top img.iso{height:32px;width:auto;display:block}
-.top h1{margin:0;font-family:var(--font-display);font-weight:600;font-size:17px;letter-spacing:-.01em}
-.top .sp{flex:1}
 .top .pill{color:var(--cream);background:rgba(239,235,253,.12);border:0;border-radius:999px;padding:7px 14px;font-size:13px;font-weight:500;text-decoration:none;cursor:pointer;white-space:nowrap}
 /* Íconos del header: actualizar · perfil · menú */
 .iconos{display:flex;align-items:center;gap:8px}
@@ -74,7 +79,6 @@ button,input,select,textarea{font:inherit;color:inherit}
 .det .salir-perfil{margin-top:26px;padding-top:18px;border-top:1px solid var(--line)}
 .btn.rojo{background:transparent;color:var(--nov);border:1px solid #E8B4A8}
 .aviso-admin{margin-top:8px;padding:10px 12px;border-radius:10px;background:var(--pot-bg);color:var(--pot);font-size:12.5px}
-.top .pill.demo{background:var(--naranja);color:var(--dark-morada)}
 main{max-width:1280px;margin:0 auto;padding:20px}
 
 /* Acceso */
@@ -92,6 +96,9 @@ main{max-width:1280px;margin:0 auto;padding:20px}
 .btn.nar{background:var(--naranja);color:var(--dark-morada)}
 .msg{margin-top:12px;font-size:13px;color:var(--nov)}
 .acceso .alt{margin-top:18px;padding-top:16px;border-top:1px solid var(--line);font-size:13px;color:var(--ink-2)}
+.ir-eval{display:inline-flex;align-items:center;gap:8px;color:var(--morada);font-weight:600;font-size:14px;text-decoration:none;padding:8px 14px 8px 10px;border-radius:999px;border:1px solid var(--line)}
+.ir-eval:hover{background:#F6F2F7}
+.ir-eval svg{width:18px;height:18px}
 
 /* KPIs */
 .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:16px}
@@ -254,10 +261,7 @@ tbody tr:hover{background:#FBF9F5}
 </head>
 <body>
 <div class="top">
-  <img src="../assets/isotipo-ahead.svg" alt="Ahead" class="iso">
-  <h1>Panel de leads · Evaluador de propiedades</h1>
-  <span class="sp"></span>
-  <span id="modoDemo" hidden><button class="pill demo" type="button" id="salirDemo">Datos de ejemplo · salir</button></span>
+  <a class="marca" href="../evaluador/" aria-label="Ahead · ir al evaluador de propiedades" title="Ir al evaluador"><img src="../assets/logo-ahead-h.svg" alt="Ahead" class="logo-h"></a>
   <div class="iconos" id="iconos" hidden>
     <button type="button" class="ibtn" id="btnRecargar" aria-label="Actualizar datos" title="Actualizar datos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11.5a8 8 0 1 1-2.6-5.9"/><path d="M20 4v5h-5"/></svg></button>
     <button type="button" class="ibtn perfil" id="btnPerfil" aria-label="Mi perfil" title="Mi perfil"><span class="av" id="avTop"></span></button>
@@ -304,10 +308,11 @@ tbody tr:hover{background:#FBF9F5}
       <button class="btn" type="submit" id="btnEntrar">Entrar</button>
     </form>
     <div class="msg" id="msgAcceso"></div>
-    <div class="alt">¿Quieres revisar cómo se ve el panel antes de conectar la hoja? <button class="btn sec" type="button" id="verDemo" style="margin-top:8px">Ver con datos de ejemplo</button></div>
+    <div class="alt"><a class="ir-eval" href="../evaluador/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2.5"/><path d="M8.5 6.5h7v3h-7z"/><path d="M9 13h.01M12 13h.01M15 13h.01M9 16.5h.01M12 16.5h.01M15 16.5h.01"/></svg>Ir a la calculadora</a></div>
   </section>
 
   <section id="app" hidden>
+    <h1 class="titulo-panel">Panel de leads <span>· Evaluador de propiedades</span></h1>
     <div class="kpis" id="kpis"></div>
     <div class="grid2">
       <div class="panel"><h3>Calificación de leads</h3><div class="barras" id="bClase"></div></div>
@@ -412,9 +417,9 @@ tbody tr:hover{background:#FBF9F5}
 </aside>
 <aside class="det" id="det" aria-label="Detalle del lead"></aside>
 
-<script src="../evaluador/config.js?v=20261002g"></script>
-<script src="../evaluador/motor.js?v=20261002g"></script>
-<script src="../evaluador/sesion.js?v=20261002g"></script>
+<script src="../evaluador/config.js?v=20261002h"></script>
+<script src="../evaluador/motor.js?v=20261002h"></script>
+<script src="../evaluador/sesion.js?v=20261002h"></script>
 <script>
 (function(){
   var C = window.AHEAD_EVAL, Mo = window.AheadMotor, $ = function(i){return document.getElementById(i)};
@@ -544,7 +549,7 @@ tbody tr:hover{background:#FBF9F5}
   });
   $("fAcceso").addEventListener("submit", function(e){
     e.preventDefault();
-    if (!C.endpoint) { $("msgAcceso").textContent = "El panel aún no está conectado a la hoja. Puedes ver los datos de ejemplo."; return; }
+    if (!C.endpoint) { $("msgAcceso").textContent = "El panel aún no está conectado a la hoja."; return; }
     $("btnEntrar").disabled = true; $("msgAcceso").className = "msg"; $("msgAcceso").textContent = "Verificando…";
     S.login($("correo").value, $("clave").value).then(function(j){
       $("btnEntrar").disabled = false;
@@ -563,8 +568,6 @@ tbody tr:hover{background:#FBF9F5}
       m.className = "msg okv"; m.textContent = "Solicitud enviada. Podrás entrar cuando el administrador apruebe tu cuenta."; $("rgPass").value = "";
     }).catch(function(err){ $("btnCrear").disabled = false; m.textContent = S.mensaje(err && err.message); });
   });
-  $("verDemo").addEventListener("click", function(){ demo = true; datos = ejemplo(); equipo = [{email:"daniel@ejemplo.com",nombre:"Daniel"},{email:"lina@ejemplo.com",nombre:"Lina"}]; abrirApp(); });
-  $("salirDemo").addEventListener("click", function(){ location.reload(); });
   $("btnSalir").addEventListener("click", function(){ S.cerrar(); location.reload(); });
   $("btnRecargar").addEventListener("click", function(){ if (!demo) cargar(); });
   if (C.endpoint && sesion()) { $("acceso").hidden = true; cargar(); }
@@ -618,7 +621,7 @@ tbody tr:hover{background:#FBF9F5}
 
   function abrirApp(){
     $("acceso").hidden = true; $("app").hidden = false;
-    $("modoDemo").hidden = !demo; $("iconos").hidden = false; $("btnSalir").hidden = demo; $("btnRecargar").hidden = demo; $("btnPerfil").hidden = demo; $("btnPerfil2").hidden = demo; $("btnCsv").hidden = false;
+    $("iconos").hidden = false; $("btnSalir").hidden = demo; $("btnRecargar").hidden = demo; $("btnPerfil").hidden = demo; $("btnPerfil2").hidden = demo; $("btnCsv").hidden = false;
     if (demo) { $("usuario").textContent = "Vista de ejemplo"; $("usuarioEmail").textContent = "Datos inventados"; avatar($("avMenu"), {nombre:"Ejemplo"}); }
     $("lnkHoja").hidden = demo || !C.hojaUrl;
     opcionesFiltros();
@@ -832,26 +835,6 @@ tbody tr:hover{background:#FBF9F5}
     var a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "ahead-leads-"+new Date().toISOString().slice(0,10)+".csv"; a.click();
   });
 
-  /* ---------- Datos de ejemplo (solo para revisar el panel) ---------- */
-  function ejemplo(){
-    var base = [
-      ["Laura","Méndez","Constructora Andina","Gerente comercial","Torre Usaquén 118","Bogotá","Edificio / proyecto completo","Constructora / desarrollador","Edificio completo",24,"Usaquén","5","1","1","Zona turística o corporativa","Sí, listo para huéspedes","Nuevo o remodelado",["Gimnasio","Coworking","Parqueadero"],"Sí","En trámite","En 3–6 meses","E","Lina"],
-      ["Andrés","Rojas","","Inversionista","Apto Provenza","Medellín","Unidad individual","Inversionista","Apartamento",1,"El Poblado","5","2","2","Zona turística o corporativa","Sí, básico","Buen estado",["Balcón o terraza","Piscina"],"Sí","No","Ya mismo","E","Daniel"],
-      ["Camila","Ortiz","Familia Ortiz","Propietaria","Casa Bocagrande","Cartagena","Casa vacacional","Propietario","Casa",1,"Bocagrande","6","4","4","Zona turística o corporativa","Sí, listo para huéspedes","Buen estado",["Piscina","Aire acondicionado","Jacuzzi o BBQ"],"No aplica","Sí","Ya mismo","E","Lina"],
-      ["Jorge","Pardo","","","","Bogotá","Unidad individual","Propietario","Aparta-estudio",1,"Kennedy","3","Estudio","1","Residencial / alejada","No","Requiere mejoras",[],"No sé","No","En 1–3 meses","Q",""],
-      ["Valentina","Gómez","VG Inversiones","Directora","Portafolio Chicó","Bogotá","Varias unidades","Inversionista","Apartamento",4,"Chicó","6","2","2","Zona turística o corporativa","Sí, listo para huéspedes","Nuevo o remodelado",["Gimnasio","Parqueadero","Vista"],"Sí","Sí","Ya mismo","E","Daniel"],
-      ["Felipe","Castaño","Inmobiliaria Norte","Agente","Edificio Laureles","Medellín","Varias unidades","Administrador o agente","Apartamento",6,"Laureles","4","1","1","Buena conectividad","Sí, básico","Buen estado",["Lavadora"],"No","No","En 1–3 meses","E","Lina"],
-      ["Natalia","Herrera","","","Apto Rodadero","Santa Marta","Unidad individual","Propietario","Apartamento",1,"El Rodadero","4","2","2","Zona turística o corporativa","Sí, básico","Buen estado",["Piscina","Vista"],"Sí","En trámite","Ya mismo","Q",""],
-      ["Ricardo","Lozano","Lozano & Cía","Socio","Mirador del Lago","Girardot / Anapoima","Proyecto en construcción","Constructora / desarrollador","Casa campestre / finca",8,"Peñalisa","5","3","3","Buena conectividad","No","Nuevo o remodelado",["Piscina","Jacuzzi o BBQ","Pet friendly"],"No sé","No","Está en construcción","E","Daniel"]
-    ];
-    var estados = ["Contactado","Nuevo","En evaluación","Cerrado ganado","Propuesta enviada","No viable","Cerrado perdido","Contactado"];
-    return base.map(function(b,i){
-      var lead = {nombre:b[0],apellido:b[1],email:(b[0]+"."+b[1]).toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"")+"@ejemplo.com",telefono:"300 000 00"+(10+i),empresa:b[2],cargo:b[3],proyecto:b[4],ciudad:b[5],tipoProyecto:b[6],rol:b[7]};
-      var inm = {ciudad:b[5],tipoInmueble:b[8],unidades:b[9],zona:b[10],estrato:b[11],habitaciones:b[12],banos:b[13],ubicacion:b[14],amoblado:b[15],estado:b[16],amenidades:b[17],ph:b[18],rnt:b[19],inicio:b[20],area:"",arriendoActual:i%3===0?3200000:""};
-      var res = Mo.estimar(inm), cal = Mo.calificar(lead, inm, res);
-      return {id:"EJEMPLO-"+(i+1), fecha:new Date(Date.now()-i*16200000).toISOString(), origen: b[21]==="E" ? "Equipo Ahead" : "QR / por su cuenta", asesor: b[22] ? b[22].toLowerCase()+"@ejemplo.com" : "", asesorNombre: b[22], estadoComercial: cal.clase==="No viable"?"No viable":estados[i], notas:"", lead:lead, inmueble:inm, resultado:res, calificacion:cal};
-    });
-  }
 })();
 </script>
 </body>

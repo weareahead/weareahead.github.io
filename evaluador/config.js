@@ -53,8 +53,7 @@ window.AHEAD_EVAL = {
       "Cali":              { tarifa: 180000, ocupacion: 0.52 },
       "Barranquilla":      { tarifa: 190000, ocupacion: 0.52 },
       "San Andrés":        { tarifa: 380000, ocupacion: 0.60 },
-      "Eje Cafetero":      { tarifa: 170000, ocupacion: 0.50 },
-      "Girardot / Anapoima": { tarifa: 330000, ocupacion: 0.40 },
+      "Eje Cafetero":      { tarifa: 170000, ocupacion: 0.50 }, // pide la ciudad (Pereira, Armenia, Manizales…)
       "Otra":              { tarifa: 180000, ocupacion: 0.48 }
     },
 

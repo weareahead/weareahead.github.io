@@ -56,8 +56,8 @@
   };
   function mensaje(codigo) { return MENSAJES[codigo] || "No se pudo conectar. Revisa la conexión."; }
 
-  /* Ojo para mostrar u ocultar la contraseña.
-     Ojo abierto = «mostrar contraseña»; ojo cerrado = «ocultar contraseña». */
+  /* Ojo para mostrar u ocultar la contraseña. El ícono refleja el estado:
+     ojo cerrado = la contraseña está oculta; ojo abierto = se está viendo. */
   var OJO_ABIERTO = '<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="3"/></svg>';
   var OJO_CERRADO = '<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10c2.4 3.1 5.4 4.7 9 4.7s6.6-1.6 9-4.7"/><path d="M6.6 13.4 5 15.9M12 14.7v2.9M17.4 13.4l1.6 2.5"/></svg>';
   function ojos(raiz) {
@@ -67,12 +67,12 @@
       var caja = document.createElement("span"); caja.className = "con-ojo";
       inp.parentNode.insertBefore(caja, inp); caja.appendChild(inp);
       var b = document.createElement("button");
-      b.type = "button"; b.className = "ojo"; b.innerHTML = OJO_ABIERTO;
+      b.type = "button"; b.className = "ojo"; b.innerHTML = OJO_CERRADO;
       b.setAttribute("aria-label", "Mostrar contraseña"); b.setAttribute("aria-pressed", "false"); b.title = "Mostrar contraseña";
       b.addEventListener("click", function () {
         var ver = inp.type === "password";
         inp.type = ver ? "text" : "password";
-        b.innerHTML = ver ? OJO_CERRADO : OJO_ABIERTO;
+        b.innerHTML = ver ? OJO_ABIERTO : OJO_CERRADO;
         var t = ver ? "Ocultar contraseña" : "Mostrar contraseña";
         b.setAttribute("aria-label", t); b.title = t; b.setAttribute("aria-pressed", String(ver));
         inp.focus();

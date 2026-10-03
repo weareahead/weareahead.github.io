@@ -109,6 +109,15 @@ select option{background:var(--dark-morada);color:var(--cream)}
   border-radius:var(--radius-pill);border:0;font-family:var(--font-display);font-weight:600;font-size:17px;letter-spacing:-.01em;
   cursor:pointer;text-decoration:none;-webkit-tap-highlight-color:transparent;transition:transform .15s,background-color .15s}
 .btn:active{transform:scale(.985)}
+.btn:disabled{opacity:.45;cursor:not-allowed;transform:none;filter:saturate(.6)}
+.nota-btn{margin:-4px 0 0;font-size:12.5px;color:var(--muted);text-align:center}
+/* Celular con indicativo */
+.tel{display:flex;gap:8px}
+.ind{position:relative;flex:none;display:flex;align-items:center;min-height:52px;padding:0 30px 0 12px;border-radius:14px;background:var(--campo);border:1px solid rgba(239,235,253,.18);font-size:16px;font-weight:500;color:var(--cream);white-space:nowrap;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23F4F0E8'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 6px center;background-size:20px}
+.ind select{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;min-height:0;padding:0;border:0}
+.ind:focus-within{border-color:var(--naranja)}
+.tel input{flex:1;min-width:0}
+.invalido .ind{border-color:var(--error)}
 .btn.primario{background:var(--naranja);color:var(--dark-morada)}
 .btn.primario:active{background:var(--naranja-hover)}
 .btn.secundario{flex:0 0 auto;background:transparent;color:var(--cream);border:1px solid rgba(244,240,232,.35)}
@@ -288,7 +297,12 @@ footer .firma{margin:0 0 4px;font-family:var(--font-display);font-weight:500;fon
       </div>
       <div class="fila dos">
         <div class="campo" data-req="email"><label for="email">Email</label><input id="email" name="email" type="email" autocomplete="email" inputmode="email" placeholder="nombre@correo.com"><span class="err">Revisa el correo.</span></div>
-        <div class="campo" data-req="tel"><label for="telefono">Teléfono / WhatsApp</label><input id="telefono" name="telefono" type="tel" autocomplete="tel" inputmode="tel" placeholder="+57 300 000 0000"><span class="err">Revisa el número.</span></div>
+        <div class="campo" data-req="tel"><label for="telefono">Celular / WhatsApp</label>
+          <div class="tel">
+            <span class="ind"><span class="ind-txt" id="indTxt" aria-hidden="true">🇨🇴 +57</span><select id="indicativo" aria-label="Indicativo de país"><option value="CO" data-cod="57" data-min="10" data-max="10" data-flag="🇨🇴" selected>🇨🇴 Colombia (+57)</option><option value="US" data-cod="1" data-min="10" data-max="10" data-flag="🇺🇸">🇺🇸 Estados Unidos / Canadá (+1)</option><option value="MX" data-cod="52" data-min="10" data-max="10" data-flag="🇲🇽">🇲🇽 México (+52)</option><option value="PA" data-cod="507" data-min="7" data-max="8" data-flag="🇵🇦">🇵🇦 Panamá (+507)</option><option value="EC" data-cod="593" data-min="9" data-max="9" data-flag="🇪🇨">🇪🇨 Ecuador (+593)</option><option value="PE" data-cod="51" data-min="9" data-max="9" data-flag="🇵🇪">🇵🇪 Perú (+51)</option><option value="CL" data-cod="56" data-min="9" data-max="9" data-flag="🇨🇱">🇨🇱 Chile (+56)</option><option value="AR" data-cod="54" data-min="10" data-max="10" data-flag="🇦🇷">🇦🇷 Argentina (+54)</option><option value="VE" data-cod="58" data-min="10" data-max="10" data-flag="🇻🇪">🇻🇪 Venezuela (+58)</option><option value="BR" data-cod="55" data-min="10" data-max="10" data-flag="🇧🇷">🇧🇷 Brasil (+55)</option><option value="CR" data-cod="506" data-min="8" data-max="8" data-flag="🇨🇷">🇨🇷 Costa Rica (+506)</option><option value="DO" data-cod="1" data-min="10" data-max="10" data-flag="🇩🇴">🇩🇴 República Dominicana (+1)</option><option value="ES" data-cod="34" data-min="9" data-max="9" data-flag="🇪🇸">🇪🇸 España (+34)</option><option value="GB" data-cod="44" data-min="10" data-max="10" data-flag="🇬🇧">🇬🇧 Reino Unido (+44)</option><option value="FR" data-cod="33" data-min="9" data-max="9" data-flag="🇫🇷">🇫🇷 Francia (+33)</option><option value="DE" data-cod="49" data-min="10" data-max="10" data-flag="🇩🇪">🇩🇪 Alemania (+49)</option><option value="IT" data-cod="39" data-min="9" data-max="10" data-flag="🇮🇹">🇮🇹 Italia (+39)</option></select></span>
+            <input id="telefono" name="telefono" type="tel" autocomplete="tel-national" inputmode="numeric" maxlength="10" placeholder="300 000 0000">
+          </div>
+          <span class="err" id="errTel">Escribe un celular de 10 dígitos.</span></div>
       </div>
       <div class="fila dos">
         <div class="campo"><label for="empresa">Empresa <span class="opc">(opcional)</span></label><input id="empresa" name="empresa" type="text" autocomplete="organization"></div>
@@ -298,7 +312,7 @@ footer .firma{margin:0 0 4px;font-family:var(--font-display);font-weight:500;fon
       <div class="campo"><label for="direccion">Dirección exacta del proyecto <span class="opc">(opcional)</span></label><input id="direccion" name="direccion" type="text" autocomplete="street-address" placeholder="Ej. Calle 93 # 11-26, Bogotá"></div>
 
       <div class="campo" data-req="radio:ciudad"><span class="lbl" id="l-ciudad">Ciudad del inmueble</span><div class="chips" role="radiogroup" aria-labelledby="l-ciudad" data-chips="ciudad"></div><span class="err">Elige la ciudad.</span></div>
-      <div class="campo" id="c-ciudadOtra" hidden><label for="ciudadOtra">¿Cuál ciudad o municipio?</label><input id="ciudadOtra" name="ciudadOtra" type="text"></div>
+      <div class="campo" id="c-ciudadOtra" hidden><label for="ciudadOtra" id="lblCiudadOtra">¿Cuál ciudad o municipio?</label><input id="ciudadOtra" name="ciudadOtra" type="text" autocomplete="address-level2"><span class="err">Escribe la ciudad.</span></div>
 
       <div class="campo" data-req="radio:tipoProyecto"><span class="lbl" id="l-tp">Tipo de proyecto</span><div class="chips" role="radiogroup" aria-labelledby="l-tp" data-chips="tipoProyecto"></div><span class="err">Elige el tipo de proyecto.</span></div>
       <div class="campo" data-req="radio:rol"><span class="lbl" id="l-rol">Tu relación con el inmueble</span><div class="chips" role="radiogroup" aria-labelledby="l-rol" data-chips="rol"></div><span class="err">Elige una opción.</span></div>
@@ -311,7 +325,8 @@ footer .firma{margin:0 0 4px;font-family:var(--font-display);font-weight:500;fon
         <span class="err">Necesitamos tu autorización para continuar.</span>
       </div>
 
-      <div class="acciones"><button type="button" class="btn primario" data-ir="2">Continuar</button></div>
+      <div class="acciones"><button type="button" class="btn primario" data-ir="2" id="btnContinuar" disabled>Continuar</button></div>
+      <p class="nota-btn" id="notaContinuar">Acepta la autorización de datos personales para continuar.</p>
     </section>
 
     <!-- PASO 2 · INMUEBLE -->
@@ -398,10 +413,10 @@ footer .firma{margin:0 0 4px;font-family:var(--font-display);font-weight:500;fon
   </footer>
 </main>
 
-<script src="config.js?v=20261002g"></script>
-<script src="motor.js?v=20261002g"></script>
-<script src="sesion.js?v=20261002g"></script>
-<script src="pdf.js?v=20261002g"></script>
+<script src="config.js?v=20261002h"></script>
+<script src="motor.js?v=20261002h"></script>
+<script src="sesion.js?v=20261002h"></script>
+<script src="pdf.js?v=20261002h"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
 <script>
 (function(){
@@ -515,7 +530,15 @@ footer .firma{margin:0 0 4px;font-family:var(--font-display);font-weight:500;fon
   }
   form.addEventListener("change", function(e){
     var t = e.target;
-    if (t.name === "ciudad") $("c-ciudadOtra").hidden = t.value !== "Otra";
+    if (t.name === "ciudad") {
+      var pide = t.value === "Otra" || t.value === "Eje Cafetero";
+      $("c-ciudadOtra").hidden = !pide;
+      $("lblCiudadOtra").textContent = t.value === "Eje Cafetero" ? "¿En qué ciudad del Eje Cafetero?" : "¿Cuál ciudad o municipio?";
+      $("ciudadOtra").placeholder = t.value === "Eje Cafetero" ? "Ej. Pereira, Armenia, Manizales, Salento" : "";
+      if (pide) setTimeout(function(){ $("ciudadOtra").focus(); }, 50);
+    }
+    if (t.id === "consentimiento") actualizarContinuar();
+    if (t.id === "indicativo") { pintarIndicativo(); var c = $("telefono").closest(".campo"); if (c.classList.contains("invalido")) validarCampo(c); }
     if (t.name === "tipoProyecto" || t.name === "tipoInmueble") {
       var multi = val("tipoProyecto") !== "Unidad individual" && val("tipoProyecto") !== "Casa vacacional" && val("tipoProyecto") !== "" || val("tipoInmueble") === "Edificio completo";
       $("c-unidades").hidden = !multi;
@@ -532,6 +555,19 @@ footer .firma{margin:0 0 4px;font-family:var(--font-display);font-weight:500;fon
     var c = e.target.closest(".campo"); if (c && c.classList.contains("invalido")) validarCampo(c);
   });
 
+  /* ---------- Celular con indicativo y autorización ---------- */
+  function paisTel(){ var o = $("indicativo").selectedOptions[0]; return {cod:o.dataset.cod, min:Number(o.dataset.min), max:Number(o.dataset.max), flag:o.dataset.flag}; }
+  function pintarIndicativo(){
+    var p = paisTel(); $("indTxt").textContent = p.flag + " +" + p.cod;
+    $("telefono").maxLength = p.max;
+    var d = $("telefono").value.replace(/\D/g,""); if (d.length > p.max) $("telefono").value = d.slice(0, p.max);
+    $("telefono").placeholder = p.cod === "57" ? "300 000 0000" : "Número sin indicativo";
+    $("errTel").textContent = p.min === p.max ? "Escribe un celular de " + p.max + " dígitos." : "Escribe un celular de " + p.min + " a " + p.max + " dígitos.";
+  }
+  $("telefono").addEventListener("input", function(){ var d = this.value.replace(/\D/g,"").slice(0, paisTel().max); if (this.value !== d) this.value = d; });
+  function actualizarContinuar(){ var ok = $("consentimiento").checked; $("btnContinuar").disabled = !ok; $("notaContinuar").hidden = ok; }
+  pintarIndicativo(); actualizarContinuar();
+
   /* ---------- Validación ---------- */
   function validarCampo(c){
     var r = c.getAttribute("data-req"), ok = true;
@@ -541,7 +577,7 @@ footer .firma{margin:0 0 4px;font-family:var(--font-display);font-weight:500;fon
     else {
       var inp = c.querySelector("input,select"), v = (inp.value||"").trim();
       if (r === "email") ok = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v);
-      else if (r === "tel") ok = v.replace(/\D/g,"").length >= 7;
+      else if (r === "tel") { var pi = paisTel(), n = v.replace(/\D/g,"").length; ok = n >= pi.min && n <= pi.max; }
       else ok = v.length > 0;
     }
     c.classList.toggle("invalido", !ok);
@@ -550,7 +586,7 @@ footer .firma{margin:0 0 4px;font-family:var(--font-display);font-weight:500;fon
   function validarPaso(n){
     var campos = form.querySelectorAll('[data-paso="'+n+'"] .campo[data-req]'), primero = null;
     campos.forEach(function(c){ if (c.hidden) return; if (!validarCampo(c) && !primero) primero = c; });
-    if (n === 1 && val("ciudad") === "Otra" && !val("ciudadOtra")) { $("ciudadOtra").focus(); return false; }
+    if (n === 1 && (val("ciudad") === "Otra" || val("ciudad") === "Eje Cafetero") && !val("ciudadOtra")) { $("c-ciudadOtra").classList.add("invalido"); $("ciudadOtra").focus(); return false; }
     if (primero) { primero.scrollIntoView({behavior:"smooth",block:"center"}); var f = primero.querySelector("input,select"); if (f) setTimeout(function(){ try{f.focus({preventScroll:true})}catch(e){} },300); return false; }
     return true;
   }
@@ -581,9 +617,9 @@ footer .firma{margin:0 0 4px;font-family:var(--font-display);font-weight:500;fon
 
     var ciudadSel = val("ciudad");
     var lead = {
-      nombre: val("nombre"), apellido: val("apellido"), email: val("email").toLowerCase(), telefono: val("telefono"),
+      nombre: val("nombre"), apellido: val("apellido"), email: val("email").toLowerCase(), telefono: "+" + paisTel().cod + " " + val("telefono").replace(/\D/g,""),
       empresa: val("empresa"), cargo: val("cargo"), proyecto: val("proyecto"), direccion: val("direccion"),
-      ciudad: ciudadSel === "Otra" ? (val("ciudadOtra") || "Otra") : ciudadSel,
+      ciudad: ciudadSel === "Otra" ? (val("ciudadOtra") || "Otra") : ciudadSel === "Eje Cafetero" ? (val("ciudadOtra") ? val("ciudadOtra") + " (Eje Cafetero)" : "Eje Cafetero") : ciudadSel,
       tipoProyecto: val("tipoProyecto"), rol: val("rol")
     };
     var inm = {
@@ -690,7 +726,7 @@ footer .firma{margin:0 0 4px;font-family:var(--font-display);font-weight:500;fon
   /* ---------- Nueva evaluación ---------- */
   $("btnNueva").addEventListener("click", function(){
     form.reset(); ultimo = null;
-    $("c-ciudadOtra").hidden = true; $("c-unidades").hidden = true;
+    $("c-ciudadOtra").hidden = true; $("c-unidades").hidden = true; pintarIndicativo(); actualizarContinuar();
     form.querySelectorAll(".invalido").forEach(function(c){ c.classList.remove("invalido"); });
     estadoEnvio("", "Guardando…");
     irA(1);
