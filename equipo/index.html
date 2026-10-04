@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="es">
+<html lang="es" class="v2">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -8,11 +8,6 @@
 <meta name="theme-color" content="#3B0B45">
 <link rel="icon" href="../favicon.ico" sizes="any">
 <link rel="icon" href="../assets/isotipo-ahead.svg" type="image/svg+xml">
-<script>
-/* Diseño del panel: "anterior" (por defecto) o "nuevo" (prueba). Se puede forzar con ?diseno=nuevo o ?diseno=anterior
-   y se recuerda en este navegador. */
-(function(){try{var q=new URLSearchParams(location.search).get("diseno");if(q==="nuevo"||q==="anterior")localStorage.setItem("ahead_panel_diseno",q);if(localStorage.getItem("ahead_panel_diseno")==="nuevo")document.documentElement.classList.add("v2");}catch(e){}})();
-</script>
 <style>
 @font-face{font-family:"Outfit";font-weight:500;font-display:swap;src:url(../assets/fonts/outfit-latin-500-normal.woff2) format("woff2")}
 @font-face{font-family:"Outfit";font-weight:600;font-display:swap;src:url(../assets/fonts/outfit-latin-600-normal.woff2) format("woff2")}
@@ -135,7 +130,7 @@ main{max-width:1280px;margin:0 auto;padding:20px}
 .proy .v{font-family:var(--font-display);font-weight:600;font-size:24px;letter-spacing:-.02em}
 .proy .d{font-size:12px;color:var(--ink-2)}
 
-/* ================= Diseño nuevo (prueba) · html.v2 =================
+/* ================= Diseño del panel · html.v2 (definido el 3 oct 2026) =================
    Referencia: tarjetas suaves sin borde, esquinas amplias, cifras grandes con el signo $ atenuado,
    barras tipo píldora con valor en cápsula oscura, sparklines en "código de barras" y franjas rayadas. */
 html.v2{--bg:#ECE7E0;--card:#F8F5F0;--card-2:#FFFFFF;--grid:rgba(92,31,99,.08);--raya:repeating-linear-gradient(135deg,rgba(92,31,99,.16) 0 2px,transparent 2px 8px)}
@@ -221,6 +216,22 @@ html.v2 tbody tr:hover{background:#FFFFFF}
 html.v2 .tag,html.v2 .ec{padding:5px 12px}
 @media (max-width:600px){html.v2 .kpis{grid-template-columns:1fr 1fr;gap:10px}html.v2 .kpi{padding:16px;border-radius:22px;align-items:start;align-content:start;grid-template-columns:1fr;grid-template-areas:"k" "v" "d" "s"}html.v2 .kpi .v{font-size:22px}html.v2 .spark{height:26px;margin-top:10px}}
 @media (max-width:480px){html.v2 .titulo-panel{font-size:30px}html.v2 .top{margin:8px 8px 0;top:8px}.hero .hstat{padding:4px 12px 6px}html.v2 .kpi .k{margin-bottom:16px}}
+
+/* ================= Animación de entrada (solo la primera carga de datos) ================= */
+@keyframes aparecer{from{opacity:0;transform:translateY(16px) scale(.985)}to{opacity:1;transform:none}}
+@keyframes anchoDesde0{from{width:0}}
+@keyframes altoDesde0{from{height:0}}
+@keyframes crecerDesde0{from{flex-grow:0}}
+@keyframes fundir{from{opacity:0}}
+html.animar #app .titulo-panel,html.animar #hero .hnum,html.animar #hero .hcard,html.animar .kpi,html.animar .grid2 .panel,html.animar .filtros,html.animar .tabla{animation:aparecer .7s cubic-bezier(.2,.75,.25,1) both;animation-delay:calc(var(--i,0) * 70ms)}
+html.animar .barra .t i{animation:anchoDesde0 1s cubic-bezier(.22,.8,.3,1) both;animation-delay:calc(var(--i,0) * 70ms + 300ms + var(--b,0) * 60ms)}
+html.animar .barra .t i em{animation:fundir .4s ease both;animation-delay:calc(var(--i,0) * 70ms + 800ms + var(--b,0) * 60ms)}
+html.animar .cols .c i{animation:altoDesde0 1s cubic-bezier(.22,.8,.3,1) both;animation-delay:calc(var(--i,0) * 70ms + 300ms + var(--b,0) * 80ms)}
+html.animar .cols .c i b{animation:fundir .4s ease both;animation-delay:calc(var(--i,0) * 70ms + 900ms + var(--b,0) * 80ms)}
+html.animar .hero .seg{animation:crecerDesde0 1.1s cubic-bezier(.22,.8,.3,1) both;animation-delay:calc(var(--i,0) * 70ms + 300ms)}
+html.animar .spark i{animation:altoDesde0 .6s cubic-bezier(.22,.8,.3,1) both;animation-delay:calc(var(--i,0) * 70ms + 300ms + var(--b,0) * 18ms)}
+html.animar #filas tr{animation:aparecer .5s cubic-bezier(.2,.75,.25,1) both;animation-delay:calc(var(--i,0) * 70ms + 200ms + var(--r,0) * 40ms)}
+@media (prefers-reduced-motion:reduce){html.animar *{animation:none!important}}
 
 /* Filtros + tabla */
 .filtros{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:10px;align-items:center}
@@ -374,7 +385,6 @@ tbody tr:hover{background:#FBF9F5}
         <a class="menu-item" role="menuitem" href="../evaluador/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2.5"/><path d="M8.5 6.5h7v3h-7z"/><path d="M9 13h.01M12 13h.01M15 13h.01M9 16.5h.01M12 16.5h.01M15 16.5h.01"/></svg> Ir al evaluador</a>
         <button type="button" class="menu-item" role="menuitem" id="btnEquipo" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8.5" r="3.2"/><path d="M3.5 19c.6-3 2.8-4.8 5.5-4.8s4.9 1.8 5.5 4.8"/><circle cx="17" cy="9.5" r="2.4"/><path d="M15.8 14.4c2.3.1 4 1.6 4.6 4.1"/></svg> Equipo<span class="badge" id="badgePend" hidden></span></button>
         <button type="button" class="menu-item" role="menuitem" id="btnPerfil2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8.5" r="3.6"/><path d="M5 20c.8-3.6 3.6-5.6 7-5.6s6.2 2 7 5.6"/></svg> Mi perfil</button>
-        <button type="button" class="menu-item" role="menuitem" id="btnDiseno"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="4" width="17" height="16" rx="3"/><path d="M3.5 9.5h17M9.5 9.5V20"/></svg> <span id="txtDiseno">Probar diseño nuevo</span></button>
         <hr>
         <button type="button" class="menu-item salir" role="menuitem" id="btnSalir"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h4a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-4"/><path d="M10 16l-4-4 4-4M6 12h10"/></svg> Cerrar sesión</button>
       </div>
@@ -519,9 +529,9 @@ tbody tr:hover{background:#FBF9F5}
 </aside>
 <aside class="det" id="det" aria-label="Detalle del lead"></aside>
 
-<script src="../evaluador/config.js?v=20261003c"></script>
-<script src="../evaluador/motor.js?v=20261003c"></script>
-<script src="../evaluador/sesion.js?v=20261003c"></script>
+<script src="../evaluador/config.js?v=20261003d"></script>
+<script src="../evaluador/motor.js?v=20261003d"></script>
+<script src="../evaluador/sesion.js?v=20261003d"></script>
 <script>
 (function(){
   var C = window.AHEAD_EVAL, Mo = window.AheadMotor, $ = function(i){return document.getElementById(i)};
@@ -728,6 +738,7 @@ tbody tr:hover{background:#FBF9F5}
     $("lnkHoja").hidden = demo || !C.hojaUrl;
     opcionesFiltros();
     pintar();
+    entrada();
   }
   function uniq(a){ return a.filter(function(v,i){return v && a.indexOf(v)===i}).sort(); }
 
@@ -867,6 +878,36 @@ tbody tr:hover{background:#FBF9F5}
         + '<td>'+esc(r.asesorNombre||r.asesor||"—")+'</td></tr>';
     }).join("") : '<tr><td colspan="8" class="vacio">'+(datos.length ? "Ningún lead coincide con los filtros." : "Aún no hay evaluaciones registradas.")+'</td></tr>';
   }
+  /* Entrada suave al cargar los datos por primera vez: tarjetas que suben en cascada,
+     barras y columnas que crecen desde cero y cifras que cuentan hasta su valor. */
+  var entradaHecha = false;
+  function entrada(){
+    if (entradaHecha) return; entradaHecha = true;
+    if (window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    var raiz = document.documentElement;
+    document.querySelectorAll("#app .titulo-panel, #hero .hnum, #hero .hcard, .kpi, .grid2 .panel, .filtros, .tabla").forEach(function(el, i){ el.style.setProperty("--i", i); });
+    document.querySelectorAll(".barras, .cols, .spark").forEach(function(g){ Array.prototype.forEach.call(g.children, function(c, i){ c.style.setProperty("--b", i); var t = c.querySelector(".t i, i"); if (t) t.style.setProperty("--b", i); }); });
+    Array.prototype.forEach.call($("filas").children, function(tr, i){ tr.style.setProperty("--r", Math.min(i, 14)); });
+    raiz.classList.add("animar");
+    document.querySelectorAll(".kpi .v, #hero .hv, #proyV").forEach(function(el){ contar(el, 1300); });
+    setTimeout(function(){ raiz.classList.remove("animar"); }, 3200);
+  }
+  // Cuenta desde 0 hasta la cifra que ya está escrita, respetando el formato ($ y puntos de miles).
+  function contar(el, dur){
+    var nodo = null;
+    (function buscar(n){ for (var i = 0; i < n.childNodes.length && !nodo; i++) { var c = n.childNodes[i]; if (c.nodeType === 3 && /\d/.test(c.nodeValue)) nodo = c; else if (c.nodeType === 1 && c.tagName !== "SMALL") buscar(c); } })(el);
+    if (!nodo) return;
+    var texto = nodo.nodeValue, fin = Number(texto.replace(/\D/g, ""));
+    if (!fin) return;
+    var pre = texto.match(/^\D*/)[0], post = texto.match(/\D*$/)[0], t0 = null;
+    function paso(t){
+      if (!t0) t0 = t;
+      var k = Math.min(1, (t - t0) / dur), e = 1 - Math.pow(1 - k, 3);
+      nodo.nodeValue = pre + Math.round(fin * e).toLocaleString("es-CO") + post;
+      if (k < 1) requestAnimationFrame(paso); else nodo.nodeValue = texto;
+    }
+    requestAnimationFrame(paso);
+  }
   // Si una cifra no cabe en su tarjeta, reduce la letra hasta que quepa completa.
   function ajustarKpis(){
     // Todas las cifras quedan del mismo tamaño para que la fila se vea pareja.
@@ -940,14 +981,6 @@ tbody tr:hover{background:#FBF9F5}
     $("proyD").textContent = "ingreso bruto anual gestionado (escenario medio) · ≈ " + Math.round(u) + " unidades";
   }
   $("tasa").addEventListener("input", function(){ proyectar(filtrados()); });
-  function pintarDiseno(){ $("txtDiseno").textContent = document.documentElement.classList.contains("v2") ? "Volver al diseño anterior" : "Probar diseño nuevo"; }
-  $("btnDiseno").addEventListener("click", function(){
-    var v2 = !document.documentElement.classList.contains("v2");
-    document.documentElement.classList.toggle("v2", v2);
-    try { localStorage.setItem("ahead_panel_diseno", v2 ? "nuevo" : "anterior"); } catch(e) {}
-    pintarDiseno(); if (!$("app").hidden) pintar();
-  });
-  pintarDiseno();
   document.querySelector("thead").addEventListener("click", function(e){
     var th = e.target.closest("th"); if (!th) return;
     var k = th.getAttribute("data-o"); orden = {k:k, dir: orden.k===k ? -orden.dir : -1}; pintar();
