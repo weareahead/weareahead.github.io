@@ -529,9 +529,9 @@ tbody tr:hover{background:#FBF9F5}
 </aside>
 <aside class="det" id="det" aria-label="Detalle del lead"></aside>
 
-<script src="../evaluador/config.js?v=20261003d"></script>
-<script src="../evaluador/motor.js?v=20261003d"></script>
-<script src="../evaluador/sesion.js?v=20261003d"></script>
+<script src="../evaluador/config.js?v=20261004a"></script>
+<script src="../evaluador/motor.js?v=20261004a"></script>
+<script src="../evaluador/sesion.js?v=20261004a"></script>
 <script>
 (function(){
   var C = window.AHEAD_EVAL, Mo = window.AheadMotor, $ = function(i){return document.getElementById(i)};
@@ -546,23 +546,47 @@ tbody tr:hover{background:#FBF9F5}
   /* ---------- Sesión (compartida con el evaluador) ---------- */
   var S = window.AheadSesion, equipo = [], yo = null;
   function sesion(){ return S.leer(); }
+  /* Carga de datos.
+     · Una sola llamada (listar) trae leads, equipo, lista de cuentas y perfil.
+     · Mientras llega, se muestra al instante la última copia guardada en este navegador
+       (se borra al cerrar sesión) y el botón de actualizar gira hasta tener datos frescos.
+     · Si Google tarda demasiado, se corta a los 20 s y se reintenta una vez. */
+  var CACHE = "ahead_panel_cache_v1";
+  function leerCache(email){ try { var c = JSON.parse(localStorage.getItem(CACHE) || "null"); return c && c.email === email && Date.now() - c.t < 7*864e5 ? c : null; } catch(e) { return null; } }
+  function guardarCache(email, j){ try { localStorage.setItem(CACHE, JSON.stringify({email: email, t: Date.now(), j: j})); } catch(e) {} }
+  function pedirListar(token, intento){
+    var ctl = window.AbortController ? new AbortController() : null;
+    var corte = ctl ? setTimeout(function(){ ctl.abort(); }, 20000) : null;
+    return fetch(C.endpoint + "?accion=listar&token=" + encodeURIComponent(token), ctl ? {signal: ctl.signal} : {})
+      .then(function(r){ clearTimeout(corte); return r.json(); })
+      .catch(function(e){ clearTimeout(corte); if ((intento||0) < 1) return pedirListar(token, 1); throw e; });
+  }
+  function aplicarDatos(j, s){
+    demo = false; datos = j.registros || []; equipo = j.equipo || []; yo = j.yo || s;
+    $("msgAcceso").textContent = ""; abrirApp();
+    if (j.perfil) S.actualizarLocal(j.perfil);
+    pintarUsuario();
+    $("btnEquipo").hidden = false;
+    if (j.usuarios) cargarUsuarios(j);
+  }
   function cargar(){
     var s = sesion(); if (!s) return;
     $("btnRecargar").classList.add("girando"); $("btnRecargar").disabled = true;
-    var listo = function(){ $("btnRecargar").classList.remove("girando"); $("btnRecargar").disabled = false; };
-    if ($("app").hidden) { $("msgAcceso").className = "msg"; $("msgAcceso").textContent = "Cargando leads…"; }
-    fetch(C.endpoint + "?accion=listar&token=" + encodeURIComponent(s.token))
-      .then(function(r){return r.json()})
+    var listo = function(){ $("btnRecargar").classList.remove("girando"); $("btnRecargar").disabled = false; clearTimeout(lento); };
+    var c = $("app").hidden ? leerCache(s.email) : null;
+    if (c) aplicarDatos(c.j, s);
+    else if ($("app").hidden) { $("msgAcceso").className = "msg"; $("msgAcceso").textContent = "Cargando leads…"; }
+    var lento = setTimeout(function(){ if ($("app").hidden) $("msgAcceso").textContent = "Google está tardando más de lo normal en responder. Seguimos intentando…"; }, 8000);
+    pedirListar(s.token)
       .then(function(j){
         listo();
         if (!j.ok) { S.cerrar(); $("msgAcceso").textContent = S.mensaje(j.error); $("acceso").hidden = false; $("app").hidden = true; $("iconos").hidden = true; return; }
-        demo = false; datos = j.registros || []; equipo = j.equipo || []; yo = j.yo || s;
-        $("msgAcceso").textContent = ""; abrirApp();
-        pintarUsuario();
-        if (!perfilCargado) { perfilCargado = true; S.perfil().then(pintarUsuario).catch(function(){}); }
-        $("btnEquipo").hidden = false; cargarUsuarios();
+        guardarCache(s.email, j);
+        aplicarDatos(j, s);
+        if (!j.perfil && !perfilCargado) { perfilCargado = true; S.perfil().then(pintarUsuario).catch(function(){}); }
+        if (!j.usuarios) cargarUsuarios();
       })
-      .catch(function(){ listo(); $("msgAcceso").textContent = "No se pudo conectar con la hoja. Revisa la conexión."; });
+      .catch(function(){ listo(); if ($("app").hidden) $("msgAcceso").textContent = "No se pudo conectar con la hoja. Revisa la conexión e inténtalo de nuevo."; });
   }
   var perfilCargado = false;
 
@@ -682,11 +706,12 @@ tbody tr:hover{background:#FBF9F5}
   });
   $("btnSalir").addEventListener("click", function(){ S.cerrar(); location.reload(); });
   $("btnRecargar").addEventListener("click", function(){ if (!demo) cargar(); });
-  if (C.endpoint && sesion()) { $("acceso").hidden = true; cargar(); }
+  // Se lanza cuando todo el script terminó de definirse (filtros, vistas…).
+  if (C.endpoint && sesion()) { $("acceso").hidden = true; setTimeout(cargar, 0); }
 
   /* ---------- Equipo: todos lo ven; aprobar/eliminar solo el admin ---------- */
-  function cargarUsuarios(){
-    S.post({accion:"usuarios", token:sesion().token}).then(function(j){
+  function cargarUsuarios(dat){
+    (dat ? Promise.resolve(dat) : S.post({accion:"usuarios", token:sesion().token})).then(function(j){
       if (!j.ok) return;
       var admin = !!j.admin, yoEmail = (sesion()||{}).email;
       equipo = j.usuarios.filter(function(u){ return u.estado === "activo" || u.estado === "admin"; }).map(function(u){ return {email:u.email, nombre:u.nombre}; });

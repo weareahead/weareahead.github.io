@@ -11,7 +11,7 @@
     } catch (e) { return null; }
   }
   function guardar(s) { try { localStorage.setItem(KEY, JSON.stringify(s)); } catch (e) {} }
-  function cerrar() { try { localStorage.removeItem(KEY); localStorage.removeItem("ahead_panel_sesion"); } catch (e) {} }
+  function cerrar() { try { localStorage.removeItem(KEY); localStorage.removeItem("ahead_panel_sesion"); localStorage.removeItem("ahead_panel_cache_v1"); } catch (e) {} }
   // Mezcla datos del perfil (nombre, foto…) en la sesión guardada.
   function actualizarLocal(datos) {
     var s = leer(); if (!s) return null;

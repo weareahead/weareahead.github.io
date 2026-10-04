@@ -1,5 +1,5 @@
 /**
- * EVALUADOR DE PROPIEDADES AHEAD — Backend en Google Sheets  (v6)
+ * EVALUADOR DE PROPIEDADES AHEAD — Backend en Google Sheets  (v7)
  * ---------------------------------------------------------------
  * Proyecto de Apps Script «Ahead · Evaluador de propiedades (backend)»
  * en la cuenta ahead.hospitality@gmail.com, publicado como Aplicación web:
@@ -14,7 +14,8 @@
  *                           si no, se marca como «QR / por su cuenta».
  *  - registro    (público)  solicitud de cuenta del equipo → queda pendiente.
  *  - login                   correo + contraseña → sesión firmada (7 días).
- *  - listar      (sesión)   evaluaciones + equipo activo.
+ *  - listar      (sesión)   evaluaciones + equipo activo + lista del equipo + perfil propio
+ *                           (todo en una sola llamada para que el panel cargue rápido).
  *  - actualizar  (sesión)   estado comercial, asesor y notas de un lead.
  *  - usuarios    (sesión)   lista del equipo. Admin: todas las cuentas con su estado;
  *                           resto del equipo: solo las cuentas activas, sin acciones.
@@ -78,9 +79,12 @@ function doGet(e) {
   if (p.accion === 'listar') {
     const s = sesion_(p.token);
     if (!s) return json_({ ok: false, error: 'sesion' });
-    return json_({ ok: true, registros: listar_(), equipo: equipoActivo_(), yo: s });
+    MEMO_ACTIVO_ = true;
+    const lu = listaUsuarios_(s);
+    return json_({ ok: true, registros: listar_(), equipo: equipoActivo_(), yo: s,
+      usuarios: lu.usuarios, admin: lu.admin, perfil: perfilDe_(s) });
   }
-  return json_({ ok: true, servicio: 'Ahead · Evaluador de propiedades', version: 5 });
+  return json_({ ok: true, servicio: 'Ahead · Evaluador de propiedades', version: 7 });
 }
 
 /* ================= Hojas ================= */
@@ -219,7 +223,14 @@ function huella(texto) {
 
 function usuariosHoja_() { return asegurarHoja_(HOJA_USUARIOS, COLUMNAS_USUARIOS); }
 
+// Dentro de una misma lectura (listar) la pestaña Usuarios se lee una sola vez.
+let MEMO_ACTIVO_ = false, USUARIOS_MEMO_ = null;
 function leerUsuarios_() {
+  if (MEMO_ACTIVO_ && USUARIOS_MEMO_) return USUARIOS_MEMO_;
+  USUARIOS_MEMO_ = leerUsuariosHoja_();
+  return USUARIOS_MEMO_;
+}
+function leerUsuariosHoja_() {
   const sh = usuariosHoja_();
   const datos = sh.getDataRange().getValues();
   const cab = datos.shift();
@@ -269,6 +280,10 @@ function registroCuenta_(b) {
 function usuarios_(b) {
   const s = sesion_(b.token);
   if (!s) return json_({ ok: false, error: 'sesion' });
+  const lu = listaUsuarios_(s);
+  return json_({ ok: true, admin: lu.admin, usuarios: lu.usuarios });
+}
+function listaUsuarios_(s) {
   const admin = s.rol === 'admin';
   const pa = perfilAdmin_();
   const lista = [{ email: USUARIO_EQUIPO, nombre: pa.nombre || 'Equipo Ahead', estado: 'admin', cargo: pa.cargo || 'Cuenta administradora',
@@ -278,7 +293,7 @@ function usuarios_(b) {
     lista.push({ email: u.email, nombre: u.nombre, estado: u.estado, cargo: u.cargo || '', telefono: String(u.telefono || ''),
       foto: u.foto || '', creado: admin ? u.creado : '', ultimoAcceso: admin ? u.ultimoAcceso : '' });
   });
-  return json_({ ok: true, admin: admin, usuarios: lista });
+  return { admin: admin, usuarios: lista };
 }
 
 function usuarioEstado_(b) {
@@ -384,12 +399,15 @@ function claveAdmin_() {
 function perfil_(b) {
   const s = sesion_(b.token);
   if (!s) return json_({ ok: false, error: 'sesion' });
+  return json_({ ok: true, perfil: perfilDe_(s) });
+}
+function perfilDe_(s) {
   if (s.rol === 'admin') {
     const p = perfilAdmin_();
-    return json_({ ok: true, perfil: { email: s.email, nombre: p.nombre || 'Equipo Ahead', rol: 'admin', telefono: p.telefono || '', cargo: p.cargo || '', foto: p.foto || '' } });
+    return { email: s.email, nombre: p.nombre || 'Equipo Ahead', rol: 'admin', telefono: p.telefono || '', cargo: p.cargo || '', foto: p.foto || '' };
   }
-  const u = leerUsuarios_().filter(function (x) { return x.email === s.email; })[0];
-  return json_({ ok: true, perfil: { email: s.email, nombre: u.nombre, rol: 'equipo', telefono: u.telefono || '', cargo: u.cargo || '', foto: u.foto || '' } });
+  const u = leerUsuarios_().filter(function (x) { return x.email === s.email; })[0] || {};
+  return { email: s.email, nombre: u.nombre || s.nombre, rol: 'equipo', telefono: String(u.telefono || ''), cargo: u.cargo || '', foto: u.foto || '' };
 }
 
 function perfilGuardar_(b) {
