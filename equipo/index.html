@@ -102,9 +102,9 @@ main{max-width:1280px;margin:0 auto;padding:20px}
 
 /* KPIs */
 .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:16px}
-.kpi{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px;min-width:0;overflow:hidden}
 .kpi .k{font-size:12.5px;color:var(--ink-2)}
-.kpi .v{margin-top:4px;font-family:var(--font-display);font-weight:600;font-size:clamp(19px,1.75vw,26px);white-space:nowrap;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.kpi .v{margin-top:4px;font-family:var(--font-display);font-weight:600;font-size:clamp(20px,1.9vw,28px);white-space:nowrap;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
 .kpi .d{font-size:12px;color:var(--ink-2)}
 .grid2{display:grid;grid-template-columns:1fr;gap:12px;margin-bottom:16px}
 @media(min-width:900px){.grid2{grid-template-columns:1fr 1fr 1fr}}
@@ -421,9 +421,9 @@ tbody tr:hover{background:#FBF9F5}
 </aside>
 <aside class="det" id="det" aria-label="Detalle del lead"></aside>
 
-<script src="../evaluador/config.js?v=20261002i"></script>
-<script src="../evaluador/motor.js?v=20261002i"></script>
-<script src="../evaluador/sesion.js?v=20261002i"></script>
+<script src="../evaluador/config.js?v=20261003b"></script>
+<script src="../evaluador/motor.js?v=20261003b"></script>
+<script src="../evaluador/sesion.js?v=20261003b"></script>
 <script>
 (function(){
   var C = window.AHEAD_EVAL, Mo = window.AheadMotor, $ = function(i){return document.getElementById(i)};
@@ -740,6 +740,7 @@ tbody tr:hover{background:#FBF9F5}
       ["Mensual promedio", Mo.fmt(prom), "por evaluación"],
       ["Con riesgos", riesgo, "2 o más factores de riesgo"]
     ].map(function(k){return '<div class="kpi"><div class="k">'+k[0]+'</div><div class="v">'+k[1]+'</div><div class="d">'+k[2]+'</div></div>'}).join("");
+    ajustarKpis();
 
     barras("bClase", ["Prioritario","Potencial","Bajo potencial","No viable"].map(function(c){return [c, F.filter(function(r){return r.calificacion.clase===c}).length]}));
     var cs = {}; F.forEach(function(r){ cs[r.lead.ciudad] = (cs[r.lead.ciudad]||0)+1; });
@@ -766,6 +767,18 @@ tbody tr:hover{background:#FBF9F5}
         + '<td>'+esc(r.asesorNombre||r.asesor||"—")+'</td></tr>';
     }).join("") : '<tr><td colspan="8" class="vacio">'+(datos.length ? "Ningún lead coincide con los filtros." : "Aún no hay evaluaciones registradas.")+'</td></tr>';
   }
+  // Si una cifra no cabe en su tarjeta, reduce la letra hasta que quepa completa.
+  function ajustarKpis(){
+    // Todas las cifras quedan del mismo tamaño para que la fila se vea pareja.
+    var vs = document.querySelectorAll("#kpis .v"), min = Infinity;
+    vs.forEach(function(v){ v.style.fontSize = ""; });
+    vs.forEach(function(v){
+      var t = 0; while (v.scrollWidth > v.clientWidth && t++ < 20) v.style.fontSize = (parseFloat(getComputedStyle(v).fontSize) - 1) + "px";
+      min = Math.min(min, parseFloat(getComputedStyle(v).fontSize));
+    });
+    vs.forEach(function(v){ v.style.fontSize = min + "px"; });
+  }
+  window.addEventListener("resize", function(){ clearTimeout(ajustarKpis.t); ajustarKpis.t = setTimeout(ajustarKpis, 120); });
   function barras(id, pares){
     var max = Math.max.apply(null, pares.map(function(p){return p[1]}).concat([1]));
     $(id).innerHTML = pares.length ? pares.map(function(p){return '<div class="barra"><span>'+esc(p[0])+'</span><span class="t"><i style="width:'+(p[1]/max*100)+'%"></i></span><span class="n">'+p[1]+'</span></div>'}).join("") : '<div class="sb">Sin datos</div>';
