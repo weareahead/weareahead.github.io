@@ -8,6 +8,11 @@
 <meta name="theme-color" content="#3B0B45">
 <link rel="icon" href="../favicon.ico" sizes="any">
 <link rel="icon" href="../assets/isotipo-ahead.svg" type="image/svg+xml">
+<script>
+/* Diseño del panel: "anterior" (por defecto) o "nuevo" (prueba). Se puede forzar con ?diseno=nuevo o ?diseno=anterior
+   y se recuerda en este navegador. */
+(function(){try{var q=new URLSearchParams(location.search).get("diseno");if(q==="nuevo"||q==="anterior")localStorage.setItem("ahead_panel_diseno",q);if(localStorage.getItem("ahead_panel_diseno")==="nuevo")document.documentElement.classList.add("v2");}catch(e){}})();
+</script>
 <style>
 @font-face{font-family:"Outfit";font-weight:500;font-display:swap;src:url(../assets/fonts/outfit-latin-500-normal.woff2) format("woff2")}
 @font-face{font-family:"Outfit";font-weight:600;font-display:swap;src:url(../assets/fonts/outfit-latin-600-normal.woff2) format("woff2")}
@@ -115,8 +120,12 @@ main{max-width:1280px;margin:0 auto;padding:20px}
 .barra .t{height:10px;border-radius:5px;background:var(--soft-lila);overflow:hidden}
 .barra .t i{display:block;height:100%;border-radius:5px;background:var(--morada)}
 .barra .n{text-align:right;font-variant-numeric:tabular-nums;color:var(--ink-2)}
+.barra .t i em{display:none}
+.spark,.hero{display:none}
+.cur{font-weight:inherit}
 .cols{display:flex;align-items:flex-end;gap:6px;height:150px;padding-top:18px}
 .cols .c{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;gap:6px;height:100%;justify-content:flex-end}
+.cols .c s{flex:1;min-height:0;width:100%;display:flex;align-items:flex-end;justify-content:center;text-decoration:none}
 .cols .c i{display:block;width:100%;max-width:44px;border-radius:6px 6px 2px 2px;background:var(--morada);position:relative}
 .cols .c i b{position:absolute;top:-18px;left:0;right:0;text-align:center;font-size:12px;font-weight:600;color:var(--ink)}
 .cols .c span{font-size:11.5px;color:var(--ink-2);white-space:nowrap}
@@ -125,6 +134,93 @@ main{max-width:1280px;margin:0 auto;padding:20px}
 .proy input[type=range]{width:100%;accent-color:var(--naranja);margin:8px 0 14px}
 .proy .v{font-family:var(--font-display);font-weight:600;font-size:24px;letter-spacing:-.02em}
 .proy .d{font-size:12px;color:var(--ink-2)}
+
+/* ================= Diseño nuevo (prueba) · html.v2 =================
+   Referencia: tarjetas suaves sin borde, esquinas amplias, cifras grandes con el signo $ atenuado,
+   barras tipo píldora con valor en cápsula oscura, sparklines en "código de barras" y franjas rayadas. */
+html.v2{--bg:#ECE7E0;--card:#F8F5F0;--card-2:#FFFFFF;--grid:rgba(92,31,99,.08);--raya:repeating-linear-gradient(135deg,rgba(92,31,99,.16) 0 2px,transparent 2px 8px)}
+html.v2 body{background:var(--bg)}
+html.v2 .top{position:sticky;top:10px;margin:10px 12px 0;border-radius:24px;box-shadow:0 12px 30px rgba(42,8,50,.18)}
+html.v2 main{max-width:1320px;padding:26px 20px 40px}
+html.v2 .titulo-panel{font-weight:500;font-size:40px;letter-spacing:-.03em;margin-bottom:22px}
+html.v2 .titulo-panel span{font-size:16px;font-weight:400}
+html.v2 .panel,html.v2 .kpi,html.v2 .tabla{background:var(--card);border:0;box-shadow:0 1px 0 rgba(255,255,255,.9) inset,0 10px 28px rgba(42,8,50,.06)}
+html.v2 .panel{border-radius:28px;padding:22px 22px 24px}
+html.v2 .panel h3{font-weight:500;font-size:18px;letter-spacing:-.01em;margin-bottom:18px}
+html.v2 .grid2{gap:16px;margin-bottom:16px}
+html.v2 .cur{color:#B5A8B9;font-weight:400;margin-right:.08em}
+/* Hero */
+html.v2 .hero{display:grid;grid-template-columns:1fr;gap:16px;margin-bottom:16px}
+@media(min-width:900px){html.v2 .hero{grid-template-columns:1.25fr 1fr}}
+.hero .hnum{padding:6px 4px 4px;display:flex;flex-direction:column;justify-content:flex-end;min-width:0}
+.hero .hstats{display:grid;grid-template-columns:1fr 1fr;gap:0;margin-bottom:22px}
+.hero .hstat{border-left:1.5px solid rgba(92,31,99,.25);padding:4px 18px 6px;min-width:0}
+.hero .hstat .k{font-size:14px;color:var(--ink-2)}
+.hero .hstat .k i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:7px;vertical-align:1px}
+.hero .hv{font-family:var(--font-display);font-weight:500;font-size:clamp(26px,3.1vw,40px);letter-spacing:-.03em;white-space:nowrap;margin-top:6px;font-variant-numeric:tabular-nums}
+.hero .hstat .d{font-size:12.5px;color:var(--ink-2)}
+.hero .hbar{display:flex;gap:4px;height:28px}
+.hero .seg{flex-basis:0;min-width:14px;border-radius:999px}
+.hero .s1{background:var(--dark-morada)} .hero .s2{background:var(--naranja)} .hero .s3{background:var(--raya)}
+.hero .hley{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:12px;font-size:12.5px;color:var(--ink-2)}
+.hero .hley b{color:var(--ink);font-weight:600}
+.hero .hley i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px;vertical-align:0}
+.hero .hley i.r{border-radius:3px;background:var(--raya);box-shadow:inset 0 0 0 1px rgba(92,31,99,.2)}
+.hero .hcard{position:relative;overflow:hidden;border-radius:28px;padding:24px;color:var(--cream);background:radial-gradient(120% 90% at 100% 0%,#6B2A73 0%,rgba(107,42,115,0) 60%),radial-gradient(80% 80% at 0% 100%,rgba(247,111,38,.28) 0%,rgba(247,111,38,0) 60%),var(--dark-morada);box-shadow:0 18px 40px rgba(42,8,50,.22)}
+.hero .hcard::after{content:"";position:absolute;right:-46px;bottom:-56px;width:230px;height:210px;background:url(../assets/isotipo-ahead.svg) no-repeat center/contain;opacity:.07;pointer-events:none}
+.hero .hcard h3{margin:0;font-family:var(--font-display);font-weight:500;font-size:18px}
+.hero .hcard .hv{color:#fff;margin-top:16px}
+.hero .hcard .hv small{font-family:var(--font-body);font-size:15px;font-weight:400;letter-spacing:0;color:rgba(244,240,232,.75);margin-left:8px}
+.hero .hcard .d{font-size:12.5px;color:rgba(244,240,232,.7)}
+.hero .hcard .hbar{height:14px;margin:18px 0 14px;gap:3px}
+.hero .hcard .seg{min-width:8px}
+.hero .eley{display:grid;grid-template-columns:1fr 1fr;gap:6px 18px;font-size:12.5px;color:rgba(244,240,232,.85);position:relative;z-index:1}
+.hero .eley > span{display:flex;justify-content:space-between;gap:8px}
+.hero .eley i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:7px}
+.hero .eley b{color:#fff;font-weight:600;font-variant-numeric:tabular-nums}
+/* KPIs */
+@media(min-width:900px){html.v2 .kpis{grid-template-columns:repeat(3,1fr)}}
+html.v2 .kpis{gap:16px;margin-bottom:16px}
+html.v2 .kpi{border-radius:28px;padding:20px 22px;display:grid;grid-template-columns:1fr auto;grid-template-areas:"k k" "v s" "d s";column-gap:12px;align-items:end}
+html.v2 .kpi .k{grid-area:k;font-size:15px;color:var(--ink);align-self:start;margin-bottom:26px}
+html.v2 .kpi .v{grid-area:v;font-weight:500;font-size:clamp(24px,2.3vw,34px);margin-top:0;min-width:0}
+html.v2 .kpi .d{grid-area:d;font-size:13px}
+html.v2 .spark{grid-area:s;display:flex;align-items:flex-end;gap:2px;height:44px}
+.spark i{display:block;width:2px;border-radius:1px;background:#D3C8D6}
+.spark i.on{background:var(--dark-morada)}
+/* Barras tipo píldora */
+html.v2 .barras{gap:12px;background-image:repeating-linear-gradient(90deg,var(--grid) 0 1px,transparent 1px 20%);background-position:0 0;padding:2px 0}
+html.v2 .barra{grid-template-columns:1fr;gap:6px}
+html.v2 .barra > span:first-child{font-size:13px;color:var(--ink)}
+html.v2 .barra .n{display:none}
+html.v2 .barra .t{height:30px;background:transparent;overflow:visible;border-radius:999px}
+html.v2 .barra .t i{position:relative;display:flex;justify-content:flex-end;height:30px;min-width:48px;border-radius:999px;background:var(--card-2);box-shadow:0 1px 2px rgba(42,8,50,.07)}
+html.v2 .barra .t i em{display:grid;place-items:center;font-style:normal;min-width:48px;height:30px;padding:0 12px;border-radius:999px;background:var(--dark-morada);color:var(--cream);font-size:12.5px;font-weight:600;font-variant-numeric:tabular-nums}
+html.v2 .barra.cero .t i em{background:#D9D0DC;color:var(--ink-2)}
+/* Columnas por día */
+html.v2 .cols{height:190px;padding-top:30px;gap:10px}
+html.v2 .cols .c s{max-width:52px;border-radius:999px;background:var(--raya)}
+html.v2 .cols .c i{max-width:none;border-radius:999px;background:var(--dark-morada)}
+html.v2 .cols .c:last-child i{background:var(--naranja)}
+html.v2 .cols .c i b{top:-26px;left:50%;right:auto;transform:translateX(-50%);min-width:28px;padding:2px 8px;border-radius:999px;background:var(--card-2);box-shadow:0 1px 3px rgba(42,8,50,.12);font-size:11.5px}
+/* Proyección: deslizador grueso con tramo rayado */
+html.v2 .proy input[type=range]{-webkit-appearance:none;appearance:none;height:26px;border-radius:999px;background:linear-gradient(90deg,var(--naranja) 0 var(--p,25%),transparent var(--p,25%)),var(--raya);margin:14px 0 18px}
+html.v2 .proy input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:30px;height:30px;border-radius:50%;background:#fff;box-shadow:0 2px 6px rgba(42,8,50,.25);cursor:pointer}
+html.v2 .proy input[type=range]::-moz-range-thumb{width:28px;height:28px;border:0;border-radius:50%;background:#fff;box-shadow:0 2px 6px rgba(42,8,50,.25);cursor:pointer}
+html.v2 .proy input[type=range]::-moz-range-track{background:transparent}
+html.v2 .proy .v{font-weight:500;font-size:34px}
+html.v2 .proy label b{font-family:var(--font-display);font-weight:500;font-size:15px;color:var(--ink)}
+/* Filtros y tabla */
+html.v2 .filtros{margin-top:8px}
+html.v2 .fbtn{border:0;background:var(--card);box-shadow:0 4px 14px rgba(42,8,50,.07);font-weight:500;min-height:46px;padding:8px 20px}
+html.v2 .ibtn2{border:0;background:var(--card);box-shadow:0 4px 14px rgba(42,8,50,.07)}
+html.v2 .tabla{border-radius:28px;padding:6px 8px}
+html.v2 th{background:var(--card);text-transform:none;letter-spacing:0;font-size:13.5px;font-weight:500;color:var(--ink-2);padding:16px 14px 10px}
+html.v2 td{padding:14px;border-bottom-color:rgba(92,31,99,.07)}
+html.v2 tbody tr:hover{background:#FFFFFF}
+html.v2 .tag,html.v2 .ec{padding:5px 12px}
+@media (max-width:600px){html.v2 .kpis{grid-template-columns:1fr 1fr;gap:10px}html.v2 .kpi{padding:16px;border-radius:22px;align-items:start;align-content:start;grid-template-columns:1fr;grid-template-areas:"k" "v" "d" "s"}html.v2 .kpi .v{font-size:22px}html.v2 .spark{height:26px;margin-top:10px}}
+@media (max-width:480px){html.v2 .titulo-panel{font-size:30px}html.v2 .top{margin:8px 8px 0;top:8px}.hero .hstat{padding:4px 12px 6px}html.v2 .kpi .k{margin-bottom:16px}}
 
 /* Filtros + tabla */
 .filtros{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:10px;align-items:center}
@@ -278,6 +374,7 @@ tbody tr:hover{background:#FBF9F5}
         <a class="menu-item" role="menuitem" href="../evaluador/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2.5"/><path d="M8.5 6.5h7v3h-7z"/><path d="M9 13h.01M12 13h.01M15 13h.01M9 16.5h.01M12 16.5h.01M15 16.5h.01"/></svg> Ir al evaluador</a>
         <button type="button" class="menu-item" role="menuitem" id="btnEquipo" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8.5" r="3.2"/><path d="M3.5 19c.6-3 2.8-4.8 5.5-4.8s4.9 1.8 5.5 4.8"/><circle cx="17" cy="9.5" r="2.4"/><path d="M15.8 14.4c2.3.1 4 1.6 4.6 4.1"/></svg> Equipo<span class="badge" id="badgePend" hidden></span></button>
         <button type="button" class="menu-item" role="menuitem" id="btnPerfil2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8.5" r="3.6"/><path d="M5 20c.8-3.6 3.6-5.6 7-5.6s6.2 2 7 5.6"/></svg> Mi perfil</button>
+        <button type="button" class="menu-item" role="menuitem" id="btnDiseno"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="4" width="17" height="16" rx="3"/><path d="M3.5 9.5h17M9.5 9.5V20"/></svg> <span id="txtDiseno">Probar diseño nuevo</span></button>
         <hr>
         <button type="button" class="menu-item salir" role="menuitem" id="btnSalir"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h4a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-4"/><path d="M10 16l-4-4 4-4M6 12h10"/></svg> Cerrar sesión</button>
       </div>
@@ -317,6 +414,7 @@ tbody tr:hover{background:#FBF9F5}
 
   <section id="app" hidden>
     <h1 class="titulo-panel">Panel de leads <span>Evaluador de propiedades</span></h1>
+    <section class="hero" id="hero" aria-label="Resumen del potencial y del seguimiento"></section>
     <div class="kpis" id="kpis"></div>
     <div class="grid2">
       <div class="panel"><h3>Calificación de leads</h3><div class="barras" id="bClase"></div></div>
@@ -421,9 +519,9 @@ tbody tr:hover{background:#FBF9F5}
 </aside>
 <aside class="det" id="det" aria-label="Detalle del lead"></aside>
 
-<script src="../evaluador/config.js?v=20261003b"></script>
-<script src="../evaluador/motor.js?v=20261003b"></script>
-<script src="../evaluador/sesion.js?v=20261003b"></script>
+<script src="../evaluador/config.js?v=20261003c"></script>
+<script src="../evaluador/motor.js?v=20261003c"></script>
+<script src="../evaluador/sesion.js?v=20261003c"></script>
 <script>
 (function(){
   var C = window.AHEAD_EVAL, Mo = window.AheadMotor, $ = function(i){return document.getElementById(i)};
@@ -732,14 +830,16 @@ tbody tr:hover{background:#FBF9F5}
     var prom = F.length ? F.reduce(function(s,r){return s + r.resultado.escenarios.medio.mensual},0) / F.length : 0;
     var riesgo = F.filter(function(r){return (r.calificacion.riesgos||[]).length >= 2}).length;
     var unidades = viables.reduce(function(s,r){return s + (r.resultado.unidades||1)},0);
+    var sEval = serie(F, function(){ return 1; }), sAnual = serie(viables, function(r){ return r.resultado.escenarios.medio.anual; });
     $("kpis").innerHTML = [
-      ["Evaluaciones", F.length, "leads registrados"],
+      ["Evaluaciones", F.length, "leads registrados", sEval],
       ["Prioritarios", prio.length, F.length ? Math.round(prio.length/F.length*100)+" % del total" : ""],
       ["Unidades potenciales", unidades, "en leads viables"],
-      ["Potencial anual", Mo.fmt(anual), "bruto, escenario medio, viables"],
-      ["Mensual promedio", Mo.fmt(prom), "por evaluación"],
+      ["Potencial anual", dinero(anual), "bruto, escenario medio, viables", sAnual],
+      ["Mensual promedio", dinero(prom), "por evaluación"],
       ["Con riesgos", riesgo, "2 o más factores de riesgo"]
-    ].map(function(k){return '<div class="kpi"><div class="k">'+k[0]+'</div><div class="v">'+k[1]+'</div><div class="d">'+k[2]+'</div></div>'}).join("");
+    ].map(function(k){return '<div class="kpi"><div class="k">'+k[0]+'</div><div class="v">'+k[1]+'</div><div class="d">'+k[2]+'</div>'+(k[3] ? spark(k[3]) : '')+'</div>'}).join("");
+    hero(F);
     ajustarKpis();
 
     barras("bClase", ["Prioritario","Potencial","Bajo potencial","No viable"].map(function(c){return [c, F.filter(function(r){return r.calificacion.clase===c}).length]}));
@@ -752,7 +852,7 @@ tbody tr:hover{background:#FBF9F5}
     barras("bRango", rangos.map(function(g){ return [g[0], F.filter(function(r){ var m = r.resultado.escenarios.medio.mensual; return m >= g[1] && m < g[2]; }).length]; }));
     var dias = {}; F.forEach(function(r){ var d = String(r.fecha).slice(0,10); dias[d] = (dias[d]||0)+1; });
     var dk = Object.keys(dias).sort().slice(-14), dmax = Math.max.apply(null, dk.map(function(k){return dias[k]}).concat([1]));
-    $("bDia").innerHTML = dk.length ? dk.map(function(k){ var d = new Date(k+"T12:00:00"); return '<div class="c"><i style="height:'+Math.max(4,dias[k]/dmax*100)+'%"><b>'+dias[k]+'</b></i><span>'+d.toLocaleDateString("es-CO",{day:"numeric",month:"short"})+'</span></div>'; }).join("") : '<div class="sb">Sin datos</div>';
+    $("bDia").innerHTML = dk.length ? dk.map(function(k){ var d = new Date(k+"T12:00:00"); return '<div class="c"><s><i style="height:'+Math.max(4,dias[k]/dmax*100)+'%"><b>'+dias[k]+'</b></i></s><span>'+d.toLocaleDateString("es-CO",{day:"numeric",month:"short"})+'</span></div>'; }).join("") : '<div class="sb">Sin datos</div>';
 
     $("cnt").textContent = F.length + " de " + datos.length;
     $("filas").innerHTML = F.length ? F.map(function(r){
@@ -770,28 +870,84 @@ tbody tr:hover{background:#FBF9F5}
   // Si una cifra no cabe en su tarjeta, reduce la letra hasta que quepa completa.
   function ajustarKpis(){
     // Todas las cifras quedan del mismo tamaño para que la fila se vea pareja.
-    var vs = document.querySelectorAll("#kpis .v"), min = Infinity;
-    vs.forEach(function(v){ v.style.fontSize = ""; });
-    vs.forEach(function(v){
-      var t = 0; while (v.scrollWidth > v.clientWidth && t++ < 20) v.style.fontSize = (parseFloat(getComputedStyle(v).fontSize) - 1) + "px";
-      min = Math.min(min, parseFloat(getComputedStyle(v).fontSize));
+    ["#kpis .v", "#hero .hnum .hv"].forEach(function(sel){
+      var vs = document.querySelectorAll(sel), min = Infinity;
+      vs.forEach(function(v){ v.style.fontSize = ""; });
+      vs.forEach(function(v){
+        if (!v.clientWidth) return;
+        var t = 0; while (v.scrollWidth > v.clientWidth && t++ < 24) v.style.fontSize = (parseFloat(getComputedStyle(v).fontSize) - 1) + "px";
+        min = Math.min(min, parseFloat(getComputedStyle(v).fontSize));
+      });
+      if (min < Infinity) vs.forEach(function(v){ v.style.fontSize = min + "px"; });
     });
-    vs.forEach(function(v){ v.style.fontSize = min + "px"; });
+  }
+  // Cifra en pesos con el signo $ aparte (en el diseño nuevo se ve atenuado).
+  function dinero(v){ return '<span class="cur">$</span>' + Mo.fmt(v).replace(/^\$/, ""); }
+  // Serie diaria de los últimos 28 días (para el "código de barras" de las tarjetas).
+  function serie(F, fn){
+    var m = {}; F.forEach(function(r){ var d = String(r.fecha).slice(0,10); m[d] = (m[d]||0) + fn(r); });
+    var out = [], hoy = new Date();
+    for (var i = 27; i >= 0; i--) { var d = new Date(hoy); d.setDate(d.getDate() - i); out.push(m[d.toISOString().slice(0,10)] || 0); }
+    return out;
+  }
+  function spark(vals){
+    var mx = Math.max.apply(null, vals.concat([1]));
+    return '<div class="spark" aria-hidden="true">' + vals.map(function(v, i){ return '<i class="'+(i >= vals.length - 7 ? 'on' : '')+'" style="height:'+(v ? Math.max(22, v/mx*100) : 14)+'%"></i>'; }).join("") + '</div>';
+  }
+  // Franja superior del diseño nuevo: potencial por calificación + seguimiento comercial.
+  var COL_ESTADO = {"Nuevo":"#CDBEF5","Contactado":"#FFD84D","En evaluación":"#F76F26","Propuesta enviada":"#7FB0FF","Cerrado ganado":"#5FD39A"};
+  function hero(F){
+    if (!document.documentElement.classList.contains("v2")) { $("hero").innerHTML = ""; return; }
+    var cl = function(c){ return F.filter(function(r){ return r.calificacion.clase === c; }); };
+    var suma = function(a){ return a.reduce(function(s,r){ return s + r.resultado.escenarios.medio.anual; }, 0); };
+    var P = cl("Prioritario"), Pt = cl("Potencial"), B = cl("Bajo potencial");
+    var aP = suma(P), aPt = suma(Pt), aB = suma(B);
+    var seg = function(c, v, t){ return v > 0 ? '<span class="seg '+c+'" style="flex-grow:'+v+'" title="'+esc(t)+'"></span>' : ''; };
+    var barra = (aP + aPt + aB) > 0 ? seg("s1", aP, "Prioritarios") + seg("s2", aPt, "Potenciales") + seg("s3", aB, "Bajo potencial") : '<span class="seg s3" style="flex-grow:1"></span>';
+    var est = function(r){ return r.estadoComercial || "Nuevo"; };
+    var abiertos = F.filter(function(r){ return ["Cerrado ganado","Cerrado perdido","No viable"].indexOf(est(r)) < 0; }).length;
+    var cuenta = {}; F.forEach(function(r){ cuenta[est(r)] = (cuenta[est(r)]||0) + 1; });
+    var nombres = {"Propuesta enviada":"Propuesta","Cerrado ganado":"Ganado"};
+    var keys = Object.keys(COL_ESTADO);
+    var ebar = keys.filter(function(k){ return cuenta[k]; }).map(function(k){ return '<span class="seg" style="flex-grow:'+cuenta[k]+';background:'+COL_ESTADO[k]+'" title="'+esc(k)+'"></span>'; }).join("") || '<span class="seg" style="flex-grow:1;background:rgba(244,240,232,.15)"></span>';
+    $("hero").innerHTML = '<div class="hnum">'
+      + '<div class="hstats">'
+      +   '<div class="hstat"><div class="k"><i style="background:var(--dark-morada)"></i>Potencial anual · prioritarios</div><div class="hv">'+dinero(aP)+'</div><div class="d">'+P.length+' lead'+(P.length===1?'':'s')+' · escenario medio</div></div>'
+      +   '<div class="hstat"><div class="k"><i style="background:var(--naranja)"></i>Potencial anual · potenciales</div><div class="hv">'+dinero(aPt)+'</div><div class="d">'+Pt.length+' lead'+(Pt.length===1?'':'s')+' · escenario medio</div></div>'
+      + '</div>'
+      + '<div class="hbar" role="img" aria-label="Reparto del potencial anual por calificación">'+barra+'</div>'
+      + '<div class="hley"><span><i style="background:var(--dark-morada)"></i>Prioritarios <b>'+P.length+'</b></span><span><i style="background:var(--naranja)"></i>Potenciales <b>'+Pt.length+'</b></span><span><i class="r"></i>Bajo potencial <b>'+B.length+'</b></span></div>'
+      + '</div>'
+      + '<div class="hcard"><h3>Seguimiento comercial</h3>'
+      +   '<div class="hv">'+abiertos+'<small>lead'+(abiertos===1?'':'s')+' abiertos</small></div>'
+      +   '<div class="d">'+(cuenta["Cerrado ganado"]||0)+' cerrados ganados · '+(cuenta["Cerrado perdido"]||0)+' perdidos</div>'
+      +   '<div class="hbar" role="img" aria-label="Leads por estado comercial">'+ebar+'</div>'
+      +   '<div class="eley">'+keys.map(function(k){ return '<span><span><i style="background:'+COL_ESTADO[k]+'"></i>'+esc(nombres[k]||k)+'</span><b>'+(cuenta[k]||0)+'</b></span>'; }).join("")+'</div>'
+      + '</div>';
   }
   window.addEventListener("resize", function(){ clearTimeout(ajustarKpis.t); ajustarKpis.t = setTimeout(ajustarKpis, 120); });
   function barras(id, pares){
     var max = Math.max.apply(null, pares.map(function(p){return p[1]}).concat([1]));
-    $(id).innerHTML = pares.length ? pares.map(function(p){return '<div class="barra"><span>'+esc(p[0])+'</span><span class="t"><i style="width:'+(p[1]/max*100)+'%"></i></span><span class="n">'+p[1]+'</span></div>'}).join("") : '<div class="sb">Sin datos</div>';
+    $(id).innerHTML = pares.length ? pares.map(function(p){return '<div class="barra'+(p[1] ? '' : ' cero')+'"><span>'+esc(p[0])+'</span><span class="t"><i style="width:'+(p[1]/max*100)+'%"><em>'+p[1]+'</em></i></span><span class="n">'+p[1]+'</span></div>'}).join("") : '<div class="sb">Sin datos</div>';
   }
   function proyectar(F){
     var t = Number($("tasa").value)/100; $("tasaV").textContent = Math.round(t*100) + " %";
+    $("tasa").style.setProperty("--p", (($("tasa").value - $("tasa").min) / ($("tasa").max - $("tasa").min) * 100) + "%");
     var base = F.filter(function(r){return r.calificacion.clase==="Prioritario" || r.calificacion.clase==="Potencial"});
     var anual = base.reduce(function(s,r){return s + r.resultado.escenarios.medio.anual},0) * t;
     var u = base.reduce(function(s,r){return s + (r.resultado.unidades||1)},0) * t;
-    $("proyV").textContent = Mo.fmt(anual);
+    $("proyV").innerHTML = dinero(anual);
     $("proyD").textContent = "ingreso bruto anual gestionado (escenario medio) · ≈ " + Math.round(u) + " unidades";
   }
   $("tasa").addEventListener("input", function(){ proyectar(filtrados()); });
+  function pintarDiseno(){ $("txtDiseno").textContent = document.documentElement.classList.contains("v2") ? "Volver al diseño anterior" : "Probar diseño nuevo"; }
+  $("btnDiseno").addEventListener("click", function(){
+    var v2 = !document.documentElement.classList.contains("v2");
+    document.documentElement.classList.toggle("v2", v2);
+    try { localStorage.setItem("ahead_panel_diseno", v2 ? "nuevo" : "anterior"); } catch(e) {}
+    pintarDiseno(); if (!$("app").hidden) pintar();
+  });
+  pintarDiseno();
   document.querySelector("thead").addEventListener("click", function(e){
     var th = e.target.closest("th"); if (!th) return;
     var k = th.getAttribute("data-o"); orden = {k:k, dir: orden.k===k ? -orden.dir : -1}; pintar();
