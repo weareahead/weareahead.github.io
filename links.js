@@ -56,9 +56,7 @@ window.AHEAD = {
         {
           texto: "Sitio web",
           detalle: "weareahead.co",
-          // TEMPORAL (06-oct-2026): apunta al ambiente de prueba mientras termina el deploy de la web nueva.
-          // Cuando la web nueva esté en producción, cambiar por la URL definitiva.
-          url: "https://dev.weareahead.co/#inicio",
+          url: "https://weareahead.co/",
           icono: "web",
           estilo: "red",
           estado: "activo"
